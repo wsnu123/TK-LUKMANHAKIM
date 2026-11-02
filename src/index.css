@@ -4,10 +4,55 @@
   html {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     scroll-behavior: smooth;
+    /* Mobile: cegah iOS memperbesar teks otomatis saat rotate/perbesar layar */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Mobile: cegah geser horizontal akibat dekorasi absolute.
+     'clip' TIDAK membuat scroll container baru, jadi navbar fixed
+     dan semua elemen fixed tidak terpengaruh. Tampilan desktop tidak berubah. */
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
   }
 
   .font-serif {
     font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* ====== MOBILE-FRIENDLY HARDENING (tampilan desktop 100% tidak berubah) ====== */
+
+/* Hilangkan tap highlight abu-abu iOS & delay klik ganda (300ms) di perangkat sentuh */
+button,
+a,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Di layar kecil (< lg), ganti 100vh (yang bermasalah dengan toolbar URL browser HP)
+   dengan 100dvh agar hero & layar penuh selalu pas dengan tinggi viewport yang terlihat */
+@media (max-width: 1023px) {
+  @supports (height: 100dvh) {
+    .h-screen {
+      height: 100dvh;
+    }
+    .min-h-screen {
+      min-height: 100dvh;
+    }
+  }
+}
+
+/* Cegah iOS auto-zoom seluruh halaman saat fokus ke input/select/textarea.
+   Hanya berlaku di perangkat sentuh (HP/tablet) — di desktop tidak ada efek. */
+@media (hover: none) and (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 }
 

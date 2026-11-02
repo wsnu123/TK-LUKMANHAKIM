@@ -105,17 +105,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Official Emblem & Brand (Left Zone) */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-3 cursor-pointer group select-none min-w-0 shrink"
           >
             <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 flex items-center justify-center">
               <LukmanHakimLogo variant="emblem" size={42} />
             </div>
 
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="font-extrabold text-base sm:text-[17px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition">
+            <div className="flex flex-col whitespace-nowrap min-w-0">
+              <span className="font-extrabold text-base sm:text-[17px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition truncate">
                 {schoolIdentity.nama}
               </span>
-              <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1">
+              <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1 truncate">
                 PURWOKERTO • NPSN {schoolIdentity.npsn}
               </span>
             </div>
