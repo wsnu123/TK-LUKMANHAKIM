@@ -1,0 +1,6 @@
+{
+  "name": "Lukman Al Hakim Foundation",
+  "description": "Website resmi Yayasan Lukman Al Hakim - Bersekolah dengan Senang dan Senang di Sekolah. Informasi PPDB, Profil Sekolah, Fasilitas, dan Layanan Pendidikan Holistik.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

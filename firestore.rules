@@ -1,0 +1,414 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'ml0752960@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // 3. Entity Validation Blueprints (Anti-Update-Gap)
+    function isValidAdminProfile(data) {
+      return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'role', 'createdAt']) &&
+        isValidId(data.uid) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 256 &&
+        data.role is string && data.role.size() <= 32 && data.role in ['super_admin', 'admin'] &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidTeacherRecord(data) {
+      return data.keys().hasAll([
+          'id', 'authorId', 'name', 'nip', 'role', 'education',
+          'experienceYears', 'photo', 'bio', 'phone', 'specialty',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'authorId', 'name', 'nip', 'role', 'education',
+          'experienceYears', 'photo', 'bio', 'phone', 'specialty',
+          'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.authorId) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.nip is string && data.nip.size() >= 1 && data.nip.size() <= 50 &&
+        data.role is string && data.role.size() >= 1 && data.role.size() <= 100 &&
+        data.education is string && data.education.size() >= 1 && data.education.size() <= 100 &&
+        data.experienceYears is number && data.experienceYears >= 0 && data.experienceYears <= 80 &&
+        data.photo is string && data.photo.size() >= 1 && data.photo.size() <= 1000 &&
+        data.bio is string && data.bio.size() >= 1 && data.bio.size() <= 600 &&
+        data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 30 &&
+        data.specialty is string && data.specialty.size() >= 1 && data.specialty.size() <= 150 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidGalleryRecord(data) {
+      return data.keys().hasAll([
+          'id', 'authorId', 'title', 'category', 'imageUrl',
+          'date', 'description', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'authorId', 'title', 'category', 'imageUrl',
+          'date', 'description', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.authorId) &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 150 &&
+        data.category is string && data.category.size() <= 60 &&
+        data.category in [
+          'Kegiatan Belajar',
+          'Outbound & Bermain',
+          'Pentas Seni & Kreasi',
+          'Fasilitas',
+          'Ibadah & Tahfidz',
+          'Eksplorasi Alam'
+        ] &&
+        data.imageUrl is string && data.imageUrl.size() >= 1 && data.imageUrl.size() <= 1000 &&
+        data.date is string && data.date.size() >= 1 && data.date.size() <= 30 &&
+        data.description is string && data.description.size() >= 1 && data.description.size() <= 600 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidRegistrationRecord(data) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'regNumber', 'childName', 'nickname', 'nik',
+          'birthPlace', 'birthDate', 'gender', 'program', 'parentName',
+          'motherName', 'phone', 'occupation', 'address', 'status',
+          'notes', 'waSent', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'regNumber', 'childName', 'nickname', 'nik',
+          'birthPlace', 'birthDate', 'gender', 'program', 'parentName',
+          'motherName', 'email', 'phone', 'occupation', 'address', 'status',
+          'notes', 'waSent', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.ownerId) &&
+        data.regNumber is string && data.regNumber.size() >= 3 && data.regNumber.size() <= 50 &&
+        data.childName is string && data.childName.size() >= 1 && data.childName.size() <= 120 &&
+        data.nickname is string && data.nickname.size() >= 1 && data.nickname.size() <= 60 &&
+        data.nik is string && data.nik.size() >= 1 && data.nik.size() <= 32 &&
+        data.birthPlace is string && data.birthPlace.size() >= 1 && data.birthPlace.size() <= 80 &&
+        data.birthDate is string && data.birthDate.size() >= 1 && data.birthDate.size() <= 30 &&
+        data.gender is string && data.gender.size() <= 20 && data.gender in ['Laki-laki', 'Perempuan'] &&
+        data.program is string && data.program.size() <= 80 &&
+        data.program in [
+          'Playgroup (Usia 2-3 Th)',
+          'TK A (Usia 4-5 Th)',
+          'TK B (Usia 5-6 Th)',
+          'Kelas Tahfidz Cilik (Usia 4-6 Th)'
+        ] &&
+        data.parentName is string && data.parentName.size() >= 1 && data.parentName.size() <= 120 &&
+        data.motherName is string && data.motherName.size() <= 120 &&
+        (!('email' in data) || (data.email is string && data.email.size() <= 256)) &&
+        data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 30 &&
+        data.occupation is string && data.occupation.size() <= 100 &&
+        data.address is string && data.address.size() >= 1 && data.address.size() <= 400 &&
+        data.status is string && data.status.size() <= 40 &&
+        data.status in [
+          'Menunggu Verifikasi',
+          'Wawancara Terjadwal',
+          'Diterima',
+          'Berkas Belum Lengkap'
+        ] &&
+        data.notes is string && data.notes.size() <= 500 &&
+        data.waSent is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidTuitionBillRecord(data) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'studentId', 'studentName', 'nis', 'classGroup',
+          'month', 'year', 'tuitionFee', 'cateringFee', 'activityFee',
+          'totalAmount', 'status', 'paidAt', 'paymentMethod', 'receiptNumber',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'studentId', 'studentName', 'nis', 'classGroup',
+          'month', 'year', 'tuitionFee', 'cateringFee', 'activityFee',
+          'totalAmount', 'status', 'paidAt', 'paymentMethod', 'receiptNumber',
+          'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.ownerId) &&
+        data.studentId is string && data.studentId.size() >= 1 && data.studentId.size() <= 64 &&
+        data.studentName is string && data.studentName.size() >= 1 && data.studentName.size() <= 120 &&
+        data.nis is string && data.nis.size() >= 1 && data.nis.size() <= 40 &&
+        data.classGroup is string && data.classGroup.size() >= 1 && data.classGroup.size() <= 80 &&
+        data.month is string && data.month.size() >= 1 && data.month.size() <= 30 &&
+        data.year is number && data.year >= 2020 && data.year <= 2100 &&
+        data.tuitionFee is number && data.tuitionFee >= 0 &&
+        data.cateringFee is number && data.cateringFee >= 0 &&
+        data.activityFee is number && data.activityFee >= 0 &&
+        data.totalAmount is number && data.totalAmount >= 0 &&
+        data.status is string && data.status.size() <= 20 && data.status in ['Lunas', 'Belum Lunas'] &&
+        data.paidAt is string && data.paidAt.size() <= 50 &&
+        data.paymentMethod is string && data.paymentMethod.size() <= 40 &&
+        data.paymentMethod in ['', 'QRIS', 'BSI Virtual Account', 'Bank Mandiri', 'Bank BRI', 'BCA'] &&
+        data.receiptNumber is string && data.receiptNumber.size() <= 60 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidStudentReportRecord(data) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'studentId', 'studentName', 'nis', 'classGroup',
+          'semester', 'academicYear', 'teacherName', 'religiousMoralRating',
+          'motorSkillsRating', 'cognitiveRating', 'languageRating',
+          'socialEmotionalRating', 'artsRating', 'teacherNotes',
+          'publishedAt', 'isPublished', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'studentId', 'studentName', 'nis', 'classGroup',
+          'semester', 'academicYear', 'teacherName', 'religiousMoralRating',
+          'motorSkillsRating', 'cognitiveRating', 'languageRating',
+          'socialEmotionalRating', 'artsRating', 'teacherNotes',
+          'publishedAt', 'isPublished', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.ownerId) &&
+        data.studentId is string && data.studentId.size() >= 1 && data.studentId.size() <= 64 &&
+        data.studentName is string && data.studentName.size() >= 1 && data.studentName.size() <= 120 &&
+        data.nis is string && data.nis.size() >= 1 && data.nis.size() <= 40 &&
+        data.classGroup is string && data.classGroup.size() >= 1 && data.classGroup.size() <= 80 &&
+        data.semester is string && data.semester.size() <= 20 && data.semester in ['Ganjil', 'Genap'] &&
+        data.academicYear is string && data.academicYear.size() >= 1 && data.academicYear.size() <= 30 &&
+        data.teacherName is string && data.teacherName.size() >= 1 && data.teacherName.size() <= 120 &&
+        data.religiousMoralRating is string && data.religiousMoralRating.size() <= 10 && data.religiousMoralRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.motorSkillsRating is string && data.motorSkillsRating.size() <= 10 && data.motorSkillsRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.cognitiveRating is string && data.cognitiveRating.size() <= 10 && data.cognitiveRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.languageRating is string && data.languageRating.size() <= 10 && data.languageRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.socialEmotionalRating is string && data.socialEmotionalRating.size() <= 10 && data.socialEmotionalRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.artsRating is string && data.artsRating.size() <= 10 && data.artsRating in ['BSB', 'BSH', 'MB', 'BB'] &&
+        data.teacherNotes is string && data.teacherNotes.size() <= 600 &&
+        data.publishedAt is string && data.publishedAt.size() >= 1 && data.publishedAt.size() <= 40 &&
+        data.isPublished is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidNotificationLogRecord(data) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'recipientPhone', 'recipientName', 'type',
+          'title', 'message', 'channel', 'status', 'gatewayMessageId',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'recipientPhone', 'recipientName', 'type',
+          'title', 'message', 'channel', 'status', 'gatewayMessageId',
+          'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.ownerId) &&
+        data.recipientPhone is string && data.recipientPhone.size() >= 5 && data.recipientPhone.size() <= 30 &&
+        data.recipientName is string && data.recipientName.size() >= 1 && data.recipientName.size() <= 120 &&
+        data.type is string && data.type.size() <= 20 && data.type in ['PPDB', 'SPP', 'RAPORT', 'BROADCAST'] &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 150 &&
+        data.message is string && data.message.size() >= 1 && data.message.size() <= 1000 &&
+        data.channel is string && data.channel.size() <= 40 && data.channel in ['WhatsApp API Gateway', 'SMS Gateway'] &&
+        data.status is string && data.status.size() <= 20 && data.status in ['Terkirim', 'Dibaca', 'Gagal'] &&
+        data.gatewayMessageId is string && data.gatewayMessageId.size() >= 1 && data.gatewayMessageId.size() <= 80 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidInquiryRecord(data) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'name', 'phone', 'childAge',
+          'interest', 'message', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'ownerId', 'name', 'phone', 'childAge',
+          'interest', 'message', 'createdAt', 'updatedAt'
+        ]) &&
+        isValidId(data.id) &&
+        isValidId(data.ownerId) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 30 &&
+        data.childAge is string && data.childAge.size() <= 40 &&
+        data.interest is string && data.interest.size() >= 1 && data.interest.size() <= 150 &&
+        data.message is string && data.message.size() >= 1 && data.message.size() <= 1000 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // 4. Collection Rules
+    match /admins/{adminUid} {
+      allow get: if isVerifiedUser() && isValidId(adminUid) && (existing().uid == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().uid == request.auth.uid || isAdmin());
+      allow create: if isAdmin() && isValidId(adminUid) && isValidAdminProfile(incoming()) &&
+        incoming().uid == adminUid && incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidId(adminUid) && isValidAdminProfile(incoming()) &&
+        incoming().uid == existing().uid && incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['role', 'email']);
+      allow delete: if isAdmin() && isValidId(adminUid);
+    }
+
+    match /teachers/{teacherId} {
+      allow get: if isVerifiedUser() && isValidId(teacherId) && (existing().authorId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().authorId == request.auth.uid || isAdmin());
+      allow create: if isAdmin() && isValidId(teacherId) && isValidTeacherRecord(incoming()) &&
+        incoming().id == teacherId && incoming().authorId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(teacherId) && isValidTeacherRecord(incoming()) &&
+        incoming().id == existing().id && incoming().authorId == existing().authorId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (existing().authorId == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'name', 'nip', 'role', 'education', 'experienceYears',
+              'photo', 'bio', 'phone', 'specialty', 'updatedAt'
+            ]))
+        );
+      allow delete: if isAdmin() && isValidId(teacherId);
+    }
+
+    match /gallery/{galleryId} {
+      allow get: if isVerifiedUser() && isValidId(galleryId) && (existing().authorId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().authorId == request.auth.uid || isAdmin());
+      allow create: if isAdmin() && isValidId(galleryId) && isValidGalleryRecord(incoming()) &&
+        incoming().id == galleryId && incoming().authorId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(galleryId) && isValidGalleryRecord(incoming()) &&
+        incoming().id == existing().id && incoming().authorId == existing().authorId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (existing().authorId == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'category', 'imageUrl', 'date', 'description', 'updatedAt'
+            ]))
+        );
+      allow delete: if isAdmin() && isValidId(galleryId);
+    }
+
+    match /registrations/{registrationId} {
+      allow get: if isVerifiedUser() && isValidId(registrationId) && (existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+      allow create: if isVerifiedUser() && isValidId(registrationId) && isValidRegistrationRecord(incoming()) &&
+        incoming().id == registrationId && incoming().ownerId == request.auth.uid &&
+        incoming().status == 'Menunggu Verifikasi' &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(registrationId) && isValidRegistrationRecord(incoming()) &&
+        incoming().id == existing().id && incoming().ownerId == existing().ownerId &&
+        incoming().regNumber == existing().regNumber &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time &&
+        (existing().status != 'Diterima' || isAdmin()) && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid &&
+            incoming().status == existing().status &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'phone', 'address', 'notes', 'occupation', 'updatedAt'
+            ]))
+        );
+      allow delete: if isAdmin() && isValidId(registrationId);
+    }
+
+    match /tuition_bills/{billId} {
+      allow get: if isVerifiedUser() && isValidId(billId) && (existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+      allow create: if isVerifiedUser() && isValidId(billId) && isValidTuitionBillRecord(incoming()) &&
+        incoming().id == billId && incoming().ownerId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(billId) && isValidTuitionBillRecord(incoming()) &&
+        incoming().id == existing().id && incoming().ownerId == existing().ownerId &&
+        incoming().studentId == existing().studentId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time &&
+        (existing().status != 'Lunas' || isAdmin()) && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid &&
+            incoming().status == 'Lunas' &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'status', 'paidAt', 'paymentMethod', 'receiptNumber', 'updatedAt'
+            ]))
+        );
+      allow delete: if isAdmin() && isValidId(billId);
+    }
+
+    match /student_reports/{reportId} {
+      allow get: if isVerifiedUser() && isValidId(reportId) && (existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+      allow create: if isAdmin() && isValidId(reportId) && isValidStudentReportRecord(incoming()) &&
+        incoming().id == reportId && incoming().ownerId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(reportId) && isValidStudentReportRecord(incoming()) &&
+        incoming().id == existing().id && incoming().ownerId == existing().ownerId &&
+        incoming().studentId == existing().studentId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'teacherNotes', 'isPublished', 'updatedAt'
+            ]))
+        );
+      allow delete: if isAdmin() && isValidId(reportId);
+    }
+
+    match /notification_logs/{logId} {
+      allow get: if isVerifiedUser() && isValidId(logId) && (existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+      allow create: if isVerifiedUser() && isValidId(logId) && isValidNotificationLogRecord(incoming()) &&
+        incoming().id == logId && incoming().ownerId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(logId) && isValidNotificationLogRecord(incoming()) &&
+        incoming().id == existing().id && incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']))
+        );
+      allow delete: if isAdmin() && isValidId(logId);
+    }
+
+    match /inquiries/{inquiryId} {
+      allow get: if isVerifiedUser() && isValidId(inquiryId) && (existing().ownerId == request.auth.uid || isAdmin());
+      allow list: if isVerifiedUser() && (existing().ownerId == request.auth.uid || isAdmin());
+      allow create: if isVerifiedUser() && isValidId(inquiryId) && isValidInquiryRecord(incoming()) &&
+        incoming().id == inquiryId && incoming().ownerId == request.auth.uid &&
+        incoming().createdAt == request.time && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser() && isValidId(inquiryId) && isValidInquiryRecord(incoming()) &&
+        incoming().id == existing().id && incoming().ownerId == existing().ownerId &&
+        incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (existing().ownerId == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['message', 'interest', 'updatedAt']))
+        );
+      allow delete: if isAdmin() && isValidId(inquiryId);
+    }
+
+    // Health-check / test connection route
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

@@ -1,0 +1,724 @@
+{
+  "entities": {
+    "AdminProfile": {
+      "title": "AdminProfile",
+      "description": "Trusted administrator record for role-based access control.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the administrator"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 256,
+          "description": "Verified email address of the administrator"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["super_admin", "admin"],
+          "maxLength": 32,
+          "description": "Administrative tier"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "TeacherRecord": {
+      "title": "TeacherRecord",
+      "description": "Teacher profile stored in Cloud Firestore.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "nip": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "education": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "experienceYears": {
+          "type": "number"
+        },
+        "photo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "bio": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "specialty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "authorId",
+        "name",
+        "nip",
+        "role",
+        "education",
+        "experienceYears",
+        "photo",
+        "bio",
+        "phone",
+        "specialty",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "GalleryRecord": {
+      "title": "GalleryRecord",
+      "description": "School facility and activity photo documentation item.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Kegiatan Belajar",
+            "Outbound & Bermain",
+            "Pentas Seni & Kreasi",
+            "Fasilitas",
+            "Ibadah & Tahfidz",
+            "Eksplorasi Alam"
+          ],
+          "maxLength": 60
+        },
+        "imageUrl": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "date": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "authorId",
+        "title",
+        "category",
+        "imageUrl",
+        "date",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "RegistrationRecord": {
+      "title": "RegistrationRecord",
+      "description": "PPDB online student registration record containing student and parent details.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "regNumber": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "childName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "nickname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "nik": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "birthPlace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "birthDate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["Laki-laki", "Perempuan"],
+          "maxLength": 20
+        },
+        "program": {
+          "type": "string",
+          "enum": [
+            "Playgroup (Usia 2-3 Th)",
+            "TK A (Usia 4-5 Th)",
+            "TK B (Usia 5-6 Th)",
+            "Kelas Tahfidz Cilik (Usia 4-6 Th)"
+          ],
+          "maxLength": 80
+        },
+        "parentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "motherName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 256,
+          "description": "Verified Gmail address for registration announcements"
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "occupation": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "address": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Menunggu Verifikasi",
+            "Wawancara Terjadwal",
+            "Diterima",
+            "Berkas Belum Lengkap"
+          ],
+          "maxLength": 40
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "waSent": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "regNumber",
+        "childName",
+        "nickname",
+        "nik",
+        "birthPlace",
+        "birthDate",
+        "gender",
+        "program",
+        "parentName",
+        "motherName",
+        "phone",
+        "occupation",
+        "address",
+        "status",
+        "notes",
+        "waSent",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TuitionBillRecord": {
+      "title": "TuitionBillRecord",
+      "description": "Monthly SPP tuition billing and digital payment record.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "studentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "studentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "nis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "classGroup": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "month": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "year": {
+          "type": "number"
+        },
+        "tuitionFee": {
+          "type": "number"
+        },
+        "cateringFee": {
+          "type": "number"
+        },
+        "activityFee": {
+          "type": "number"
+        },
+        "totalAmount": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Lunas", "Belum Lunas"],
+          "maxLength": 20
+        },
+        "paidAt": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["", "QRIS", "BSI Virtual Account", "Bank Mandiri", "Bank BRI", "BCA"],
+          "maxLength": 40
+        },
+        "receiptNumber": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "studentId",
+        "studentName",
+        "nis",
+        "classGroup",
+        "month",
+        "year",
+        "tuitionFee",
+        "cateringFee",
+        "activityFee",
+        "totalAmount",
+        "status",
+        "paidAt",
+        "paymentMethod",
+        "receiptNumber",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StudentReportRecord": {
+      "title": "StudentReportRecord",
+      "description": "Semester holistic development e-raport record for a student.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "studentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "studentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "nis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "classGroup": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "semester": {
+          "type": "string",
+          "enum": ["Ganjil", "Genap"],
+          "maxLength": 20
+        },
+        "academicYear": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "teacherName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "religiousMoralRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "motorSkillsRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "cognitiveRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "languageRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "socialEmotionalRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "artsRating": {
+          "type": "string",
+          "enum": ["BSB", "BSH", "MB", "BB"],
+          "maxLength": 10
+        },
+        "teacherNotes": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "publishedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "studentId",
+        "studentName",
+        "nis",
+        "classGroup",
+        "semester",
+        "academicYear",
+        "teacherName",
+        "religiousMoralRating",
+        "motorSkillsRating",
+        "cognitiveRating",
+        "languageRating",
+        "socialEmotionalRating",
+        "artsRating",
+        "teacherNotes",
+        "publishedAt",
+        "isPublished",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "NotificationLogRecord": {
+      "title": "NotificationLogRecord",
+      "description": "WhatsApp and SMS API Gateway dispatch log entry.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientPhone": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "recipientName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "type": {
+          "type": "string",
+          "enum": ["PPDB", "SPP", "RAPORT", "BROADCAST"],
+          "maxLength": 20
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["WhatsApp API Gateway", "SMS Gateway"],
+          "maxLength": 40
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Terkirim", "Dibaca", "Gagal"],
+          "maxLength": 20
+        },
+        "gatewayMessageId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "recipientPhone",
+        "recipientName",
+        "type",
+        "title",
+        "message",
+        "channel",
+        "status",
+        "gatewayMessageId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "InquiryRecord": {
+      "title": "InquiryRecord",
+      "description": "Parent consultation or school tour inquiry submitted from Contact Page.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "childAge": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "interest": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "name",
+        "phone",
+        "childAge",
+        "interest",
+        "message",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/admins/{adminUid}": {
+      "schema": "AdminProfile",
+      "description": "Administrator registry collection keyed by Firebase Auth UID."
+    },
+    "/teachers/{teacherId}": {
+      "schema": "TeacherRecord",
+      "description": "School teacher profiles managed by administrators."
+    },
+    "/gallery/{galleryId}": {
+      "schema": "GalleryRecord",
+      "description": "School activity and facility gallery items managed by administrators."
+    },
+    "/registrations/{registrationId}": {
+      "schema": "RegistrationRecord",
+      "description": "PPDB student registrations owned by the submitting parent or managed by admins."
+    },
+    "/tuition_bills/{billId}": {
+      "schema": "TuitionBillRecord",
+      "description": "SPP tuition bills and payment records."
+    },
+    "/student_reports/{reportId}": {
+      "schema": "StudentReportRecord",
+      "description": "Holistic student e-raport evaluations."
+    },
+    "/notification_logs/{logId}": {
+      "schema": "NotificationLogRecord",
+      "description": "WhatsApp and SMS notification transmission logs."
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "InquiryRecord",
+      "description": "Parent consultation and school tour inquiries from the contact form."
+    }
+  }
+}

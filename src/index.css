@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 102, 153, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 102, 153, 0);
+  }
+}
+
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.4s infinite;
+}
+
+.school-card-hover {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
+}
+
+.school-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(15, 41, 55, 0.14);
+}
+
+.school-grid-pattern {
+  background-image: radial-gradient(rgba(0, 102, 153, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+@keyframes letterPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Interactive Click Ripple & Particle Animations */
+@keyframes clickRippleEffect {
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 0.85;
+    border-width: 3px;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  50% {
+    opacity: 0.6;
+    border-width: 2px;
+  }
+  100% {
+    width: 64px;
+    height: 64px;
+    opacity: 0;
+    border-width: 1px;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}
+
+@keyframes clickParticleEffect {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--vx, 10px)), calc(-50% + var(--vy, 10px))) scale(0.2);
+  }
+}
+
+.animate-click-ripple {
+  border-style: solid;
+  animation: clickRippleEffect 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-click-particle {
+  animation: clickParticleEffect 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Tactile Click Physics for All Buttons & Interactive Elements */
+button:not(:disabled):active, 
+a.btn-click:active,
+.clickable-card:active {
+  transform: scale(0.96) !important;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
