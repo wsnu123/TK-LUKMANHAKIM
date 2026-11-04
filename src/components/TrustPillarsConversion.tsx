@@ -20,7 +20,7 @@ export const TrustPillarsConversion: React.FC<TrustPillarsConversionProps> = ({
 }) => {
   const { schoolIdentity } = useApp();
   const handleOpenWaBooking = () => {
-    const targetWa = (schoolIdentity.whatsapp || '6281228990111').replace(/[^0-9]/g, '');
+    const targetWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
     const cleanWa = targetWa.startsWith('0') ? '62' + targetWa.slice(1) : targetWa;
     const text = encodeURIComponent(
       `Assalamu’alaikum Admin ${schoolIdentity.nama}. Saya ingin berkonsultasi & menjadwalkan Kunjungan Sekolah / Trial Class Gratis untuk Ananda. Mohon informasi jadwal yang tersedia.`

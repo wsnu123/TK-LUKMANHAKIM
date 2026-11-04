@@ -58,7 +58,7 @@ export const SpmbPosterCarousel: React.FC<SpmbPosterCarouselProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const cleanPhone = (schoolIdentity.whatsapp || '6281228990111').replace(/\D/g, '');
+  const cleanPhone = (schoolIdentity.whatsapp || '6287713551412').replace(/\D/g, '');
   const waTarget = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
 
   // 4 Poster Landscape Spesifikasi Unggulan TK Islam Lukman Hakim Purwokerto

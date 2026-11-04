@@ -61,7 +61,7 @@ export const PpdbCrudTab: React.FC<PpdbCrudTabProps> = ({
   const [notes, setNotes] = useState('');
 
   // Announcement via Gmail modal states
-  const { sendAnnouncementEmail } = useApp();
+  const { currentUser, sendAnnouncementEmail } = useApp();
   const [announcementModalReg, setAnnouncementModalReg] = useState<Registration | null>(null);
   const [isSendingAnnouncement, setIsSendingAnnouncement] = useState(false);
   const [announcementTemplate, setAnnouncementTemplate] = useState<'diterima' | 'observasi' | 'berkas'>('diterima');
@@ -75,12 +75,19 @@ export const PpdbCrudTab: React.FC<PpdbCrudTabProps> = ({
   const [testSuccessMessage, setTestSuccessMessage] = useState<string | null>(null);
 
   const handleRunTestGmailSend = async () => {
+    if (!currentUser?.getIdToken) {
+      onNotify('Silakan masuk dengan akun Google admin terverifikasi untuk menguji Gmail.');
+      return;
+    }
     setIsTestingGmail(true);
     setTestSuccessMessage(null);
     try {
       const res = await fetch('/api/mail/test-send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await currentUser.getIdToken()}`,
+        },
         body: JSON.stringify({ to: testTargetEmail || 'ml0752960@gmail.com' }),
       });
       const data = await res.json();
@@ -99,7 +106,7 @@ export const PpdbCrudTab: React.FC<PpdbCrudTabProps> = ({
 
   const generateAnnouncementText = (reg: Registration, tpl: 'diterima' | 'observasi' | 'berkas') => {
     if (tpl === 'diterima') {
-      const subject = `[PENGUMUMAN HASIL PPDB] Selamat! Ananda ${reg.childName} Diterima di TK LUKMAN HAKIM Purwokerto`;
+      const subject = `[PENGUMUMAN HASIL SPMB] Selamat, Ananda ${reg.childName} diterima di TK Lukman Hakim Purwokerto`;
       const body = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${reg.parentName},
 
 Alhamdulillah, panitia Penerimaan Peserta Didik Baru (PPDB) TK LUKMAN HAKIM Purwokerto mengumumkan bahwa pendaftaran ananda:
@@ -114,17 +121,17 @@ Dinyatakan RESMI DITERIMA sebagai Santri Baru TK LUKMAN HAKIM Purwokerto Tahun A
 Informasi Langkah Selanjutnya (Daftar Ulang & Pengambilan Seragam):
 1. Pengukuran seragam santri dan pengambilan perlengkapan dijadwalkan pada hari kerja (Senin - Jumat, pukul 08.00 - 13.00 WIB) di Kantor Tata Usaha TK Lukman Hakim.
 2. Membawa fotokopi Akta Kelahiran dan Kartu Keluarga (KK).
-3. Untuk informasi rincian biaya atau jadwal pengantaran berkas, Ayah/Bunda dapat menghubungi Panitia di WhatsApp 0812-2899-0111.
+3. Untuk informasi rincian biaya atau jadwal pengantaran berkas, Ayah/Bunda dapat menghubungi Panitia melalui WhatsApp +62 877-1355-1412.
 
 Jazakumullahu Khairan Katsiran atas amanah dan kepercayaan Ayah/Bunda mendidik ananda bersama keluarga besar TK Lukman Hakim.
 
 Wassalamu’alaikum Warahmatullahi Wabarakatuh,
 Panitia PPDB TK LUKMAN HAKIM Purwokerto
 Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan
-Telp/WA: 0812-2899-0111`;
+Telp/WA: +62 877-1355-1412`;
       return { subject, body };
     } else if (tpl === 'observasi') {
-      const subject = `[JADWAL OBSERVASI PPDB] Undangan Wawancara & Observasi Ramah Anak: ${reg.childName} (${reg.regNumber})`;
+      const subject = `[JADWAL OBSERVASI SPMB] Undangan wawancara dan observasi ramah anak: ${reg.childName} (${reg.regNumber})`;
       const body = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${reg.parentName},
 
 Sehubungan dengan pendaftaran calon santri ananda ${reg.childName} (${reg.regNumber}) pada jenjang ${reg.program}, kami mengundang Ayah/Bunda dan ananda untuk hadir pada sesi Wawancara Orang Tua & Observasi Ramah Anak:
@@ -135,13 +142,13 @@ Tempat       : Kampus TK Lukman Hakim, Jl. Hos Noto Suwiryo No. 5 Teluk, Purwoke
 
 Observasi ini bertujuan mengenal minat, kesiapan sosio-emosional, serta stimulasi fitrah terbaik bagi ananda dalam suasana bermain yang menyenangkan.
 
-Mohon konfirmasi kesiapan kehadiran Ayah/Bunda ke WhatsApp Panitia di 0812-2899-0111 atau membalas email ini.
+Mohon konfirmasi kesiapan kehadiran Ayah/Bunda ke WhatsApp Panitia di +62 877-1355-1412 atau membalas email ini.
 
 Wassalamu’alaikum Warahmatullahi Wabarakatuh,
 Panitia PPDB TK LUKMAN HAKIM Purwokerto`;
       return { subject, body };
     } else {
-      const subject = `[PEMBERITAHUAN BERKAS PPDB] Kelengkapan Berkas Pendaftaran Ananda ${reg.childName}`;
+      const subject = `[KELENGKAPAN BERKAS SPMB] Berkas pendaftaran Ananda ${reg.childName}`;
       const body = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${reg.parentName},
 
 Terima kasih telah mendaftarkan ananda ${reg.childName} (${reg.regNumber}) di TK LUKMAN HAKIM Purwokerto.
@@ -150,7 +157,7 @@ Panitia memohon untuk melengkapi berkas administrasi berikut agar proses verifik
 1. Nomor Induk Kependudukan (NIK) / Fotokopi Kartu Keluarga (KK)
 2. Nomor WhatsApp aktif wali santri
 
-Mohon konfirmasi atau kirimkan foto berkas ke WhatsApp 0812-2899-0111 atau membalas email ini.
+Mohon konfirmasi atau kirimkan foto berkas ke WhatsApp +62 877-1355-1412 atau membalas email ini.
 
 Wassalamu’alaikum Warahmatullahi Wabarakatuh,
 Panitia PPDB TK LUKMAN HAKIM Purwokerto`;
@@ -1039,7 +1046,7 @@ export const TeachersCrudTab: React.FC<TeachersCrudTabProps> = ({
   const [nip, setNip] = useState('19900101 202001 2 001');
   const [education, setEducation] = useState('S1 PG-PAUD');
   const [experienceYears, setExperienceYears] = useState(5);
-  const [phone, setPhone] = useState('081228990111');
+  const [phone, setPhone] = useState('6287713551412');
   const [specialty, setSpecialty] = useState('Pendidikan Karakter & Motorik Anak');
   const [bio, setBio] = useState('');
   const [photo, setPhoto] = useState('/assets/budi_mulia_hero.jpg');
@@ -1051,7 +1058,7 @@ export const TeachersCrudTab: React.FC<TeachersCrudTabProps> = ({
     setNip('19900101 202001 2 001');
     setEducation('S1 PG-PAUD');
     setExperienceYears(5);
-    setPhone('081228990111');
+    setPhone('6287713551412');
     setSpecialty('Pendidikan Karakter & Motorik Anak');
     setBio('');
     setPhoto('/assets/budi_mulia_hero.jpg');
@@ -1108,7 +1115,7 @@ export const TeachersCrudTab: React.FC<TeachersCrudTabProps> = ({
         nip: nip || '19900101 202001 2 001',
         education: education || 'S1 PG-PAUD',
         experienceYears: Number(experienceYears) || 3,
-        phone: phone || '081228990111',
+        phone: phone || '6287713551412',
         specialty: specialty || 'Pendidikan Karakter & Motorik',
         bio: bio || 'Pendidik berdedikasi tinggi membimbing potensi anak usia dini.',
         photo: photo || '/assets/budi_mulia_hero.jpg',

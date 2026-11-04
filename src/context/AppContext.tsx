@@ -94,6 +94,7 @@ interface AppContextType {
 
   schoolIdentity: SchoolIdentity;
   updateSchoolIdentity: (updated: Partial<SchoolIdentity>) => void;
+  saveAllSettingsToServer: () => Promise<boolean>;
 
   heroSlides: HeroSlide[];
   addHeroSlide: (slide: Omit<HeroSlide, 'id'>) => void;
@@ -390,9 +391,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [lastCloudSyncAt, setLastCloudSyncAt] = useState<string | null>(null);
 
   const isAdminUser = Boolean(
-    currentUser &&
-      currentUser.emailVerified &&
-      currentUser.email?.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()
+    auth.currentUser &&
+      auth.currentUser.emailVerified &&
+      auth.currentUser.email?.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()
   );
 
   const [schoolIdentity, setSchoolIdentity] = useState<SchoolIdentity>(() =>
@@ -926,9 +927,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsAdminLoggedIn(false);
   };
 
+  const getAdminRequestHeaders = async (): Promise<Record<string, string>> => {
+    if (
+      !auth.currentUser?.emailVerified ||
+      auth.currentUser.email?.toLowerCase() !== BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()
+    ) {
+      throw new Error('Silakan masuk dengan akun Google admin terverifikasi.');
+    }
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+    };
+  };
+
   // Direct Gmail Dispatch Methods
   const sendPpdbConfirmationEmail = async (reg: Registration) => {
-    const toEmail = reg.email || currentUser?.email || '';
+    const toEmail = reg.email || '';
     if (!toEmail) return { success: false };
     try {
       const res = await fetch('/api/mail/send-ppdb-confirmation', {
@@ -980,9 +994,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     parentName?: string;
   }) => {
     try {
+      const headers = await getAdminRequestHeaders();
       const res = await fetch('/api/mail/send-announcement', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(params),
       });
       return await res.json();
@@ -1003,9 +1018,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     receiptNumber?: string;
   }) => {
     try {
+      const headers = await getAdminRequestHeaders();
       const res = await fetch('/api/mail/send-spp-receipt', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(params),
       });
       return await res.json();
@@ -1016,9 +1032,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const fetchInboxEmails = async (email: string) => {
-    if (!email) return [];
+    if (!email || !auth.currentUser || !isAdminUser) return [];
     try {
-      const res = await fetch(`/api/mail/inbox/${encodeURIComponent(email)}`);
+      const res = await fetch(`/api/mail/inbox/${encodeURIComponent(email)}`, {
+        headers: { Authorization: `Bearer ${await auth.currentUser.getIdToken()}` },
+      });
       const data = await res.json();
       return data.messages || [];
     } catch {
@@ -1051,7 +1069,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           program: r.program,
           parentName: sanitizeString(r.parentName, VALIDATION_LIMITS.parentNameMax, 'Orang Tua'),
           motherName: sanitizeString(r.motherName, VALIDATION_LIMITS.motherNameMax, ''),
-          phone: sanitizeString(r.phone, VALIDATION_LIMITS.phoneMax, '081228990111'),
+          phone: sanitizeString(r.phone, VALIDATION_LIMITS.phoneMax, '6287713551412'),
           occupation: sanitizeString(r.occupation, VALIDATION_LIMITS.occupationMax, ''),
           address: sanitizeString(r.address, VALIDATION_LIMITS.addressMax, 'Purwokerto'),
           status: 'Menunggu Verifikasi',
@@ -1104,7 +1122,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           id: safeId,
           ownerId: uid,
           name: sanitizeString(inq.name, VALIDATION_LIMITS.parentNameMax, 'Orang Tua'),
-          phone: sanitizeString(inq.phone, VALIDATION_LIMITS.phoneMax, '081228990111'),
+          phone: sanitizeString(inq.phone, VALIDATION_LIMITS.phoneMax, '6287713551412'),
           childAge: sanitizeString(inq.childAge || '', 40, ''),
           interest: sanitizeString(inq.interest, VALIDATION_LIMITS.inquiryInterestMax, 'Informasi PPDB'),
           message: sanitizeString(inq.message, VALIDATION_LIMITS.inquiryMessageMax, 'Konsultasi pendaftaran'),
@@ -1132,7 +1150,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             experienceYears: Math.min(80, Math.max(0, Number(t.experienceYears) || 1)),
             photo: sanitizeString(t.photo, VALIDATION_LIMITS.teacherPhotoMax, 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2'),
             bio: sanitizeString(t.bio, VALIDATION_LIMITS.teacherBioMax, 'Pendidik TK Lukman Hakim.'),
-            phone: sanitizeString(t.phone, VALIDATION_LIMITS.teacherPhoneMax, '081228990111'),
+            phone: sanitizeString(t.phone, VALIDATION_LIMITS.teacherPhoneMax, '6287713551412'),
             specialty: sanitizeString(t.specialty, VALIDATION_LIMITS.teacherSpecialtyMax, 'PAUD'),
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
@@ -1215,7 +1233,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         experienceYears: Math.min(80, Math.max(0, Number(teacher.experienceYears) || 1)),
         photo: sanitizeString(teacher.photo, VALIDATION_LIMITS.teacherPhotoMax, 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2'),
         bio: sanitizeString(teacher.bio, VALIDATION_LIMITS.teacherBioMax, 'Pendidik berdedikasi.'),
-        phone: sanitizeString(teacher.phone, VALIDATION_LIMITS.teacherPhoneMax, '081228990111'),
+        phone: sanitizeString(teacher.phone, VALIDATION_LIMITS.teacherPhoneMax, '6287713551412'),
         specialty: sanitizeString(teacher.specialty, VALIDATION_LIMITS.teacherSpecialtyMax, 'Pendidikan Anak'),
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -1236,7 +1254,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (updated.experienceYears !== undefined) payload.experienceYears = Math.min(80, Math.max(0, Number(updated.experienceYears) || 0));
       if (updated.photo !== undefined) payload.photo = sanitizeString(updated.photo, VALIDATION_LIMITS.teacherPhotoMax, '/assets/budi_mulia_hero.jpg');
       if (updated.bio !== undefined) payload.bio = sanitizeString(updated.bio, VALIDATION_LIMITS.teacherBioMax, 'Pendidik.');
-      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.teacherPhoneMax, '081228990111');
+      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.teacherPhoneMax, '6287713551412');
       if (updated.specialty !== undefined) payload.specialty = sanitizeString(updated.specialty, VALIDATION_LIMITS.teacherSpecialtyMax, 'PAUD');
 
       updateDoc(doc(db, path, safeId), payload).catch((error) =>
@@ -1320,7 +1338,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     })}`;
     const safeId = sanitizeId(`reg_${Date.now()}`);
     const userEmail = reg.email || currentUser?.email || auth.currentUser?.email || '';
-    const safeSummary = `Assalamu’alaikum Ayah/Bunda ${reg.parentName},\nAlhamdulillah pendaftaran PPDB Online Ananda ${reg.childName} (${regNumber}) telah resmi tercatat di sistem TK LUKMAN HAKIM Purwokerto.\nJenjang: ${reg.program} | WA: ${reg.phone}\nPanitia PPDB: 0812-2899-0111`;
+    const safeSummary = `Assalamu’alaikum Ayah/Bunda ${reg.parentName},\nAlhamdulillah pendaftaran PPDB Online Ananda ${reg.childName} (${regNumber}) telah resmi tercatat di sistem TK LUKMAN HAKIM Purwokerto.\nJenjang: ${reg.program} | WA: ${reg.phone}\nPanitia PPDB: +62 877-1355-1412`;
     const initialGmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(userEmail)}&su=${encodeURIComponent(`[BUKTI PPDB] ${reg.childName} (${regNumber})`)}&body=${encodeURIComponent(safeSummary)}`;
     const initialMailtoLink = `mailto:${encodeURIComponent(userEmail)}?subject=${encodeURIComponent(`[BUKTI PPDB] ${reg.childName} (${regNumber})`)}&body=${encodeURIComponent(safeSummary)}`;
 
@@ -1354,7 +1372,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         parentName: sanitizeString(reg.parentName, VALIDATION_LIMITS.parentNameMax, 'Orang Tua'),
         motherName: sanitizeString(reg.motherName || '', VALIDATION_LIMITS.motherNameMax, ''),
         email: sanitizeString(userEmail, VALIDATION_LIMITS.emailMax || 256, userEmail),
-        phone: sanitizeString(reg.phone, VALIDATION_LIMITS.phoneMax, '081228990111'),
+        phone: sanitizeString(reg.phone, VALIDATION_LIMITS.phoneMax, '6287713551412'),
         occupation: sanitizeString(reg.occupation || '', VALIDATION_LIMITS.occupationMax, ''),
         address: sanitizeString(reg.address, VALIDATION_LIMITS.addressMax, 'Purwokerto'),
         status: 'Menunggu Verifikasi',
@@ -1410,7 +1428,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (updated.program !== undefined) payload.program = updated.program;
       if (updated.parentName !== undefined) payload.parentName = sanitizeString(updated.parentName, VALIDATION_LIMITS.parentNameMax, 'Orang Tua');
       if (updated.motherName !== undefined) payload.motherName = sanitizeString(updated.motherName, VALIDATION_LIMITS.motherNameMax, '');
-      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.phoneMax, '081228990111');
+      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.phoneMax, '6287713551412');
       if (updated.occupation !== undefined) payload.occupation = sanitizeString(updated.occupation, VALIDATION_LIMITS.occupationMax, '');
       if (updated.address !== undefined) payload.address = sanitizeString(updated.address, VALIDATION_LIMITS.addressMax, 'Purwokerto');
       if (updated.status !== undefined) payload.status = updated.status;
@@ -1437,7 +1455,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const subject = `[PENGUMUMAN RESMI PPDB] Keputusan Hasil Seleksi Ananda ${existing.childName} (${existing.regNumber}): ${status}`;
       const isAccepted = status === 'Diterima';
-      const body = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${existing.parentName},\n\nAlhamdulillah, Panitia PPDB TK LUKMAN HAKIM Purwokerto mengumumkan bahwa pendaftaran ananda:\n\n• Nama Calon Siswa : ${existing.childName} (${existing.nickname || existing.childName})\n• No. Registrasi   : ${existing.regNumber}\n• Pilihan Jenjang  : ${existing.program}\n• Status Seleksi   : ${status.toUpperCase()}\n\n${isAccepted ? 'Selamat! Ananda dinyatakan RESMI DITERIMA sebagai Santri Baru TK Lukman Hakim Purwokerto Tahun Ajaran 2026/2027. Silakan konfirmasi jadwal pengukuran seragam & daftar ulang.' : 'Silakan pantau status pendaftaran secara berkala melalui menu Portal PPDB di website sekolah.'}\n\nJazakumullahu Khairan Katsiran,\nPanitia PPDB TK LUKMAN HAKIM Purwokerto\nHotline WhatsApp: 0812-2899-0111 | Email: tklukmanhakim.pwt@gmail.com`;
+      const body = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${existing.parentName},\n\nAlhamdulillah, Panitia PPDB TK LUKMAN HAKIM Purwokerto mengumumkan bahwa pendaftaran ananda:\n\n• Nama Calon Siswa : ${existing.childName} (${existing.nickname || existing.childName})\n• No. Registrasi   : ${existing.regNumber}\n• Pilihan Jenjang  : ${existing.program}\n• Status Seleksi   : ${status.toUpperCase()}\n\n${isAccepted ? 'Selamat! Ananda dinyatakan RESMI DITERIMA sebagai Santri Baru TK Lukman Hakim Purwokerto Tahun Ajaran 2026/2027. Silakan konfirmasi jadwal pengukuran seragam & daftar ulang.' : 'Silakan pantau status pendaftaran secara berkala melalui menu Portal PPDB di website sekolah.'}\n\nJazakumullahu Khairan Katsiran,\nPanitia PPDB TK LUKMAN HAKIM Purwokerto\nHotline WhatsApp: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
 
       sendAnnouncementEmail({
         to: targetEmail,
@@ -1711,7 +1729,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setDoc(doc(db, path, safeId), {
         id: safeId,
         ownerId: auth.currentUser.uid,
-        recipientPhone: sanitizeString(phone, 30, '081228990111'),
+        recipientPhone: sanitizeString(phone, 30, '6287713551412'),
         recipientName: sanitizeString(recipientName, 120, 'Wali Santri'),
         type,
         title: sanitizeString(title, 150, 'Notifikasi Sekolah'),
@@ -1773,7 +1791,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           id: safeId,
           ownerId: auth.currentUser.uid,
           name: sanitizeString(inquiry.name, VALIDATION_LIMITS.parentNameMax, 'Orang Tua'),
-          phone: sanitizeString(inquiry.phone, VALIDATION_LIMITS.phoneMax, '081228990111'),
+          phone: sanitizeString(inquiry.phone, VALIDATION_LIMITS.phoneMax, '6287713551412'),
           childAge: sanitizeString(inquiry.childAge || '', 40, ''),
           interest: sanitizeString(inquiry.interest, VALIDATION_LIMITS.inquiryInterestMax, 'Informasi PPDB'),
           message: sanitizeString(inquiry.message, VALIDATION_LIMITS.inquiryMessageMax, 'Konsultasi pendaftaran'),
@@ -1795,7 +1813,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const path = 'inquiries';
       const payload: Record<string, any> = { updatedAt: serverTimestamp() };
       if (updated.name !== undefined) payload.name = sanitizeString(updated.name, VALIDATION_LIMITS.parentNameMax, 'Orang Tua');
-      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.phoneMax, '081228990111');
+      if (updated.phone !== undefined) payload.phone = sanitizeString(updated.phone, VALIDATION_LIMITS.phoneMax, '6287713551412');
       if (updated.childAge !== undefined) payload.childAge = sanitizeString(updated.childAge, 40, '');
       if (updated.interest !== undefined) payload.interest = sanitizeString(updated.interest, VALIDATION_LIMITS.inquiryInterestMax, 'Informasi PPDB');
       if (updated.message !== undefined) payload.message = sanitizeString(updated.message, VALIDATION_LIMITS.inquiryMessageMax, 'Konsultasi');
@@ -1825,6 +1843,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.SCHOOL_IDENTITY, JSON.stringify(schoolIdentity));
   }, [schoolIdentity]);
+
+  useEffect(() => {
+    const settingsRef = doc(db, 'site_settings', 'public');
+    return onSnapshot(settingsRef, (snapshot) => {
+      if (!snapshot.exists()) return;
+      const settings = snapshot.data().settings;
+      if (!settings || typeof settings !== 'object') return;
+      if (settings.schoolIdentity) setSchoolIdentity(settings.schoolIdentity);
+      if (Array.isArray(settings.heroSlides)) setHeroSlides(settings.heroSlides);
+      if (Array.isArray(settings.activityPhotos)) setActivityPhotos(settings.activityPhotos);
+      if (Array.isArray(settings.testimonials)) setTestimonials(settings.testimonials);
+      if (Array.isArray(settings.waContacts)) setWaContacts(settings.waContacts);
+      if (Array.isArray(settings.philosophyCards)) setPhilosophyCards(settings.philosophyCards);
+      if (Array.isArray(settings.pillarsData)) setPillarsData(settings.pillarsData);
+      if (settings.appearanceConfig) setAppearanceConfig(settings.appearanceConfig);
+      if (Array.isArray(settings.customFeatures)) setCustomFeatures(settings.customFeatures);
+      if (Array.isArray(settings.teachers)) setTeachers(settings.teachers);
+      if (Array.isArray(settings.gallery)) setGallery(settings.gallery);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'site_settings/public');
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.HERO_SLIDES, JSON.stringify(heroSlides));
@@ -1956,6 +1996,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  const saveAllSettingsToServer = async (): Promise<boolean> => {
+    try {
+      if (
+        !auth.currentUser?.emailVerified ||
+        auth.currentUser.email?.toLowerCase() !== BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()
+      ) return false;
+      const settings = {
+          schoolIdentity,
+          heroSlides,
+          activityPhotos,
+          testimonials,
+          waContacts,
+          philosophyCards,
+          pillarsData,
+          appearanceConfig,
+          customFeatures,
+          teachers,
+          gallery,
+      };
+      const sizeBytes = new TextEncoder().encode(JSON.stringify(settings)).length;
+      if (sizeBytes > 900_000) return false;
+      await setDoc(doc(db, 'site_settings', 'public'), {
+        settings,
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser.uid,
+      });
+      return true;
+    } catch (error) {
+      console.warn('Gagal menyimpan pengaturan website:', error);
+      return false;
+    }
+  };
+
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
     const newSlide: HeroSlide = { ...slide, id: `hero_${Date.now()}` };
     setHeroSlides((prev) => [...prev, newSlide]);
@@ -2054,9 +2127,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     try {
+      const headers = await getAdminRequestHeaders();
       const response = await fetch('/api/backup/export', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ dataset: fullDataset }),
       });
       const result = await response.json();
@@ -2121,6 +2195,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         fetchInboxEmails,
         schoolIdentity,
         updateSchoolIdentity,
+        saveAllSettingsToServer,
         heroSlides,
         addHeroSlide,
         updateHeroSlide,

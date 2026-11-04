@@ -95,12 +95,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 }) => {
   const {
     currentUser,
+    isAdminUser,
     isCloudSynced,
     lastCloudSyncAt,
     signInWithGoogleAccount,
+    signOutAccount,
     syncLocalDataToFirestore,
     schoolIdentity,
     updateSchoolIdentity,
+    saveAllSettingsToServer,
     heroSlides,
     addHeroSlide,
     updateHeroSlide,
@@ -118,8 +121,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     toggleCustomFeature,
     adminCredentials,
     updateAdminCredentials,
-    isAdminAuthenticated,
-    loginAdminWithCredentials,
     logoutAdminSession,
     testimonials,
     addTestimonial,
@@ -168,34 +169,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSyncingCloud, setIsSyncingCloud] = useState(false);
 
-  // Admin Login Form State & Brute-Force Lockout Protection
-  const [loginUser, setLoginUser] = useState('');
-  const [loginPass, setLoginPass] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [failedAttempts, setFailedAttempts] = useState<number>(() => {
-    return Number(sessionStorage.getItem('tklh_admin_failed_attempts') || '0');
-  });
-  const [lockoutUntil, setLockoutUntil] = useState<number>(() => {
-    return Number(sessionStorage.getItem('tklh_admin_lockout_until') || '0');
-  });
-  const [nowTick, setNowTick] = useState<number>(Date.now());
-
-  useEffect(() => {
-    if (lockoutUntil <= Date.now()) return;
-    const interval = setInterval(() => {
-      const current = Date.now();
-      setNowTick(current);
-      if (current >= lockoutUntil) {
-        setLockoutUntil(0);
-        setFailedAttempts(0);
-        sessionStorage.removeItem('tklh_admin_lockout_until');
-        sessionStorage.removeItem('tklh_admin_failed_attempts');
-        setLoginError(null);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [lockoutUntil]);
 
   // Notification gateway manual sender
   const [targetPhone, setTargetPhone] = useState('081234567890');
@@ -286,6 +260,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setStatusMessage(`Berhasil menambahkan ${newItems.length} foto ke ${sentraName}!`);
   };
 
+  const handleSaveWebsiteSettings = async () => {
+    const saved = await saveAllSettingsToServer();
+    setStatusMessage(
+      saved
+        ? 'Pengaturan website berhasil disimpan ke Firestore.'
+        : 'Pengaturan gagal disimpan. Pastikan login Google admin aktif dan ukuran konten tidak melebihi batas Firestore.'
+    );
+  };
+
   const handleAdminDeleteSentraPhoto = (id: string) => {
     const updated = adminUserPhotos.filter((p) => p.id !== id);
     setAdminUserPhotos(updated);
@@ -366,45 +349,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   if (!isOpen) return null;
 
-  const remainingLockoutSeconds = Math.max(0, Math.ceil((lockoutUntil - nowTick) / 1000));
-  const isLockedOut = remainingLockoutSeconds > 0;
-
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLockedOut) return;
-
+  const handleAdminGoogleLogin = async () => {
     setLoginError(null);
-    const ok = loginAdminWithCredentials(loginUser, loginPass);
-    if (ok) {
-      setFailedAttempts(0);
-      setLockoutUntil(0);
-      sessionStorage.removeItem('tklh_admin_failed_attempts');
-      sessionStorage.removeItem('tklh_admin_lockout_until');
-      setLoginPass('');
-    } else {
-      const nextFailures = failedAttempts + 1;
-      setFailedAttempts(nextFailures);
-      sessionStorage.setItem('tklh_admin_failed_attempts', String(nextFailures));
-
-      if (nextFailures >= 5) {
-        const lockTime = Date.now() + 60 * 1000; // 60 seconds lockout
-        setLockoutUntil(lockTime);
-        setNowTick(Date.now());
-        sessionStorage.setItem('tklh_admin_lockout_until', String(lockTime));
-        setLoginError(
-          'Terlalu banyak percobaan gagal (5x). Akses login dikunci sementara selama 60 detik demi keamanan sistem.'
-        );
-      } else {
-        const remaining = 5 - nextFailures;
-        setLoginError(
-          `Akses ditolak: Username atau Password tidak sesuai. Sisa percobaan sebelum dikunci: ${remaining} kali.`
-        );
-      }
+    const user = await signInWithGoogleAccount();
+    if (!user || user.email?.toLowerCase() !== 'ml0752960@gmail.com' || !user.emailVerified) {
+      setLoginError('Gunakan akun Google admin sekolah yang sudah terverifikasi.');
+      if (user) await signOutAccount();
     }
   };
 
-  // ==================== GERBANG PRIVASI LOGIN ADMIN (STRICT USERNAME & PASSWORD ONLY) ====================
-  if (!isAdminAuthenticated) {
+  if (!isAdminUser) {
     return (
       <div
         className={
@@ -436,72 +390,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </p>
           </div>
 
-          <form onSubmit={handleLoginSubmit} className="p-5 sm:p-6 space-y-4 text-xs">
-            {isLockedOut ? (
-              <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl font-bold flex items-start gap-2.5">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-                <div>
-                  <span className="block">Sistem Dikunci Sementara</span>
-                  <span className="font-normal text-[11px] text-rose-700 mt-0.5 block">
-                    Silakan tunggu <strong>{remainingLockoutSeconds} detik</strong> sebelum mencoba masuk kembali.
-                  </span>
-                </div>
+          <div className="p-5 sm:p-6 space-y-4 text-xs">
+            {loginError && (
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl font-semibold flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{loginError}</span>
               </div>
-            ) : (
-              loginError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl font-semibold flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>{loginError}</span>
-                </div>
-              )
             )}
-
-            <div>
-              <label className="font-bold text-slate-700 block mb-1.5">Username Admin *</label>
-              <input
-                type="text"
-                required
-                disabled={isLockedOut}
-                autoComplete="username"
-                value={loginUser}
-                onChange={(e) => setLoginUser(e.target.value)}
-                placeholder="Masukkan username pengelola..."
-                className="w-full bg-slate-50 border border-slate-300 focus:border-[#006699] focus:bg-white rounded-xl p-3 font-semibold text-slate-900 outline-none transition disabled:opacity-50"
-              />
-            </div>
-
-            <div>
-              <label className="font-bold text-slate-700 block mb-1.5">Password Admin *</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  disabled={isLockedOut}
-                  autoComplete="current-password"
-                  value={loginPass}
-                  onChange={(e) => setLoginPass(e.target.value)}
-                  placeholder="Masukkan password pengelola..."
-                  className="w-full bg-slate-50 border border-slate-300 focus:border-[#006699] focus:bg-white rounded-xl p-3 pr-10 font-semibold text-slate-900 outline-none transition disabled:opacity-50"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition cursor-pointer"
-                  title={showPassword ? 'Sembunyikan Password' : 'Lihat Password'}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Masuk menggunakan akun Google admin sekolah. Perubahan panel hanya dapat disimpan oleh akun yang sudah diverifikasi.
+            </p>
             <button
-              type="submit"
-              disabled={isLockedOut}
-              className="w-full py-3.5 bg-[#006699] hover:bg-[#0F2937] disabled:bg-slate-400 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+              type="button"
+              onClick={handleAdminGoogleLogin}
+              className="w-full py-3.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <KeyRound className="w-4 h-4" />
-              <span>{isLockedOut ? `Terkunci (${remainingLockoutSeconds}d)` : 'Masuk ke Panel Admin'}</span>
+              <span>Masuk dengan Google Admin</span>
             </button>
 
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
@@ -517,7 +422,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 Kembali ke Website
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     );
@@ -588,17 +493,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleSyncToFirestore = async () => {
     setIsSyncingCloud(true);
     try {
-      if (!currentUser) {
+      if (!isAdminUser) {
         const loggedIn = await signInWithGoogleAccount();
-        if (!loggedIn) {
-          setRestoreStatus('Silakan selesaikan login Google untuk menyinkronkan ke Cloud Firestore.');
+        if (!loggedIn || loggedIn.email?.toLowerCase() !== 'ml0752960@gmail.com' || !loggedIn.emailVerified) {
+          setRestoreStatus('Silakan masuk dengan akun Google admin sekolah yang sudah terverifikasi.');
           setIsSyncingCloud(false);
           return;
         }
       }
-      await syncLocalDataToFirestore();
-      setRestoreStatus('Alhamdulillah! Seluruh perubahan berhasil disinkronkan ke Google Cloud Firestore.');
-      setStatusMessage('Sinkronisasi ke Cloud Firestore selesai!');
+      const saved = await saveAllSettingsToServer();
+      if (!saved) throw new Error('Ukuran konten melebihi batas Firestore atau izin admin ditolak.');
+      setRestoreStatus('Pengaturan website berhasil disimpan ke Firestore.');
+      setStatusMessage('Pengaturan website berhasil disimpan ke cloud.');
     } catch (err: any) {
       setRestoreStatus(`Gagal sinkronisasi: ${err?.message || 'Periksa izin akun Google Anda.'}`);
     } finally {
@@ -774,7 +680,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
 
                 <button
-                  onClick={() => logoutAdminSession()}
+                  onClick={async () => {
+                    logoutAdminSession();
+                    await signOutAccount();
+                  }}
                   title="Kunci & Keluar Menu Admin"
                   className="px-3 py-2 rounded-xl bg-[#0F2937] hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shrink-0"
                 >
@@ -1183,7 +1092,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Sinkronisasi Konten Website
                     </h3>
                     <p className="text-xs text-sky-100 mt-1 leading-relaxed">
-                      Seluruh perubahan teks, foto, dan data siswa otomatis tersimpan secara langsung.
+                      Simpan identitas, banner, teks, dan galeri agar tampil konsisten di semua perangkat.
                     </p>
 
                     <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -1192,6 +1101,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         className="px-4 py-2 rounded-xl bg-white hover:bg-sky-50 text-[#0F2937] text-xs font-extrabold transition cursor-pointer"
                       >
                         Lihat Website
+                      </button>
+                      <button
+                        onClick={handleSaveWebsiteSettings}
+                        disabled={!isAdminUser}
+                        className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-[11px] font-bold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                        title={isAdminUser ? 'Simpan pengaturan ke Firestore' : 'Masuk dengan akun Google admin untuk menyimpan ke cloud'}
+                      >
+                        <Cloud className="w-3.5 h-3.5" /> Simpan ke Cloud
                       </button>
                       <button
                         onClick={() => {
@@ -1602,22 +1519,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <h4 className="font-bold text-slate-900 text-base">
                               Firebase Cloud Firestore Database & Penyimpanan Otomatis
                             </h4>
-                            <span className="text-xs font-semibold text-emerald-700">
-                              ·{' '}
-                              {currentUser
-                                ? isCloudSynced
-                                  ? `Terhubung Live (${lastCloudSyncAt || 'Aktif'})`
-                                  : 'Terautentikasi Google'
-                                : 'Tersimpan Otomatis di Browser'}
-                            </span>
+                              <span className="text-xs font-semibold text-emerald-700">
+                                ·{' '}
+                                {currentUser
+                                  ? isCloudSynced
+                                    ? `Terhubung Live (${lastCloudSyncAt || 'Aktif'})`
+                                    : 'Terautentikasi Google'
+                                  : 'Tersimpan di perangkat ini'}
+                              </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
-                            Seluruh perubahan pada Menu Admin tersimpan otomatis seketika dan dapat disinkronkan ke Google Cloud Firestore.
+                            Simpan perubahan CMS ke Firestore agar tampil konsisten di semua perangkat. Data contoh yang terpasang bawaan tidak dianggap sebagai pendaftar aktif.
                           </p>
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                          {!currentUser ? (
+                          {!isAdminUser ? (
                             <button
                               onClick={signInWithGoogleAccount}
                               className="px-4 py-2.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 cursor-pointer"
