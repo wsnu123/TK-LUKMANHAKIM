@@ -26,7 +26,6 @@ export default function App() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isPortalWaliOpen, setIsPortalWaliOpen] = useState(false);
   const [portalWaliTab, setPortalWaliTab] = useState<'spp' | 'raport' | 'jadwal'>('spp');
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   const handleOpenPortalWali = (tab: 'spp' | 'raport' | 'jadwal' = 'spp') => {
@@ -196,11 +195,6 @@ export default function App() {
         <ReportModal
           isOpen={isReportOpen}
           onClose={() => setIsReportOpen(false)}
-        />
-
-        <AdminDashboard
-          isOpen={isAdminOpen}
-          onClose={() => setIsAdminOpen(false)}
         />
       </div>
     </AppProvider>
