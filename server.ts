@@ -114,7 +114,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'kontak_whatsapp',
     keywords: ['kontak', 'hubungi', 'whatsapp', 'nomor wa', 'telepon', 'no telp', 'hotline', 'admin', 'sekretariat'],
-    answer: `**Kontak Resmi & Sekretariat TK Lukman Hakim Purwokerto:**\n\n- **Hotline WhatsApp**: **0812-2899-0111** (Layanan Cepat Konsultasi & PPDB)\n- **Telepon Kantor**: (0281) 638842\n- **Email Resmi**: tklukmanhakim.pwt@gmail.com\n- **Alamat Kampus**: Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas\n- **Jam Operasional**: Senin – Jumat (07.00 – 15.30 WIB) & Sabtu (08.00 – 12.00 WIB).\n\nAyah & Bunda dapat mengklik tombol **Tanya Admin WhatsApp** di bawah untuk langsung terhubung ke admin kami.`,
+    answer: `**Kontak Resmi & Sekretariat TK Lukman Hakim Purwokerto:**\n\n- **Hotline WhatsApp**: **0877-1355-1412** (Layanan Cepat Konsultasi & PPDB)\n- **Telepon Kantor**: (0281) 638842\n- **Email Resmi**: tklukmanhakim.pwt@gmail.com\n- **Alamat Kampus**: Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas\n- **Jam Operasional**: Senin – Jumat (07.00 – 15.30 WIB) & Sabtu (08.00 – 12.00 WIB).\n\nAyah & Bunda dapat mengklik tombol **Tanya Admin WhatsApp** di bawah untuk langsung terhubung ke admin kami.`,
     suggestedActions: ['wa_admin', 'open_ppdb'],
   },
   {
@@ -200,7 +200,7 @@ function generateIntelligentReply(
 ): { reply: string; suggestedActions: string[]; isHighConfidence: boolean } {
   const lower = query.toLowerCase().trim();
   const schoolName = schoolContext?.nama || 'TK LUKMAN HAKIM';
-  const waNumber = schoolContext?.whatsapp || '6281228990111';
+  const waNumber = schoolContext?.whatsapp || '6287713551412';
 
   // Check if user greets
   if (/^(halo|hai|assalamu|salam|pagi|siang|sore|malam|permisi|tes|ping|assalamualaikum)\b/i.test(lower) && lower.length < 35) {
@@ -307,7 +307,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
       try {
         const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK LUKMAN HAKIM'} Purwokerto (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A).
 Jawablah pertanyaan secara sangat cepat, cerdas, ramah, to-the-point, dan informatif dalam 2-4 kalimat atau poin ringkas tanpa emotikon/emoji.
-Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan'}, WA: ${schoolContext?.whatsapp || '6281228990111'}, Biaya PPDB Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln. Kurikulum Merdeka PAUD, Tahfidz Tilawati, 5 Pilar Karakter & Cambridge Fun English.`;
+Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan'}, WA: ${schoolContext?.whatsapp || '6287713551412'}, Biaya PPDB Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln. Kurikulum Merdeka PAUD, Tahfidz Tilawati, 5 Pilar Karakter & Cambridge Fun English.`;
 
         let fullPrompt = message;
         if (Array.isArray(history) && history.length > 0) {
@@ -618,10 +618,10 @@ app.post('/api/mail/test-send', async (req: Request, res: Response) => {
     const targetEmail = to || 'ml0752960@gmail.com';
     const baseUrl = getBaseUrl(req);
     const mapsUrl = 'https://maps.google.com/?q=TK+Lukman+Hakim+Purwokerto+Jl+Hos+Noto+Suwiryo+No+5+Teluk+Purwokerto+Selatan';
-    const waUrl = 'https://wa.me/6281228990111?text=' + encodeURIComponent('Assalamu’alaikum Panitia PPDB TK Lukman Hakim, uji coba pengiriman email telah sampai dengan baik.');
+    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent('Assalamu’alaikum Panitia PPDB TK Lukman Hakim, uji coba pengiriman email telah sampai dengan baik.');
 
     const testSubject = '[UJI COBA RESMI] Tes Pengiriman Email - TK LUKMAN HAKIM Purwokerto';
-    const testBody = `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nIni adalah pesan uji coba pengiriman email resmi dari sistem PPDB Cloud TK LUKMAN HAKIM Purwokerto ke alamat Gmail Anda (${targetEmail}).\n\nJika pesan ini sampai di kotak masuk atau tab Utama Gmail Anda, berarti konfigurasi pengiriman email telah berfungsi sempurna!\n\nWassalam,\nTim IT & Panitia PPDB TK Lukman Hakim Purwokerto\nJl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan\nHotline WA: 0812-2899-0111`;
+    const testBody = `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nIni adalah pesan uji coba pengiriman email resmi dari sistem PPDB Cloud TK LUKMAN HAKIM Purwokerto ke alamat Gmail Anda (${targetEmail}).\n\nJika pesan ini sampai di kotak masuk atau tab Utama Gmail Anda, berarti konfigurasi pengiriman email telah berfungsi sempurna!\n\nWassalam,\nTim IT & Panitia PPDB TK Lukman Hakim Purwokerto\nJl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan\nHotline WA: 0877-1355-1412`;
 
     const bodyHtml = `
       <div style="font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
@@ -657,14 +657,14 @@ app.post('/api/mail/test-send', async (req: Request, res: Response) => {
               ${buildEmailButton(baseUrl, '🌐 Buka Website TK Lukman Hakim', '#006699')}
               ${buildEmailButton(waUrl, '💬 Chat WhatsApp Sekretariat', '#16a34a')}
               ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Google Maps', '#ea580c')}
-              ${buildEmailButton('tel:081228990111', '📞 Telepon: 0812-2899-0111', '#475569')}
+              ${buildEmailButton('tel:087713551412', '📞 Telepon: 0877-1355-1412', '#475569')}
             </div>
           </div>
 
           <div style="font-size: 12px; color: #64748b; line-height: 1.6; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
             <strong>Sekretariat Kampus:</strong><br/>
             Jl. Hos Noto Suwiryo No. 5, Kel. Teluk, Kec. Purwokerto Selatan, Kab. Banyumas, Jawa Tengah 53145.<br/>
-            Hotline PPDB: <strong>0812-2899-0111</strong> • Email Resmi: <strong>tklukmanhakim.pwt@gmail.com</strong>
+            Hotline PPDB: <strong>0877-1355-1412</strong> • Email Resmi: <strong>tklukmanhakim.pwt@gmail.com</strong>
           </div>
         </div>
 
@@ -791,13 +791,13 @@ Jazakumullahu Khairan Katsiran atas kepercayaan Ayah & Bunda.
 Wassalamu’alaikum Warahmatullahi Wabarakatuh,
 Panitia PPDB TK LUKMAN HAKIM Purwokerto
 Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan
-WhatsApp Hotline: 0812-2899-0111 | Email: tklukmanhakim.pwt@gmail.com`;
+WhatsApp Hotline: 0877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
 
     const baseUrl = getBaseUrl(req);
     const ppdbPortalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber)}`;
     const mapsUrl = 'https://maps.google.com/?q=TK+Lukman+Hakim+Purwokerto+Jl+Hos+Noto+Suwiryo+No+5+Teluk+Purwokerto+Selatan';
     const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName}* dengan No. Registrasi *${regNumber}*. Saya telah menerima surat konfirmasi pendaftaran resmi di Gmail dan ingin mengonfirmasi jadwal observasi ramah anak. Terima kasih.`;
-    const waUrl = `https://wa.me/6281228990111?text=${encodeURIComponent(waText)}`;
+    const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
 
     const bodyHtml = `
       <div style="font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
@@ -856,12 +856,12 @@ WhatsApp Hotline: 0812-2899-0111 | Email: tklukmanhakim.pwt@gmail.com`;
               ${buildEmailButton(ppdbPortalUrl, '🌐 Cek Status & Buka Portal PPDB', '#006699')}
               ${buildEmailButton(waUrl, '💬 Chat WhatsApp Panitia PPDB', '#16a34a')}
               ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Google Maps', '#ea580c')}
-              ${buildEmailButton('tel:081228990111', '📞 Hotline Telepon: 0812-2899-0111', '#475569')}
+              ${buildEmailButton('tel:087713551412', '📞 Hotline Telepon: 0877-1355-1412', '#475569')}
             </div>
           </div>
 
           <div style="font-size: 12px; color: #64748b; line-height: 1.6; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
-            Butuh konsultasi lebih lanjut? Hubungi Sekretariat PPDB via WhatsApp di <strong>0812-2899-0111</strong> atau telepon kantor di <strong>(0281) 638842</strong>.
+            Butuh konsultasi lebih lanjut? Hubungi Sekretariat PPDB via WhatsApp di <strong>0877-1355-1412</strong> atau telepon kantor di <strong>(0281) 638842</strong>.
           </div>
         </div>
 
@@ -877,7 +877,7 @@ Alhamdulillah pendaftaran PPDB TK LUKMAN HAKIM Purwokerto telah tercatat resmi:
 • Calon Siswa: ${childName} (${program})
 • WhatsApp: ${phone}
 • Status: Menunggu Verifikasi & Jadwal Observasi
-Panitia PPDB: 0812-2899-0111 | tklukmanhakim.pwt@gmail.com`;
+Panitia PPDB: 0877-1355-1412 | tklukmanhakim.pwt@gmail.com`;
 
     const gmailWebLink = createGmailComposeUrl(to, subject, compactComposeBody);
     const gmailInboxLink = createGmailInboxUrl('TK LUKMAN HAKIM');
@@ -937,7 +937,7 @@ Panitia PPDB: 0812-2899-0111 | tklukmanhakim.pwt@gmail.com`;
     const to = req.body?.to || req.body?.registration?.email || 'ml0752960@gmail.com';
     const fallbackId = `EML-PPDB-FB-${Date.now()}`;
     const subject = `[BUKTI PPDB ONLINE] Konfirmasi Pendaftaran - TK LUKMAN HAKIM Purwokerto`;
-    const fallbackBody = `Assalamu’alaikum Warahmatullahi Wabarakatuh,\nPendaftaran PPDB online telah berhasil dicatat resmi di database TK Lukman Hakim Purwokerto. Hotline WA: 0812-2899-0111.`;
+    const fallbackBody = `Assalamu’alaikum Warahmatullahi Wabarakatuh,\nPendaftaran PPDB online telah berhasil dicatat resmi di database TK Lukman Hakim Purwokerto. Hotline WA: 0877-1355-1412.`;
     const gmailWebLink = createGmailComposeUrl(to, subject, fallbackBody);
     const mailtoLink = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fallbackBody)}`;
     
@@ -987,7 +987,7 @@ app.post('/api/mail/send-announcement', async (req: Request, res: Response) => {
     const baseUrl = getBaseUrl(req);
     const mapsUrl = 'https://maps.google.com/?q=TK+Lukman+Hakim+Purwokerto+Jl+Hos+Noto+Suwiryo+No+5+Teluk+Purwokerto+Selatan';
     const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName || 'Santri'}* (${regNumber || ''}). Saya telah membaca surat pengumuman keputusan hasil seleksi di Gmail (${status || 'Diterima'}). Saya ingin mengonfirmasi proses selanjutnya / daftar ulang. Terima kasih.`;
-    const waUrl = `https://wa.me/6281228990111?text=${encodeURIComponent(waText)}`;
+    const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
     const portalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber || '')}`;
 
     const bodyHtml = `
@@ -1027,13 +1027,13 @@ app.post('/api/mail/send-announcement', async (req: Request, res: Response) => {
               ${buildEmailButton(waUrl, '💬 Konfirmasi via WhatsApp Panitia', '#16a34a')}
               ${buildEmailButton(portalUrl, '🌐 Buka Status di Website Sekolah', '#006699')}
               ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Lokasi Kampus', '#ea580c')}
-              ${buildEmailButton('tel:081228990111', '📞 Hotline PPDB: 0812-2899-0111', '#475569')}
+              ${buildEmailButton('tel:087713551412', '📞 Hotline PPDB: 0877-1355-1412', '#475569')}
             </div>
           </div>
 
           <div style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b;">
             <span>Panitia PPDB TK Lukman Hakim</span>
-            <span>Hotline WA: <strong>0812-2899-0111</strong></span>
+            <span>Hotline WA: <strong>0877-1355-1412</strong></span>
           </div>
         </div>
 
@@ -1102,7 +1102,7 @@ app.post('/api/mail/send-announcement', async (req: Request, res: Response) => {
     const to = req.body?.to || 'ml0752960@gmail.com';
     const fallbackId = `EML-ANN-FB-${Date.now()}`;
     const subject = req.body?.subject || `[PENGUMUMAN RESMI PPDB] Keputusan Hasil Seleksi - TK LUKMAN HAKIM Purwokerto`;
-    const fallbackBody = req.body?.body || `Assalamu’alaikum Warahmatullahi Wabarakatuh,\nPengumuman hasil seleksi PPDB TK Lukman Hakim Purwokerto. Hotline WA: 0812-2899-0111.`;
+    const fallbackBody = req.body?.body || `Assalamu’alaikum Warahmatullahi Wabarakatuh,\nPengumuman hasil seleksi PPDB TK Lukman Hakim Purwokerto. Hotline WA: 0877-1355-1412.`;
     const gmailWebLink = createGmailComposeUrl(to, subject, fallbackBody);
     const mailtoLink = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fallbackBody)}`;
 
@@ -1140,7 +1140,7 @@ app.post('/api/mail/send-spp-receipt', async (req: Request, res: Response) => {
     const { to, studentName, nis, month, year, totalAmount, paymentMethod, receiptNumber } = req.body;
     const targetEmail = to || 'ml0752960@gmail.com';
     const baseUrl = getBaseUrl(req);
-    const waUrl = 'https://wa.me/6281228990111?text=' + encodeURIComponent(`Assalamu’alaikum Keuangan TK Lukman Hakim, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${studentName} (${nis}) No: ${receiptNumber || '-'}.`);
+    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent(`Assalamu’alaikum Keuangan TK Lukman Hakim, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${studentName} (${nis}) No: ${receiptNumber || '-'}.`);
     const mapsUrl = 'https://maps.google.com/?q=TK+Lukman+Hakim+Purwokerto';
 
     const subject = `[KUITANSI PEMBAYARAN RESMI] SPP Periode ${month} ${year} - ${studentName} (${nis})`;

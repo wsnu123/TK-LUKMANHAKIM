@@ -19,6 +19,7 @@ import {
   Check,
   Sparkles,
   HeartHandshake,
+  Mail,
 } from 'lucide-react';
 
 interface PpdbModalProps {
@@ -27,15 +28,17 @@ interface PpdbModalProps {
 }
 
 export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
-  const { addRegistration, registrations, schoolIdentity } = useApp();
+  const { addRegistration, registrations, schoolIdentity, sendPpdbConfirmationEmail } = useApp();
 
   const [activeTab, setActiveTab] = useState<'form' | 'status'>('form');
   const [step, setStep] = useState(1);
+  const [registrationMethod, setRegistrationMethod] = useState<'whatsapp' | 'email'>('whatsapp');
   const [submittedReg, setSubmittedReg] = useState<Registration | null>(null);
+  const [emailComposeUrl, setEmailComposeUrl] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
-  // Form states (Direct without Gmail requirement)
+  // Form states
   const [childName, setChildName] = useState('');
   const [nickname, setNickname] = useState('');
   const [nik, setNik] = useState('');
@@ -45,6 +48,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   const [program, setProgram] = useState<Registration['program']>('TK A (Usia 4-5 Th)');
   const [parentName, setParentName] = useState('');
   const [motherName, setMotherName] = useState('');
+  const [parentEmail, setParentEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
@@ -58,7 +62,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   // Clean WhatsApp phone number configured by admin
-  const rawAdminWa = (schoolIdentity.whatsapp || '6281228990111').replace(/[^0-9]/g, '');
+  const rawAdminWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
   const targetWaNumber = rawAdminWa.startsWith('0')
     ? '62' + rawAdminWa.slice(1)
     : rawAdminWa.startsWith('62')
@@ -89,6 +93,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
       `🚻 *Jenis Kelamin:* ${reg.gender}\n` +
       `🏫 *Jenjang / Program:* ${reg.program}\n` +
       `👨‍👩‍👦 *Nama Orang Tua:* ${reg.parentName} / ${reg.motherName || '-'}\n` +
+      (reg.email ? `📧 *Email Wali:* ${reg.email}\n` : '') +
       `📱 *No. WhatsApp Wali:* ${reg.phone}\n` +
       `🏡 *Alamat Domisili:* ${reg.address || '-'}\n` +
       (reg.notes ? `📝 *Catatan Khusus:* ${reg.notes}\n\n` : `\n`) +
@@ -109,12 +114,18 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     setTimeout(() => setCopyStatus(null), 4000);
   };
 
-  const handleSubmitRegistration = (e: React.FormEvent) => {
+  const handleSubmitRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentName.trim() || !phone.trim()) {
       setFormError('Mohon lengkapi Nama Orang Tua dan Nomor WhatsApp aktif.');
       return;
     }
+
+    if (registrationMethod === 'email' && !parentEmail.trim()) {
+      setFormError('Mohon masukkan alamat email aktif jika memilih metode konfirmasi email.');
+      return;
+    }
+
     setFormError(null);
 
     const reg = addRegistration({
@@ -127,7 +138,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
       program,
       parentName: parentName.trim(),
       motherName: motherName.trim(),
-      email: '',
+      email: parentEmail.trim(),
       phone: phone.trim(),
       occupation: occupation.trim(),
       address: address.trim(),
@@ -138,10 +149,19 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     setSubmittedReg(reg);
     setStep(3);
 
-    // Auto trigger WhatsApp send on first submit
-    setTimeout(() => {
-      handleSendToWhatsApp(reg);
-    }, 400);
+    if (registrationMethod === 'whatsapp') {
+      // Auto trigger WhatsApp send on first submit
+      setTimeout(() => {
+        handleSendToWhatsApp(reg);
+      }, 400);
+    } else {
+      // Send confirmation email via context (with fail-safe client URL fallback)
+      const emailRes = await sendPpdbConfirmationEmail(reg);
+      const url = emailRes.composeUrl || emailRes.gmailWebLink;
+      if (url) {
+        setEmailComposeUrl(url);
+      }
+    }
   };
 
   const handleSearchStatus = (e: React.FormEvent) => {
@@ -398,26 +418,76 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                 </form>
               )}
 
-              {/* STEP 2: DATA ORANG TUA & WHATSAPP */}
+              {/* STEP 2: DATA ORANG TUA & PILIHAN METODE PENDAFTARAN */}
               {step === 2 && (
                 <form onSubmit={handleSubmitRegistration} className="space-y-4">
-                  <div className="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                        <MessageCircle className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-slate-900 text-xs sm:text-sm">
-                          Langkah 2: Data Orang Tua & Kontak WhatsApp
-                        </h4>
-                        <p className="text-[11px] text-emerald-800">
-                          Data akan langsung terhubung ke WhatsApp Panitia PPDB: {schoolIdentity.whatsapp}
+                  {/* Pilihan Dual Metode Pendaftaran (WhatsApp vs Email) */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-800">
+                      Pilih Metode Jalur Konfirmasi Pendaftaran:
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Pilihan 1: WhatsApp (Rekomendasi Utama) */}
+                      <button
+                        type="button"
+                        onClick={() => setRegistrationMethod('whatsapp')}
+                        className={`text-left p-3.5 rounded-2xl border-2 transition relative cursor-pointer ${
+                          registrationMethod === 'whatsapp'
+                            ? 'border-emerald-600 bg-emerald-50/70 shadow-sm ring-1 ring-emerald-600/30'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                              <MessageCircle className="w-4 h-4" />
+                            </div>
+                            <span className="font-extrabold text-xs text-slate-900">
+                              Via WhatsApp Resmi
+                            </span>
+                          </div>
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black uppercase tracking-wider">
+                            Rekomendasi
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                          Paling cepat & praktis! Formulir langsung terhubung ke panitia SPMB di{' '}
+                          <strong className="text-emerald-700 font-bold">{schoolIdentity.whatsapp}</strong> untuk jadwal observasi langsung.
                         </p>
-                      </div>
+                      </button>
+
+                      {/* Pilihan 2: Email Resmi (Alternatif) */}
+                      <button
+                        type="button"
+                        onClick={() => setRegistrationMethod('email')}
+                        className={`text-left p-3.5 rounded-2xl border-2 transition relative cursor-pointer ${
+                          registrationMethod === 'email'
+                            ? 'border-[#006699] bg-sky-50/70 shadow-sm ring-1 ring-[#006699]/30'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-[#006699] text-white flex items-center justify-center">
+                              <Mail className="w-4 h-4" />
+                            </div>
+                            <span className="font-extrabold text-xs text-slate-900">
+                              Via Email Resmi
+                            </span>
+                          </div>
+                          <span className="px-2 py-0.5 rounded-full bg-sky-100 text-[#006699] text-[9px] font-bold uppercase tracking-wider">
+                            Alternatif
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed">
+                          Terkirim ke email sekretariat{' '}
+                          <strong className="text-sky-800 font-bold">{schoolIdentity.email}</strong> dan salinan otomatis ke inbox Ayah & Bunda.
+                        </p>
+                      </button>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
                         Nama Ayah / Wali *
@@ -425,7 +495,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       <input
                         type="text"
                         required
-                        placeholder="Nama Ayah"
+                        placeholder="Nama Lengkap Ayah"
                         value={parentName}
                         onChange={(e) => setParentName(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs font-medium"
@@ -438,7 +508,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       </label>
                       <input
                         type="text"
-                        placeholder="Nama Ibu"
+                        placeholder="Nama Lengkap Ibu"
                         value={motherName}
                         onChange={(e) => setMotherName(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs"
@@ -461,6 +531,20 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                     <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Alamat Email Wali {registrationMethod === 'email' ? '*' : '(Opsional)'}
+                      </label>
+                      <input
+                        type="email"
+                        required={registrationMethod === 'email'}
+                        placeholder="nama.wali@gmail.com"
+                        value={parentEmail}
+                        onChange={(e) => setParentEmail(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
                         Pekerjaan Orang Tua
                       </label>
                       <input
@@ -472,13 +556,13 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
                       <label className="block text-xs font-bold text-slate-700 mb-1">
                         Alamat Domisili Lengkap
                       </label>
-                      <textarea
-                        rows={2}
-                        placeholder="Jl. ..., RT/RW, Kelurahan, Kecamatan, Kab. Banyumas"
+                      <input
+                        type="text"
+                        placeholder="Jl. ..., RT/RW, Kelurahan, Kec. Purwokerto..."
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs"
@@ -487,11 +571,11 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Catatan Khusus / Kebutuhan Ananda (Opsional)
+                        Catatan Khusus / Minat Ananda (Opsional)
                       </label>
                       <input
                         type="text"
-                        placeholder="Alergi makanan, minat ananda, atau preferensi trial class"
+                        placeholder="Alergi makanan, minat seni/hafalan, atau waktu observasi yang diharapkan"
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs"
@@ -510,16 +594,29 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                     <button
                       type="submit"
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition cursor-pointer shadow-md"
+                      className={`px-6 py-2.5 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition cursor-pointer shadow-md ${
+                        registrationMethod === 'whatsapp'
+                          ? 'bg-emerald-600 hover:bg-emerald-700'
+                          : 'bg-[#006699] hover:bg-[#00527a]'
+                      }`}
                     >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>Kirim Pendaftaran via WhatsApp</span>
+                      {registrationMethod === 'whatsapp' ? (
+                        <>
+                          <MessageCircle className="w-4 h-4" />
+                          <span>Kirim via WhatsApp (+62 877-1355-1412)</span>
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-4 h-4" />
+                          <span>Kirim Pendaftaran via Email Resmi</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>
               )}
 
-              {/* STEP 3: SUKSES & TERHUBUNG WHATSAPP */}
+              {/* STEP 3: SUKSES & KONFIRMASI */}
               {step === 3 && submittedReg && (
                 <div className="space-y-6 text-center animate-in fade-in py-2">
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center border-4 border-emerald-50">
@@ -528,10 +625,12 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                   <div className="space-y-1.5">
                     <h3 className="text-xl sm:text-2xl font-extrabold text-[#0F2937]">
-                      Alhamdulillah, Pendaftaran Berhasil!
+                      Alhamdulillah, Formulir Berhasil Diterima!
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                      Data pendaftaran ananda telah tersimpan. Silakan kirimkan format pendaftaran langsung ke WhatsApp Panitia SPMB di bawah ini untuk konfirmasi cepat.
+                      {registrationMethod === 'whatsapp'
+                        ? 'Data pendaftaran ananda telah tersimpan. Silakan kirimkan pesan WhatsApp ke Panitia SPMB di bawah untuk konfirmasi jadwal observasi/trial class.'
+                        : 'Data pendaftaran ananda telah tersimpan dan konfirmasi email telah diproses. Ayah & Bunda juga dapat menghubungi panitia via WhatsApp untuk respon cepat.'}
                     </p>
                   </div>
 
@@ -546,9 +645,14 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                           {submittedReg.regNumber}
                         </span>
                       </div>
-                      <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold">
-                        {submittedReg.status}
-                      </span>
+                      <div className="text-right">
+                        <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold block">
+                          {submittedReg.status}
+                        </span>
+                        <span className="text-[10px] text-slate-500 mt-1 block">
+                          Jalur: {registrationMethod === 'whatsapp' ? 'WhatsApp Cepat' : 'Email Resmi'}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-xs">
@@ -568,6 +672,12 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                         <span className="text-slate-500 block text-[11px]">WhatsApp Wali:</span>
                         <span className="font-mono font-semibold text-slate-800">{submittedReg.phone}</span>
                       </div>
+                      {submittedReg.email && (
+                        <div className="col-span-2">
+                          <span className="text-slate-500 block text-[11px]">Email Wali:</span>
+                          <span className="font-mono text-slate-800">{submittedReg.email}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -585,15 +695,28 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       className="w-full sm:w-auto px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>Kirim ke WhatsApp Panitia SPMB</span>
+                      <span>Kirim ke WhatsApp Panitia (+62 877-1355-1412)</span>
                     </button>
+
+                    {emailComposeUrl && (
+                      <a
+                        href={emailComposeUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full sm:w-auto px-5 py-3 bg-[#006699] hover:bg-[#00527a] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition"
+                      >
+                        <Mail className="w-4 h-4" />
+                        <span>Buka di Gmail</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
 
                     <button
                       onClick={() => handleCopyWaText(submittedReg)}
                       className="w-full sm:w-auto px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer"
                     >
                       <Copy className="w-4 h-4 text-slate-500" />
-                      <span>Salin Pesan WA</span>
+                      <span>Salin Format Pesan</span>
                     </button>
 
                     <button

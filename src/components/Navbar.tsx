@@ -204,19 +204,52 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Fasilitas Penunjang (Single Direct Link) */}
-            <button
-              onClick={() => handleNavClick('facilities')}
-              className={`transition py-1.5 relative cursor-pointer whitespace-nowrap ${
-                currentPage === 'facilities'
-                  ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                  : 'text-slate-700 hover:text-[#006699]'
-              }`}
+            {/* Fasilitas & Tour Kampus */}
+            <div
+              className="relative"
+              onMouseEnter={() => setOpenDropdown('facilities')}
+              onMouseLeave={() => setOpenDropdown(null)}
             >
-              Fasilitas Penunjang
-            </button>
+              <button
+                onClick={() => handleNavClick('facilities')}
+                className={`flex items-center gap-1 transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+                  currentPage === 'facilities'
+                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
+                    : 'text-slate-700 hover:text-[#006699]'
+                }`}
+              >
+                <span>Fasilitas & Tour</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'facilities' ? 'rotate-180' : ''}`} />
+              </button>
 
-            {/* Contact Us */}
+              {openDropdown === 'facilities' && (
+                <div className="absolute top-full left-0 pt-2 w-72 z-50">
+                  <div className="bg-white rounded-xl shadow-[0_18px_45px_rgba(15,41,55,0.16)] border border-slate-200/90 p-2 divide-y divide-slate-100">
+                    <div className="py-1">
+                      <button
+                        onClick={() => handleNavClick('facilities')}
+                        className="w-full text-left px-3 py-2 rounded-lg transition hover:bg-slate-50 flex items-center justify-between text-xs font-bold text-slate-800 hover:text-[#006699] cursor-pointer"
+                      >
+                        <span>Semua Fasilitas Kampus</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
+                      </button>
+                      <button
+                        onClick={() => handleNavClick('facilities', 'virtual-tour')}
+                        className="w-full text-left px-3 py-2 rounded-lg transition bg-amber-50/80 hover:bg-amber-100 flex items-center justify-between text-xs font-bold text-amber-900 cursor-pointer mt-1"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <span>🧭</span>
+                          <span>Virtual Tour Interaktif 360°</span>
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-800 text-[9px] font-bold">Baru</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Kontak & Lokasi */}
             <button
               onClick={() => handleNavClick('contact')}
               className={`transition py-1.5 relative cursor-pointer whitespace-nowrap ${
@@ -225,7 +258,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'text-slate-700 hover:text-[#006699]'
               }`}
             >
-              Contact Us
+              Kontak & Lokasi
             </button>
           </nav>
 
@@ -357,15 +390,27 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Mobile Facilities Direct Link */}
-            <button
-              onClick={() => handleNavClick('facilities')}
-              className={`text-left py-3 font-bold text-sm ${
-                currentPage === 'facilities' ? 'text-[#006699]' : 'text-slate-900'
-              }`}
-            >
-              Fasilitas Penunjang
-            </button>
+            {/* Mobile Facilities & Virtual Tour */}
+            <div className="py-2 border-y border-slate-100 flex flex-col gap-1">
+              <button
+                onClick={() => handleNavClick('facilities')}
+                className={`text-left py-1.5 font-bold text-sm ${
+                  currentPage === 'facilities' ? 'text-[#006699]' : 'text-slate-900'
+                }`}
+              >
+                Fasilitas Penunjang Kampus
+              </button>
+              <button
+                onClick={() => handleNavClick('facilities', 'virtual-tour')}
+                className="text-left py-2 px-3 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <span>🧭</span>
+                  <span>Virtual Tour Interaktif 360°</span>
+                </span>
+                <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[9px] font-extrabold">BARU</span>
+              </button>
+            </div>
 
             <button
               onClick={() => handleNavClick('contact')}
@@ -373,7 +418,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 currentPage === 'contact' ? 'text-[#006699]' : 'text-slate-900'
               }`}
             >
-              Contact Us
+              Kontak & Lokasi Sekolah
             </button>
           </div>
 

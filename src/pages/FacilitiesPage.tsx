@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
+import { VirtualTourModal } from '../components/VirtualTourModal';
 
 interface FacilitiesPageProps {
   activeSection?: string;
@@ -99,7 +100,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.52.51_76a8e247.jpeg',
       '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.53.01_031c3324.jpeg',
       '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.52.55_945243a3.jpeg',
-      '/src/assets/images/sentra_balok_montessori_1790826050585.jpg',
+      '/assets/images/sentra_balok_montessori_1790826050585.jpg',
     ],
     description:
       'Ruang kelas sentra ber-AC Daikin Inverter sejuk dan higienis, menaungi 7 sentra unggulan: Sentra Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1, dan Persiapan 2 dengan media belajar konkret.',
@@ -126,11 +127,11 @@ const ALL_FACILITIES: FacilityItem[] = [
     reviewsCount: 164,
     areaSize: 'Kapasitas ±80 Santri',
     locationZone: 'Sayap Timur Lantai 1',
-    image: '/src/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
+    image: '/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
     galleryImages: [
-      '/src/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
+      '/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
       '/assets/gallery/foto6-sholat-berjamaah.jpg',
-      '/public/src/assets/images/sholat_berjamaah_1789701704780.jpg',
+      '/assets/images/sholat_berjamaah_1789701704780.jpg',
     ],
     description:
       'Pusat pembinaan ruhiyah dan adab islami anak. Digunakan setiap pagi untuk ikrar bersama, Sholat Dhuha berjamaah, serta bimbingan tahsin makhorijul huruf dengan metode Tilawati ceria.',
@@ -157,11 +158,11 @@ const ALL_FACILITIES: FacilityItem[] = [
     reviewsCount: 95,
     areaSize: 'Zona Taman Sains',
     locationZone: 'Taman Belakang Kampus',
-    image: '/src/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
+    image: '/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
     galleryImages: [
-      '/src/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
+      '/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
       '/assets/gallery/foto8-eksplorasi-alam-burung.jpg',
-      '/public/src/assets/images/rumah_burung_nature_1789701916669.jpg',
+      '/assets/images/rumah_burung_nature_1789701916669.jpg',
     ],
     description:
       'Tempat santri belajar sains langsung dari alam nyata. Anak diajak menyemai bibit sayur hidroponik, menyiram tanaman, serta mengamati perilaku burung merpati putih jinak di sangkar taman sekolah.',
@@ -188,10 +189,10 @@ const ALL_FACILITIES: FacilityItem[] = [
     reviewsCount: 110,
     areaSize: 'Sentra Kreasi Seni',
     locationZone: 'Lantai 1 Ruang Seni',
-    image: '/src/assets/images/seni_lukis_angklung_1790826091504.jpg',
+    image: '/assets/images/seni_lukis_angklung_1790826091504.jpg',
     galleryImages: [
-      '/src/assets/images/seni_lukis_angklung_1790826091504.jpg',
-      '/src/assets/images/wisuda_pentas_seni_1790826113606.jpg',
+      '/assets/images/seni_lukis_angklung_1790826091504.jpg',
+      '/assets/images/wisuda_pentas_seni_1790826113606.jpg',
     ],
     description:
       'Ruang kreasi ekspresif untuk melatih motorik halus, kepekaan ritme musikal, serta kepercayaan diri tampil di hadapan umum melalui angklung bambu cilik, cat air ramah anak, dan kolase.',
@@ -222,7 +223,7 @@ const ALL_FACILITIES: FacilityItem[] = [
     galleryImages: [
       '/assets/gallery/foto7-makan-siang-bersama.jpg',
       '/assets/gallery/foto4-snack-area-bermain.jpg',
-      '/public/src/assets/images/makan_siang_santri_1789701844034.jpg',
+      '/assets/images/makan_siang_santri_1789701844034.jpg',
     ],
     description:
       'Area makan bersama berlantai bersih dengan meja ergonomis rendah untuk mengajarkan adab makan islami, menu gizi seimbang non-MSG, didukung wastafel cuci tangan 55 cm dan toilet balita anti-slip.',
@@ -345,10 +346,13 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
   const [selectedFacilityModal, setSelectedFacilityModal] = useState<FacilityItem | null>(null);
   const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string } | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [isVirtualTourOpen, setIsVirtualTourOpen] = useState(false);
 
-  // Handle active section scrolling
+  // Handle active section scrolling and auto-open virtual tour
   React.useEffect(() => {
-    if (activeSection) {
+    if (activeSection === 'virtual-tour') {
+      setIsVirtualTourOpen(true);
+    } else if (activeSection) {
       const el = document.getElementById(activeSection);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
@@ -436,6 +440,26 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
           <p className="text-sky-100/90 text-sm sm:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
             Jelajahi lingkungan belajar yang aman, sejuk, dan terstandarisasi. Memadukan kehangatan ruang kelas sentra ber-AC Daikin dengan luasnya taman bermain alam terbuka.
           </p>
+
+          {/* Virtual Tour & Quick Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button
+              onClick={() => setIsVirtualTourOpen(true)}
+              type="button"
+              className="px-6 py-3 rounded-full bg-[#fbbf24] hover:bg-[#f59e0b] text-[#0F2937] font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 transition transform hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Compass className="w-4 h-4 text-[#006699]" />
+              <span>🧭 Buka Virtual Tour Interaktif (6 Zona)</span>
+            </button>
+            <a
+              href={`https://wa.me/6287713551412?text=${encodeURIComponent('Assalamu’alaikum Admin TK Lukman Hakim. Saya ingin mendaftar sesi School Tour Langsung / Free Trial Class untuk ananda. Mohon informasi jadwal temu yang tersedia.')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="px-6 py-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs sm:text-sm border border-white/30 shadow-md flex items-center gap-2 transition cursor-pointer"
+            >
+              <span>💬 Jadwalkan Kunjungan Offline (Gratis)</span>
+            </a>
+          </div>
 
           {/* ==================================================================== */}
           {/* SEARCH & FILTER BAR DOCK (GENEROUS WIDE DOCK TO FILL SCREEN)         */}
@@ -810,7 +834,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                 <div className="space-y-4">
                   <div className="rounded-2xl overflow-hidden shadow-md border-2 border-white h-48 sm:h-52 bg-slate-100">
                     <img
-                      src="/src/assets/images/sentra_balok_montessori_1790826050585.jpg"
+                      src="/assets/images/sentra_balok_montessori_1790826050585.jpg"
                       alt="Kelas Balok"
                       className="w-full h-full object-cover"
                     />
@@ -1160,6 +1184,13 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
           </div>
         </div>
       )}
+
+      {/* Interactive Virtual Tour Modal */}
+      <VirtualTourModal
+        isOpen={isVirtualTourOpen}
+        onClose={() => setIsVirtualTourOpen(false)}
+        onOpenPpdb={onOpenPpdb}
+      />
     </div>
   );
 };

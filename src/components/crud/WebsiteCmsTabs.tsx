@@ -609,7 +609,7 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
               <input
                 type="text"
                 required
-                placeholder="6281228990111"
+                placeholder="6287713551412"
                 value={form.whatsapp}
                 onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
                 className="w-full bg-white border border-emerald-300 rounded-lg p-2.5 font-mono font-bold text-slate-900"
@@ -624,7 +624,7 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
               <input
                 type="text"
                 placeholder="(0281) 634xxx / 0812..."
-                value={form.telepon || '0812-2899-0111'}
+                value={form.telepon || '0877-1355-1412'}
                 onChange={(e) => setForm({ ...form, telepon: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-mono"
               />
@@ -1309,7 +1309,7 @@ export const WaContactsCrudTab: React.FC<WaContactsCrudProps> = ({
 
   const [unit, setUnit] = useState('KB & TK Islam');
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('6281228990111');
+  const [phone, setPhone] = useState('6287713551412');
   const [role, setRole] = useState('Layanan Informasi PPDB & Kurikulum');
 
   const handleCreate = (e: React.FormEvent) => {

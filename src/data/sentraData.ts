@@ -154,7 +154,7 @@ export const SEVEN_SENTRA_DATA: SentraItem[] = [
         activity: 'Simpul Geometri & Ketangkasan Jari',
       },
       {
-        src: '/src/assets/images/sentra_balok_montessori_1790826050585.jpg',
+        src: '/assets/images/sentra_balok_montessori_1790826050585.jpg',
         caption: 'Ruang Sentra Balok ber-AC lengkap dengan ribuan keping balok kayu Montessori',
         activity: 'Ruang Kelas Sentra Balok Ber-AC',
       },

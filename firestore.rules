@@ -406,6 +406,12 @@ service cloud.firestore {
       allow delete: if isAdmin() && isValidId(inquiryId);
     }
 
+    // Public Site Settings (Logo, Identity, Appearance, Contacts)
+    match /site_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Health-check / test connection route
     match /test/connection {
       allow read: if true;

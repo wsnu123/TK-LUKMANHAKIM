@@ -58,12 +58,12 @@ export const SocialFeeds: React.FC = () => {
               <Youtube className="w-4 h-4" /> YouTube Channel
             </a>
             <a
-              href="https://www.instagram.com/pg.lukmanhakimpwt/"
+              href="https://www.instagram.com/pg.tk.lukmanhakimpwt"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 text-white rounded-xl text-xs font-semibold shadow-xs transition"
             >
-              <Instagram className="w-4 h-4" /> @pg.lukmanhakimpwt
+              <Instagram className="w-4 h-4" /> @pg.tk.lukmanhakimpwt
             </a>
           </div>
         </div>
