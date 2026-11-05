@@ -433,7 +433,7 @@ export const TuitionModal: React.FC<TuitionModalProps> = ({ isOpen, onClose }) =
                   </a>
 
                   <a
-                    href={`https://wa.me/${(schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Assalamu’alaikum Keuangan ${schoolIdentity.nama}, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${activeBill.studentName} (${activeBill.nis}) periode ${activeBill.month} ${activeBill.year} senilai Rp ${(activeBill.amount + (activeBill.cateringFee || 0) + (activeBill.activityFee || 0)).toLocaleString('id-ID')}. Mohon dicatat. Terima kasih.`)}`}
+                    href={`https://wa.me/${(schoolIdentity.whatsapp || '6281228990111').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Assalamu’alaikum Keuangan ${schoolIdentity.nama}, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${activeBill.studentName} (${activeBill.nis}) periode ${activeBill.month} ${activeBill.year} senilai Rp ${(activeBill.amount + (activeBill.cateringFee || 0) + (activeBill.activityFee || 0)).toLocaleString('id-ID')}. Mohon dicatat. Terima kasih.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition cursor-pointer"

@@ -130,7 +130,7 @@ const ALL_FACILITIES: FacilityItem[] = [
     galleryImages: [
       '/src/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
       '/assets/gallery/foto6-sholat-berjamaah.jpg',
-      '/src/assets/images/sholat_berjamaah_1789701704780.jpg',
+      '/public/src/assets/images/sholat_berjamaah_1789701704780.jpg',
     ],
     description:
       'Pusat pembinaan ruhiyah dan adab islami anak. Digunakan setiap pagi untuk ikrar bersama, Sholat Dhuha berjamaah, serta bimbingan tahsin makhorijul huruf dengan metode Tilawati ceria.',
@@ -161,7 +161,7 @@ const ALL_FACILITIES: FacilityItem[] = [
     galleryImages: [
       '/src/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
       '/assets/gallery/foto8-eksplorasi-alam-burung.jpg',
-      '/src/assets/images/rumah_burung_nature_1789701916669.jpg',
+      '/public/src/assets/images/rumah_burung_nature_1789701916669.jpg',
     ],
     description:
       'Tempat santri belajar sains langsung dari alam nyata. Anak diajak menyemai bibit sayur hidroponik, menyiram tanaman, serta mengamati perilaku burung merpati putih jinak di sangkar taman sekolah.',
@@ -222,7 +222,7 @@ const ALL_FACILITIES: FacilityItem[] = [
     galleryImages: [
       '/assets/gallery/foto7-makan-siang-bersama.jpg',
       '/assets/gallery/foto4-snack-area-bermain.jpg',
-      '/src/assets/images/makan_siang_santri_1789701844034.jpg',
+      '/public/src/assets/images/makan_siang_santri_1789701844034.jpg',
     ],
     description:
       'Area makan bersama berlantai bersih dengan meja ergonomis rendah untuk mengajarkan adab makan islami, menu gizi seimbang non-MSG, didukung wastafel cuci tangan 55 cm dan toilet balita anti-slip.',

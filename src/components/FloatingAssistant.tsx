@@ -38,7 +38,7 @@ export const FloatingAssistant: React.FC<FloatingAssistantProps> = ({
   onOpenChatbot,
 }) => {
   const { schoolIdentity } = useApp();
-  const cleanWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
+  const cleanWa = (schoolIdentity.whatsapp || '6281228990111').replace(/[^0-9]/g, '');
   const targetWa = cleanWa.startsWith('0') ? '62' + cleanWa.slice(1) : cleanWa;
 
   const waUrl = `https://wa.me/${targetWa}?text=${encodeURIComponent(

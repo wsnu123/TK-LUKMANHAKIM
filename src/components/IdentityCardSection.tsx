@@ -95,7 +95,7 @@ export const IdentityCardSection: React.FC = () => {
 
               {/* WA Quick Contact */}
               <a
-                href={`https://wa.me/${SCHOOL_IDENTITY.whatsapp.replace(/[^0-9]/g, '') || '6287713551412'}?text=Assalamu%E2%80%99alaikum%20Admin%20${encodeURIComponent(SCHOOL_IDENTITY.nama)}%2C%20saya%20ingin%20konsultasi%20informasi%20sekolah.`}
+                href={`https://wa.me/${SCHOOL_IDENTITY.whatsapp.replace(/[^0-9]/g, '') || '6281228990111'}?text=Assalamu%E2%80%99alaikum%20Admin%20${encodeURIComponent(SCHOOL_IDENTITY.nama)}%2C%20saya%20ingin%20konsultasi%20informasi%20sekolah.`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-between p-3.5 rounded-2xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/40 text-white transition cursor-pointer"

@@ -4,7 +4,6 @@ import { Registration } from '../types';
 import {
   GraduationCap,
   MessageCircle,
-  Mail,
   X,
   CheckCircle2,
   Calendar,
@@ -59,7 +58,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   // Clean WhatsApp phone number configured by admin
-  const rawAdminWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
+  const rawAdminWa = (schoolIdentity.whatsapp || '6281228990111').replace(/[^0-9]/g, '');
   const targetWaNumber = rawAdminWa.startsWith('0')
     ? '62' + rawAdminWa.slice(1)
     : rawAdminWa.startsWith('62')
@@ -103,12 +102,6 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     window.open(waUrl, '_blank');
   };
 
-  const handleSendToEmail = (reg: Registration) => {
-    const subject = `[Pendaftaran SPMB 2026/2027] ${reg.childName} - ${reg.regNumber}`;
-    const body = `${generateWaMessage(reg)}\n\nEmail wali: ${reg.email || '-'}\n\nPesan ini dikirim ke ${schoolIdentity.email}.`;
-    window.location.href = `mailto:${schoolIdentity.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
   const handleCopyWaText = (reg: Registration) => {
     const text = generateWaMessage(reg);
     navigator.clipboard.writeText(text);
@@ -145,6 +138,10 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     setSubmittedReg(reg);
     setStep(3);
 
+    // Auto trigger WhatsApp send on first submit
+    setTimeout(() => {
+      handleSendToWhatsApp(reg);
+    }, 400);
   };
 
   const handleSearchStatus = (e: React.FormEvent) => {
@@ -534,7 +531,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       Alhamdulillah, Pendaftaran Berhasil!
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                      Data pendaftaran ananda sudah tercatat di perangkat ini. Untuk memastikan panitia menerima datanya, pilih WhatsApp (lebih cepat) atau email resmi sekolah.
+                      Data pendaftaran ananda telah tersimpan. Silakan kirimkan format pendaftaran langsung ke WhatsApp Panitia SPMB di bawah ini untuk konfirmasi cepat.
                     </p>
                   </div>
 
@@ -588,15 +585,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                       className="w-full sm:w-auto px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>Kirim lewat WhatsApp (disarankan)</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleSendToEmail(submittedReg)}
-                      className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>Kirim lewat email</span>
+                      <span>Kirim ke WhatsApp Panitia SPMB</span>
                     </button>
 
                     <button

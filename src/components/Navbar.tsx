@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
   ChevronDown,
+  ChevronRight,
   Menu,
   X,
   ArrowUpRight,
   Settings,
+  UserCheck,
   CreditCard,
   GraduationCap,
+  Calendar,
   Bot,
+  Sparkles,
   Mail,
 } from 'lucide-react';
 import { PageTab } from '../types';
@@ -101,17 +105,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Official Emblem & Brand (Left Zone) */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none min-w-0 shrink"
+            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
           >
             <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 flex items-center justify-center">
               <LukmanHakimLogo variant="emblem" size={42} />
             </div>
 
-            <div className="flex flex-col whitespace-nowrap min-w-0">
-              <span className="font-extrabold text-base sm:text-[17px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition truncate">
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="font-extrabold text-base sm:text-[17px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition">
                 {schoolIdentity.nama}
               </span>
-              <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1 truncate">
+              <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1">
                 PURWOKERTO • NPSN {schoolIdentity.npsn}
               </span>
             </div>
@@ -272,7 +276,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={onOpenAdmin}
+              onClick={() => handleNavClick('admin')}
               title="Buka Panel Admin Layar Penuh"
               className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-bold transition cursor-pointer whitespace-nowrap ${
                 currentPage === 'admin' || isAdminAuthenticated
@@ -415,49 +419,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               Formulir SPMB Online 2026/2027
             </button>
 
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  if (onOpenPortalWali) onOpenPortalWali('spp');
-                  else onOpenSpp();
-                }}
-                className="py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <CreditCard className="w-3.5 h-3.5 text-[#006699]" />
-                Cek SPP
-              </button>
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  if (onOpenPortalWali) onOpenPortalWali('raport');
-                  else onOpenReport();
-                }}
-                className="py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <GraduationCap className="w-3.5 h-3.5 text-[#006699]" />
-                E-Raport
-              </button>
-            </div>
-
-            {onOpenChatbot && (
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  onOpenChatbot();
-                }}
-                className="w-full py-2.5 rounded-xl border border-sky-200 bg-sky-50 text-sky-800 font-bold text-xs text-center cursor-pointer flex items-center justify-center gap-2"
-              >
-                <Bot className="w-4 h-4" />
-                Tanya AI Sekolah
-              </button>
-            )}
-
             <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
+              onClick={() => handleNavClick('admin')}
               className="w-full py-2.5 text-center text-xs font-bold text-white bg-[#0F2937] rounded-xl cursor-pointer"
             >
               Panel Admin

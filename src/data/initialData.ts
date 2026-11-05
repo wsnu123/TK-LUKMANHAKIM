@@ -10,7 +10,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     experienceYears: 16,
     photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
     bio: 'Berpengalaman lebih dari 15 tahun membina pendidikan anak usia dini dengan pendekatan tauhid dan cinta kasih.',
-    phone: '087713551412',
+    phone: '081228990111',
     specialty: 'Leadership & Islamic Character Building',
   },
   {
@@ -81,7 +81,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Sentra Balok Kayu & Puzzle Montessori Ber-AC',
     category: 'Kegiatan Belajar',
     imageUrl: '/src/assets/images/sentra_balok_montessori_1790826050585.jpg',
-    date: '2026-02-15',
+    date: '2025-02-15',
     description: 'Santri antusias menyusun menara balok kayu dan puzzle geometris di ruang kelas sentra yang sejuk dan terang.',
   },
   {
@@ -89,7 +89,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Halaqah Pagi & Belajar Al-Qur’an Metode Tilawati',
     category: 'Ibadah & Tahfidz',
     imageUrl: '/src/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
-    date: '2026-02-12',
+    date: '2025-02-12',
     description: 'Melafalkan huruf hijaiyah dan murojaah surat pendek Juz 30 dengan peraga Tilawati yang interaktif dan ceria.',
   },
   {
@@ -97,7 +97,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Praktik Sains & Menyiram Kebun Hidroponik Sekolah',
     category: 'Eksplorasi Alam',
     imageUrl: '/src/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
-    date: '2026-02-10',
+    date: '2025-02-10',
     description: 'Menumbuhkan kecintaan pada alam dengan merawat dan menyiram tanaman sayur hidroponik di kebun edukasi.',
   },
   {
@@ -105,7 +105,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Sentra Seni Lukis Cat Air & Musik Angklung Cilik',
     category: 'Pentas Seni & Kreasi',
     imageUrl: '/src/assets/images/seni_lukis_angklung_1790826091504.jpg',
-    date: '2026-02-08',
+    date: '2025-02-08',
     description: 'Mengasah imajinasi warna, motorik halus, dan kepekaan irama musik tradisional angklung bersama teman.',
   },
   {
@@ -113,7 +113,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Ruang Bermain Sensorik Daycare & Batita Ceria',
     category: 'Fasilitas',
     imageUrl: '/src/assets/images/daycare_batita_sensorik_1790826101972.jpg',
-    date: '2026-02-05',
+    date: '2025-02-05',
     description: 'Area bermain matras empuk dengan mainan sensorik aman bagi tumbuh kembang anak usia 1.5 hingga 3 tahun.',
   },
   {
@@ -121,7 +121,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Gebyar Pentas Seni & Panggung Keberanian Santri',
     category: 'Pentas Seni & Kreasi',
     imageUrl: '/src/assets/images/wisuda_pentas_seni_1790826113606.jpg',
-    date: '2026-01-28',
+    date: '2025-01-28',
     description: 'Penampilan percaya diri santri di panggung kreasi tahunan dengan busana warna-warni yang membanggakan.',
   },
   {
@@ -129,7 +129,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Pembiasaan Sholat Dhuha Berjamaah Sejak Dini',
     category: 'Ibadah & Tahfidz',
     imageUrl: '/src/assets/images/sholat_berjamaah_1789701704780.jpg',
-    date: '2026-01-25',
+    date: '2025-01-25',
     description: 'Melatih ketertiban gerakan dan bacaan sholat berjamaah setiap pagi di Musholla Raudhatul Jannah.',
   },
   {
@@ -137,7 +137,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Adab Makan Siang Sehat Bersama Teman Sebaya',
     category: 'Kegiatan Belajar',
     imageUrl: '/src/assets/images/makan_siang_santri_1789701844034.jpg',
-    date: '2026-01-20',
+    date: '2025-01-20',
     description: 'Membiasakan cuci tangan, berdoa sebelum makan, dan menikmati menu katering sehat bergizi tanpa MSG.',
   },
   {
@@ -145,7 +145,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Simulasi Tertib Lalu Lintas & Zebra Cross Kampus',
     category: 'Outbound & Bermain',
     imageUrl: '/src/assets/images/taman_lalu_lintas_1789701865478.jpg',
-    date: '2026-01-18',
+    date: '2025-01-18',
     description: 'Mengenal arti rambu lalu lintas dan tata cara menyeberang jalan yang aman di halaman sekolah.',
   },
   {
@@ -153,7 +153,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Pembelajaran Audio-Visual & Kisah Teladan Interaktif',
     category: 'Fasilitas',
     imageUrl: '/src/assets/images/ruang_multimedia_1789701890861.jpg',
-    date: '2026-01-15',
+    date: '2025-01-15',
     description: 'Menyimak tayangan sains anak dan kisah nabi melalui layar proyektor interaktif di ruang multimedia ber-AC.',
   },
   {
@@ -161,7 +161,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Sahabat Satwa & Rumah Burung Merpati Taman',
     category: 'Eksplorasi Alam',
     imageUrl: '/src/assets/images/rumah_burung_nature_1789701916669.jpg',
-    date: '2026-01-12',
+    date: '2025-01-12',
     description: 'Melatih rasa kasih sayang terhadap makhluk ciptaan Allah dengan memberi makan burung merpati jinak.',
   },
   {
@@ -169,7 +169,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
     title: 'Outing Class Edukatif ke Menara Teratai Purwokerto',
     category: 'Outbound & Bermain',
     imageUrl: '/src/assets/images/menara_teratai_1789701818973.jpg',
-    date: '2026-01-08',
+    date: '2025-01-08',
     description: 'Kunjungan belajar kontekstual mengenal ikon kebanggaan daerah bersama ustadzah pendamping.',
   },
 ];
@@ -177,7 +177,7 @@ export const INITIAL_GALLERY: GalleryItem[] = [
 export const INITIAL_REGISTRATIONS: Registration[] = [
   {
     id: 'reg-001',
-    regNumber: 'PPDB-LHP-2026-001',
+    regNumber: 'PPDB-LHP-2025-001',
     childName: 'Muhammad Fatih Al-Farisi',
     nickname: 'Fatih',
     nik: '3302011205200001',
@@ -192,13 +192,13 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     occupation: 'Wiraswasta & Dokter',
     address: 'Jl. Overste Isdiman No. 42, Purwokerto Lor, Banyumas',
     status: 'Diterima',
-    createdAt: '2026-02-14 09:30',
+    createdAt: '2025-02-14 09:30',
     notes: 'Sudah lunas uang pangkal & seragam.',
     waSent: true,
   },
   {
     id: 'reg-002',
-    regNumber: 'PPDB-LHP-2026-002',
+    regNumber: 'PPDB-LHP-2025-002',
     childName: 'Aisyah Humaira Zahra',
     nickname: 'Humaira',
     nik: '3302025508190002',
@@ -213,13 +213,13 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     occupation: 'Dosen Universitas Jenderal Soedirman',
     address: 'Perumahan Griya Satria Bantarsoka Blok C-12, Purwokerto Barat',
     status: 'Diterima',
-    createdAt: '2026-02-15 14:15',
+    createdAt: '2025-02-15 14:15',
     notes: 'Mengikuti kelas Tahfidz Cilik tambahan.',
     waSent: true,
   },
   {
     id: 'reg-003',
-    regNumber: 'PPDB-LHP-2026-003',
+    regNumber: 'PPDB-LHP-2025-003',
     childName: 'Kenzi Rayyan Al-Ghifari',
     nickname: 'Kenzi',
     nik: '3302031102210003',
@@ -234,13 +234,13 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     occupation: 'Karyawan Swasta BUMN',
     address: 'Jl. Gerilya No. 88, Karangpucung, Purwokerto Selatan',
     status: 'Wawancara Terjadwal',
-    createdAt: '2026-02-18 11:20',
+    createdAt: '2025-02-18 11:20',
     notes: 'Jadwal wawancara & observasi: Sabtu, 22 Februari 2025 jam 09.00.',
     waSent: true,
   },
   {
     id: 'reg-004',
-    regNumber: 'PPDB-LHP-2026-004',
+    regNumber: 'PPDB-LHP-2025-004',
     childName: 'Zhafira Khansa Nabila',
     nickname: 'Khansa',
     nik: '3302016209200004',
@@ -255,7 +255,7 @@ export const INITIAL_REGISTRATIONS: Registration[] = [
     occupation: 'Apoteker',
     address: 'Jl. Supriyadi No. 15, Purwokerto Wetan',
     status: 'Menunggu Verifikasi',
-    createdAt: '2026-02-20 08:45',
+    createdAt: '2025-02-20 08:45',
     notes: 'Berkas akta & KK sudah diunggah.',
     waSent: false,
   },
@@ -269,15 +269,15 @@ export const INITIAL_TUITION_BILLS: TuitionBill[] = [
     nis: '2024001',
     classGroup: 'TK A - Al-Kautsar',
     month: 'Februari',
-    year: 2026,
+    year: 2025,
     tuitionFee: 350000,
     cateringFee: 150000,
     activityFee: 50000,
     totalAmount: 550000,
     status: 'Lunas',
-    paidAt: '2026-02-05 10:15',
+    paidAt: '2025-02-05 10:15',
     paymentMethod: 'QRIS',
-    receiptNumber: 'KW-LHP-2026-0205-001',
+    receiptNumber: 'KW-LHP-2025-0205-001',
   },
   {
     id: 'bill-2',
@@ -286,7 +286,7 @@ export const INITIAL_TUITION_BILLS: TuitionBill[] = [
     nis: '2024001',
     classGroup: 'TK A - Al-Kautsar',
     month: 'Maret',
-    year: 2026,
+    year: 2025,
     tuitionFee: 350000,
     cateringFee: 150000,
     activityFee: 50000,
@@ -300,15 +300,15 @@ export const INITIAL_TUITION_BILLS: TuitionBill[] = [
     nis: '2024002',
     classGroup: 'TK B - Ar-Rahman',
     month: 'Februari',
-    year: 2026,
+    year: 2025,
     tuitionFee: 350000,
     cateringFee: 150000,
     activityFee: 75000,
     totalAmount: 575000,
     status: 'Lunas',
-    paidAt: '2026-02-08 14:22',
+    paidAt: '2025-02-08 14:22',
     paymentMethod: 'BSI Virtual Account',
-    receiptNumber: 'KW-LHP-2026-0208-009',
+    receiptNumber: 'KW-LHP-2025-0208-009',
   },
   {
     id: 'bill-4',
@@ -317,7 +317,7 @@ export const INITIAL_TUITION_BILLS: TuitionBill[] = [
     nis: '2024003',
     classGroup: 'Playgroup - Bintang Kecil',
     month: 'Februari',
-    year: 2026,
+    year: 2025,
     tuitionFee: 300000,
     cateringFee: 150000,
     activityFee: 50000,
@@ -334,7 +334,7 @@ export const INITIAL_REPORTS: StudentReport[] = [
     nis: '2024001',
     classGroup: 'TK A - Al-Kautsar',
     semester: 'Ganjil',
-    academicYear: '2025/2026',
+    academicYear: '2024/2025',
     teacherName: 'Ustadzah Annisa Dwi Lestari, S.Psi.',
     aspects: {
       religiousMoral: {
@@ -391,7 +391,7 @@ export const INITIAL_REPORTS: StudentReport[] = [
     nis: '2024002',
     classGroup: 'TK B - Ar-Rahman',
     semester: 'Ganjil',
-    academicYear: '2025/2026',
+    academicYear: '2024/2025',
     teacherName: 'Ustadzah Rahmawati Khairunnisa, S.Pd.',
     aspects: {
       religiousMoral: {
@@ -453,7 +453,7 @@ export const INITIAL_NOTIFICATION_LOGS: NotificationLog[] = [
     message: 'Alhamdulillah, pembayaran SPP Ananda Muhammad Fatih Al-Farisi bulan Februari 2025 sebesar Rp 550.000 telah kami terima. Kuitansi resmi: KW-LHP-2025-0205-001.',
     channel: 'WhatsApp API Gateway',
     status: 'Dibaca',
-    timestamp: '2026-02-05 10:16',
+    timestamp: '2025-02-05 10:16',
     gatewayMessageId: 'MSG-WA-992101',
   },
   {
@@ -477,7 +477,7 @@ export const INITIAL_NOTIFICATION_LOGS: NotificationLog[] = [
     message: 'Terima kasih telah mendaftarkan Ananda Kenzi Rayyan Al-Ghifari (No: PPDB-LHP-2025-003). Jadwal wawancara & observasi santai bersama psikolog sekolah: Sabtu, 22 Feb 2025 jam 09.00 WIB.',
     channel: 'WhatsApp API Gateway',
     status: 'Terkirim',
-    timestamp: '2026-02-18 11:25',
+    timestamp: '2025-02-18 11:25',
     gatewayMessageId: 'MSG-WA-773412',
   },
 ];
@@ -490,7 +490,7 @@ export const INITIAL_INQUIRIES: Inquiry[] = [
     childAge: '4.2 Tahun',
     interest: 'Pendaftaran TK A (Usia 4-5 Th)',
     message: 'Assalamu’alaikum, mohon informasi jadwal trial class dan rincian seragam untuk tahun ajaran baru.',
-    createdAt: '2026-02-19 09:30',
+    createdAt: '2025-02-19 09:30',
   },
   {
     id: 'inq-002',
@@ -499,7 +499,7 @@ export const INITIAL_INQUIRIES: Inquiry[] = [
     childAge: '3.1 Tahun',
     interest: 'Kelompok Bermain / Playgroup',
     message: 'Apakah tersedia layanan antar-jemput sekitar area Berkoh dan Tanjung Purwokerto Selatan?',
-    createdAt: '2026-02-20 13:15',
+    createdAt: '2025-02-20 13:15',
   },
   {
     id: 'inq-003',
@@ -508,7 +508,7 @@ export const INITIAL_INQUIRIES: Inquiry[] = [
     childAge: '5.3 Tahun',
     interest: 'Kelas Tahfidz Cilik & TK B',
     message: 'Ingin menjadwalkan kunjungan survei fasilitas sekolah hari Jumat pagi pukul 08.30 WIB.',
-    createdAt: '2026-02-21 10:05',
+    createdAt: '2025-02-21 10:05',
   },
 ];
 
@@ -516,12 +516,12 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
   {
     id: 'budi-mulia-style-hero',
     image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.52.51_76a8e247.jpeg',
-    welcome: 'Selamat Datang di',
-    title: 'TK ISLAM LUKMAN HAKIM',
-    subtitle: 'BERSEKOLAH DENGAN SENANG, TUMBUH DENGAN TENANG',
+    welcome: 'Welcome To',
+    title: 'TK LUKMAN HAKIM',
+    subtitle: 'BERSEKOLAH DENGAN SENANG DAN SENANG DI SEKOLAH',
     description:
-      'Membina masa emas ananda dengan cinta kasih, pondasi tauhid kokoh, adab islami, serta kegembiraan bereksplorasi melalui metode 7 sentra ramah fitrah anak.',
-    primaryButton: 'Daftar SPMB 2026/2027',
+      'Bersekolah di TK Lukman Hakim akan membentuk siswa menjadi individu yang memiliki iman dan ketaqwaan kepada Allah SWT. Menjadi insan yang berintegritas, memiliki self esteem, dan kepekaan terhadap lingkungan sosial.',
+    primaryButton: 'Lets Join Us',
   },
   {
     id: 'sentra-montessori-hero',
@@ -531,7 +531,7 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
     subtitle: 'KURIKULUM MERDEKA PAUD, CAMBRIDGE & ISLAMIC MONTESSORI',
     description:
       'Setiap anak belajar melalui eksplorasi benda konkret, balok edukatif, dan permainan terarah yang mengasah logika, keaksaraan, serta kemandirian.',
-    primaryButton: 'Daftar SPMB 2026/2027',
+    primaryButton: 'Lets Join Us',
   },
   {
     id: 'tahfidz-tilawati-hero',
@@ -541,7 +541,7 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
     subtitle: 'MENCINTAI AL-QUR’AN & IBADAH HARIAN SEJAK USIA EMAS',
     description:
       'Pembiasaan Sholat Dhuha berjamaah, dzikir pagi, doa harian, dan halaqah Tilawati dengan irama yang riang dan mudah dihafal anak.',
-    primaryButton: 'Daftar SPMB 2026/2027',
+    primaryButton: 'Lets Join Us',
   },
   {
     id: 'kebun-sains-hero',
@@ -551,7 +551,7 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
     subtitle: 'BERKEBUN HIDROPONIK, TAMAN LALU LINTAS & RUMAH MERPATI',
     description:
       'Halaman kampus seluas ±1.200 m² yang asri tempat ananda mengenal alam ciptaan Allah, melatih motorik kasar, dan bersosialisasi dengan gembira.',
-    primaryButton: 'Daftar SPMB 2026/2027',
+    primaryButton: 'Lets Join Us',
   },
   {
     id: 'pentas-kreasi-hero',
@@ -561,18 +561,18 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
     subtitle: 'SETIAP ANAK UNIK, ISTIMEWA, DAN BERPRESTASI',
     description:
       'Mengembangkan keberanian tampil di depan umum melalui kegiatan seni lukis, musik angklung, panggung kreasi, dan kepemimpinan cilik.',
-    primaryButton: 'Daftar SPMB 2026/2027',
+    primaryButton: 'Lets Join Us',
   },
 ];
 
 export const WA_ADMIN_CONTACTS: WaAdminContact[] = [
-  { id: 'wa-1', unit: 'Pusat Informasi & SPMB Online', name: 'Umi Hanifah, S.Sos.', phone: '6287713551412', role: 'Konsultasi Pendaftaran & Kuota' },
+  { id: 'wa-1', unit: 'Pusat Informasi & SPMB Online', name: 'Umi Hanifah, S.Sos.', phone: '6281228990111', role: 'Konsultasi Pendaftaran & Kuota' },
   { id: 'wa-2', unit: 'Playgroup (Batita Ceria)', name: 'Ustadzah Indah, S.Pd.', phone: '6285747009821', role: 'Sentra Sensori & Kelas Bermain' },
   { id: 'wa-3', unit: 'TK A (Usia 4-5 Tahun)', name: 'Ustadzah Annisa, S.Psi.', phone: '6281229883456', role: 'Wali Kelas TK A Al-Kautsar' },
   { id: 'wa-4', unit: 'TK B (Persiapan Masuk SD)', name: 'Ustadzah Rahma, S.Pd.', phone: '6281391223445', role: 'Wali Kelas TK B Ar-Rahman' },
   { id: 'wa-5', unit: 'Kelas Tahfidz Quran Cilik', name: 'Ustadz Fauzi Al-Hafidz', phone: '6285290114567', role: 'Bimbingan Murojaah & Adab' },
   { id: 'wa-6', unit: 'Admin Pembayaran & SPP Digital', name: 'Ibu Ningsih (Keuangan)', phone: '6281390445566', role: 'Verifikasi Kuitansi & VA Bank' },
-  { id: 'wa-7', unit: 'Kepala Sekolah & Sekretariat SPMB', name: 'Hj. Siti Nur Azizah, M.Pd.', phone: '6287713551412', role: 'Konsultasi Khusus & Pendaftaran' },
+  { id: 'wa-7', unit: 'Kepala Sekolah & Yayasan', name: 'Hj. Siti Nur Azizah, M.Pd.', phone: '6281228990111', role: 'Konsultasi Khusus & Kerjasama' },
 ];
 
 export const FIVE_PILLARS = [
@@ -644,9 +644,9 @@ export const TESTIMONIALS: TestimonialItem[] = [
 ];
 
 export const SCHOOL_IDENTITY: SchoolIdentity = {
-  nama: 'TK ISLAM LUKMAN HAKIM PURWOKERTO',
+  nama: 'TK LUKMAN HAKIM',
   npsn: '69981337',
-  alamat: 'Jl. HOS Notosuwiryo No. 5, RT 01/RW 03, Teluk',
+  alamat: 'Jl. Hos Noto Suwiryo No. 5 Teluk Kec. Purwokerto Selatan',
   desaKelurahan: 'TELUK',
   kecamatan: 'KEC. PURWOKERTO SELATAN',
   kabupaten: 'KAB. BANYUMAS',
@@ -654,20 +654,11 @@ export const SCHOOL_IDENTITY: SchoolIdentity = {
   statusSekolah: 'SWASTA',
   bentukPendidikan: 'TK',
   jenjangPendidikan: 'PAUD',
-  instagram: 'pg.tk.lukmanhakimpwt',
-  instagramUrl: 'https://www.instagram.com/pg.tk.lukmanhakimpwt',
-  whatsapp: '+62 877-1355-1412',
-  telepon: '+62 877-1355-1412',
+  instagram: 'pg.lukmanhakimpwt',
+  instagramUrl: 'https://www.instagram.com/pg.lukmanhakimpwt/',
+  whatsapp: '0812-2899-0111',
   email: 'tklukmanhakim.pwt@gmail.com',
-  mapsQuery: 'TK+Islam+Lukman+Hakim+Purwokerto+Jl+HOS+Notosuwiryo+No+5+Teluk',
-  googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)',
-  facebookUrl: 'https://www.facebook.com/tklukmanhakimpwt',
-  youtubeUrl: 'https://www.youtube.com/@tklukmanhakimpurwokerto',
-  tagline: 'Mendidik dengan Hati, Menumbuhkan Fitrah Rabbani Sejak Dini',
-  akreditasi: 'A (Unggul) BAN-PAUD',
-  kepalaSekolah: 'Hj. Siti Nur Azizah, S.Pd.I., M.Pd.',
-  jamOperasional: 'Senin – Jumat (07.00 – 16.00 WIB) & Sabtu (08.00 – 12.00 WIB)',
-  yayasan: 'Yayasan Pendidikan Teknologi Banyumas',
+  mapsQuery: 'Jl.+Hos+Noto+Suwiryo+No.+5+Teluk+Purwokerto+Selatan+Banyumas',
 };
 
 export const SCHOOL_ACTIVITY_PHOTOS: SchoolActivityPhoto[] = [

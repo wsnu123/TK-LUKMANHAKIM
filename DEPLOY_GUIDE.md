@@ -34,19 +34,6 @@ Akun Pengembang:
 
 ### CARA HOSTING / DEPLOY GRATIS (1-KLIK)
 
-### Konfigurasi Email Gmail
-
-Pengiriman email langsung memakai SMTP Gmail. Atur rahasia berikut pada environment hosting (jangan masukkan App Password ke source code atau repository):
-
-```env
-SMTP_USER=alamat-gmail-pengirim@gmail.com
-SMTP_PASS=app-password-gmail-16-karakter
-FIREBASE_PROJECT_ID=refreshing-ticket-pgmzr
-ADMIN_EMAILS=ml0752960@gmail.com
-```
-
-Gunakan Google App Password dengan verifikasi dua langkah aktif. Endpoint email admin menerima Firebase ID token dari akun admin yang emailnya terverifikasi. Login admin lokal di browser bukan pengganti autentikasi server.
-
 Setelah kode berada di GitHub Anda (`ml0752960`), Anda dapat memilih platform hosting berikut:
 
 #### Opsi 1: Vercel (Sangat Direkomendasikan & Gratis)
