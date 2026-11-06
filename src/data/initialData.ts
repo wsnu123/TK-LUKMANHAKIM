@@ -668,6 +668,7 @@ export const SCHOOL_IDENTITY: SchoolIdentity = {
   kepalaSekolah: 'Hj. Siti Nur Azizah, S.Pd.I., M.Pd.',
   jamOperasional: 'Senin – Jumat (07.00 – 16.00 WIB) & Sabtu (08.00 – 12.00 WIB)',
   yayasan: 'Yayasan Pendidikan Teknologi Banyumas',
+  customLogoUrl: '/logo.png',
 };
 
 export const SCHOOL_ACTIVITY_PHOTOS: SchoolActivityPhoto[] = [

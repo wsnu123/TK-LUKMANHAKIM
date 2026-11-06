@@ -453,58 +453,17 @@ function generateIntelligentReply(
     kepalaSekolah?: string;
   }
 ): { reply: string; suggestedActions: string[]; isHighConfidence: boolean } {
-  const lower = query.toLowerCase().trim();
-  const schoolName = schoolContext?.nama || 'TK LUKMAN HAKIM';
-  const waNumber = schoolContext?.whatsapp || '6287713551412';
+  const q = query.toLowerCase().trim();
+  const schoolName = schoolContext?.nama || 'TK LUKMAN HAKIM PURWOKERTO';
+  const npsn = schoolContext?.npsn || '69981337';
+  const alamat = schoolContext?.alamat || 'Jl. HOS Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas';
+  const wa = schoolContext?.whatsapp || '+62 877-1355-1412';
 
-  // Check if user greets
-  if (/^(halo|hai|assalamu|salam|pagi|siang|sore|malam|permisi|tes|ping|assalamualaikum)\b/i.test(lower) && lower.length < 35) {
-    return {
-      reply: `Wa’alaikumussalam Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSelamat datang di **Asisten Pintar AI ${schoolName} Purwokerto** (NPSN: ${schoolContext?.npsn || '69981337'} • Terakreditasi A).\n\nSaya siap menjawab **semua pertanyaan** Ayah & Bunda secara cepat dan lengkap, mulai dari:\n• **Syarat & Rincian Biaya PPDB 2026/2027**\n• **Biaya SPP Bulanan & Cara Cek E-Raport**\n• **Kurikulum Merdeka, Tahfidz Tilawati & 5 Pilar Karakter**\n• **Program Daycare, KB, TK A, TK B & Fasilitas Kampus**\n• **Konsultasi Parenting, Psikologi Anak, Gizi & Kesiapan SD**\n\nSilakan ketik pertanyaan Anda atau klik salah satu topik cepat di bawah.`,
-      suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
-      isHighConfidence: true,
-    };
-  }
-
-  // Thanks / appreciation
-  if (/^(makasih|terima kasih|syukron|jazakallah|terimakasih|oke|baik|siap|bagus)\b/i.test(lower) && lower.length < 25) {
-    return {
-      reply: `Afwan / Sama-sama Ayah & Bunda! Senang sekali dapat membantu.\n\nJika Ayah & Bunda ingin menjadwalkan kunjungan langsung atau mendaftarkan ananda untuk **Free Trial Class**, silakan gunakan tombol formulir PPDB atau hubungi WhatsApp Sekretariat kami ya. Semoga ananda senantiasa sehat dan ceria!`,
-      suggestedActions: ['open_ppdb', 'wa_admin'],
-      isHighConfidence: true,
-    };
-  }
-
-  // Score topics by matching keywords
-  let bestMatch: (typeof KNOWLEDGE_TOPICS)[0] | null = null;
-  let maxScore = 0;
-
-  for (const topic of KNOWLEDGE_TOPICS) {
-    let score = 0;
-    for (const kw of topic.keywords) {
-      if (lower.includes(kw)) {
-        score += kw.length >= 5 ? 3 : 2;
-      }
-    }
-    if (score > maxScore) {
-      maxScore = score;
-      bestMatch = topic;
-    }
-  }
-
-  if (bestMatch && maxScore >= 2) {
-    return {
-      reply: bestMatch.answer,
-      suggestedActions: bestMatch.suggestedActions || ['open_ppdb', 'wa_admin'],
-      isHighConfidence: true,
-    };
-  }
-
-  // Handle math / calculation questions if user tests the AI's intelligence
-  const mathMatch = lower.match(/(\d+)\s*([+\-x*/:])\s*(\d+)/);
+  // 1. Math / Calculation detection
+  const mathMatch = q.match(/(\d+(?:\.\d+)?)\s*([+\-x*/:])\s*(\d+(?:\.\d+)?)/);
   if (mathMatch) {
     const a = parseFloat(mathMatch[1]);
-    const op = mathMatch[2];
+    const op = mathMatch[2].toLowerCase();
     const b = parseFloat(mathMatch[3]);
     let res = 0;
     if (op === '+') res = a + b;
@@ -513,15 +472,150 @@ function generateIntelligentReply(
     else if ((op === '/' || op === ':') && b !== 0) res = Number((a / b).toFixed(2));
 
     return {
-      reply: `Hasil dari **${a} ${op} ${b}** adalah **${res.toLocaleString('id-ID')}**.\n\nDi **${schoolName}**, kami mengenalkan konsep berhitung dan logika matematika kepada anak-anak melalui media benda konkret (seperti balok kayu Montessori, mengelompokkan warna, dan permainan peran) agar anak paham konsepnya dengan riang gembira tanpa paksaan.\n\nAda lagi yang ingin ditanyakan seputar pendaftaran atau program belajar, Ayah/Bunda?`,
+      reply: `Hasil perhitungan dari **${a} ${op} ${b}** adalah **${res.toLocaleString('id-ID')}**.\n\nDi **${schoolName}**, kami mengenalkan logika matematika awal melalui benda nyata konkret (seperti balok geometri Montessori, manik warna, dan permainan peran) agar anak memahami esensi berhitung dengan riang tanpa stres rumus kaku.`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 2. Greetings (Halo, Salam, Pagi, dll.)
+  if (/^(halo|hai|assalamu|salam|pagi|siang|sore|malam|permisi|tes|ping|assalamualaikum)\b/i.test(q) && q.length < 40) {
+    return {
+      reply: `Wa’alaikumussalam Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSelamat datang di **Asisten Pintar AI ${schoolName}** (NPSN: **${npsn}** • Terakreditasi A Unggul BAN-PAUD).\n\nSaya siap membantu Ayah & Bunda seputar:\n• **Pendaftaran Murid Baru (SPMB 2026/2027) & Free Trial Class 100% Gratis**\n• **Rincian Biaya Formulir (Rp 150rb) & SPP Bulanan (KB Rp 300rb, TK Rp 350rb)**\n• **Kurikulum Merdeka PAUD, 7 Sentra Ber-AC, Tahfidz Tilawati & 5 Pilar Karakter**\n• **Konsultasi Pengasuhan (Anak Tantrum, GTM, Speech Delay, hingga Kesiapan Masuk SD)**\n\nSilakan ketik pertanyaan apa saja yang ingin Ayah/Bunda ketahui!`,
+      suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 3. Appreciation / Thanks
+  if (/^(makasih|terima kasih|syukron|jazakallah|terimakasih|oke|baik|siap|mantap)\b/i.test(q) && q.length < 30) {
+    return {
+      reply: `Afwan / Sama-sama, Ayah & Bunda! Senang sekali dapat membantu.\n\nJika Ayah & Bunda ingin menjadwalkan kunjungan kampus atau mencoba **Free Trial Class** bersama ananda secara langsung, silakan klik tombol pendaftaran atau hubungi WhatsApp kami (${wa}). Semoga ananda tumbuh sehat dan berakhlak mulia!`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 4. Parenting: Tantrum, Amarah, Rewel, Ngambek, Menangis
+  if (/(tantrum|ngambek|marah|emosi|rewel|nangis|menangis|pukul|lempar)/i.test(q)) {
+    return {
+      reply: `**Panduan Positif: Menghadapi Anak Tantrum atau Ngambek (Usia 1.5 - 5 Tahun)**\n\nSaat anak meluapkan emosi, otak emosi (*amigdala*) sedang membajak sehingga nalar logika belum bisa mencerna omongan panjang. Berikut pendekatan **Disiplin Positif** yang kami terapkan di ${schoolName}:\n\n1. **Tenangkan Diri Terlebih Dahulu (*Co-Regulation*)**:\n   Tarik napas dalam-dalam. Jika orang tua panik atau membentak, sistem saraf anak akan semakin terancam.\n2. **Duduk Sejajar dengan Mata Anak & Validasi Emosinya**:\n   Katakan dengan lembut: *"Ibu/Ayah tahu Adik sedang sedih/kesal sekali karena mainannya harus bergantian. Menangis dulu tidak apa-apa, Ibu temani di sini ya."*\n3. **Beri Sentuhan Aman**:\n   Tawarkan pelukan hangat atau genggam tangannya jika anak bersedia.\n4. **Fasilitasi Batasan Tegas Tanpa Menyakiti**:\n   Validasi emosinya, tetapi beri batasan perilakunya: *"Marah boleh Adik, tapi memukul atau melempar barang tidak boleh ya."*\n5. **Apresiasi Saat Sudah Tenang**:\n   Beri pelukan dan diskusikan jalan keluar saat emosi sudah reda.\n\nDi ${schoolName}, seluruh ustadzah dilatih mendampingi emosi anak dengan sabar, penuh kasih, dan tanpa bentakan.`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 5. Parenting: GTM / Susah Makan / Sayur
+  if (/(gtm|susah makan|gamau makan|sayur|makan|pilih makanan|katering)/i.test(q)) {
+    return {
+      reply: `**Solusi Anak Susah Makan (GTM) & Pembiasaan Gizi Sehat:**\n\n1. **Terapkan Feeding Rules yang Teratur**:\n   - Berikan jadwal makan konsisten (3x makan utama, 2x camilan berjarak 2 jam).\n   - Batasi waktu makan maksimal 30 menit. Jika selesai, bersihkan tanpa paksaan marah.\n   - Lingkungan 100% bebas distraksi gawai atau televisi.\n2. **Kekuatan Contoh Teman Sebaya (*Peer Modeling*)**:\n   Di ${schoolName}, banyak santri yang awalnya pemilih makanan menjadi lahap makan sayur karena melihat teman-temannya makan bersama dengan riang di meja makan komunal.\n3. **Menu Katering Sehat & Variatif Non-MSG**:\n   Kami menyajikan makanan gizi seimbang yang higienis, menarik secara visual, dan ramah kunyah balita.`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 6. Parenting: Terlambat Bicara / Speech Delay / Gadget
+  if (/(speech delay|terlambat bicara|bicara|ngomong|bahasa|gadget|hp|layar|screen)/i.test(q)) {
+    return {
+      reply: `**Stimulasi Keterampilan Bicara & Pembatasan Gadget (Screen Time):**\n\n1. **Batasi Paparan Layar Pasif**:\n   WHO merekomendasikan anak di bawah 2 tahun 0 jam layar, dan 2-5 tahun maksimal 1 jam/hari. Paparan video cepat membuat komunikasi anak menjadi pasif satu arah.\n2. **Bicara Interaktif & Ajukan Pertanyaan Terbuka**:\n   Gunakan narasi sehari-hari saat beraktivitas: *"Wah, airnya dingin ya Adik, Adik mau sabun yang wangi apa?"*\n3. **Membaca Buku Bersama (*Read Aloud*)**:\n   Membacakan dongeng bergambar 15 menit setiap malam terbukti secara klinis melipatgandakan kosakata anak.\n4. **Interaksi Nyata di Sentra Bermain**:\n   Sentra Main Peran dan Sentra Balok di ${schoolName} dirancang untuk memancing dialog verbal aktif antara anak dan teman sebayanya.`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 7. Parenting: Toilet Training & Kemandirian
+  if (/(toilet|pipis|popok|diapers|pampers|ngompol|cebok)/i.test(q)) {
+    return {
+      reply: `**Pendampingan Toilet Training di ${schoolName}:**\n\nAyah & Bunda tidak perlu khawatir jika ananda di usia Batita (Daycare) atau Kelompok Bermain (KB) masih dalam proses melepas popok:\n• Ustadzah mengajak santri ke toilet secara terjadwal setiap 60-90 menit (*scheduled toileting*).\n• Kamar mandi sekolah berstandar ramah balita: kloset duduk ukuran anak, lantai anti-slip, dan wastafel rendah (55 cm).\n• Jika ananda belum sengaja mengompol, ustadzah membersihkan dengan kasih sayang tanpa membuat anak malu atau rendah diri.`,
+      suggestedActions: ['wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 8. Parenting: Kesiapan Masuk SD & Calistung
+  if (/(masuk sd|calistung|baca tulis|baca|tulis|hitung|persiapan sd)/i.test(q)) {
+    return {
+      reply: `**Transisi Menyenangkan PAUD ke SD di ${schoolName}:**\n\nSesuai panduan Kemendikdasmen, kesiapan masuk SD bukan tentang drilling hafalan huruf yang kaku, melainkan:\n1. **Kematangan Sosial-Emosional**: Mampu menyimak penjelasan, sabar menunggu giliran, dan mandiri merapikan barang.\n2. **Metode Fonik Menyenangkan**: Mengenal bunyi huruf dan membaca melalui kartu bergambar, lagu berirama, dan dongeng interaktif.\n3. **Logika Numerik Konkret**: Konsep angka diajarkan melalui benda nyata Montessori (balok, biji-bijian, timbangan).\n\nAlhamdulillah, ribuan alumni ${schoolName} terbukti siap dan berprestasi di berbagai SDIT, MI, dan SD Negeri/Swasta unggulan.`,
       suggestedActions: ['open_ppdb'],
       isHighConfidence: true,
     };
   }
 
-  // Comprehensive contextual response for open-ended question
+  // 9. PPDB, SPMB, Biaya, SPP, Syarat Pendaftaran
+  if (/(ppdb|spmb|daftar|pendaftaran|biaya|spp|tarif|harga|bayar|formulir|registrasi|kuota|syarat)/i.test(q)) {
+    return {
+      reply: `**Informasi Pendaftaran Siswa Baru (PPDB 2026/2027) ${schoolName}:**\n\n• **Biaya Pendaftaran & Observasi**: Rp 150.000\n• **SPP Bulanan Playgroup (KB)**: Rp 300.000 / bulan\n• **SPP Bulanan TK A & TK B**: Rp 350.000 / bulan\n• **Katering Makan Siang Sehat**: Rp 150.000 / bulan (Opsional, non-MSG)\n• **100% Free Trial Class**: Ayah, Bunda & ananda dapat mencoba kelas sentra dan bermain di playground gratis sebelum mendaftar!\n\n**Syarat Berkas:**\n1. Mengisi Formulir PPDB Online di web ini\n2. Fotokopi Akta Kelahiran & Kartu Keluarga (KK)\n3. Pas foto ananda 3x4 (2 lembar)\n\nSilakan klik tombol **"Buka Formulir PPDB"** di bawah untuk pendaftaran langsung.`,
+      suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 10. Trial Class & Kunjungan
+  if (/(trial|coba kelas|kunjungan|visit|survey|open house)/i.test(q)) {
+    return {
+      reply: `**Free Trial Class & School Tour (100% Gratis):**\n\nKami mengundang Ayah, Bunda, dan ananda untuk berkunjung:\n• Mengikuti 1 sesi bermain di sentra tematik ber-AC\n• Bermain di playground alam terbuka dan berkenalan dengan ustadzah pengasuh\n• Waktu: Senin – Kamis pukul 08.00 – 10.00 WIB (konfirmasi H-1)\n• Biaya: **Gratis tanpa pungutan biaya apa pun**\n\nSilakan klik tombol **Tanya Admin WhatsApp** atau buka formulir PPDB untuk memilih jadwal!`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 11. Profil Guru / Pengajar (Khusus saat ditanya spesifik profil guru)
+  if (/(siapa (saja )?(guru|ustadzah|pengajar|kepala sekolah)|profil (guru|ustadzah)|dewan pendidik|rasio guru)/i.test(q)) {
+    return {
+      reply: `**Dewan Pendidik & Ustadzah ${schoolName}:**\n\nSeluruh pendidik berkualifikasi akademik **S1 PG-PAUD & Psikologi Anak**, bersertifikasi metode Tilawati Al-Qur'an, dan menerapkan Disiplin Positif:\n• **Kepala Sekolah**: Hj. Siti Nur Azizah, S.Pd.I., M.Pd.\n• **Koordinator Kurikulum & TK B**: Ustadzah Rahmawati Khairunnisa, S.Pd.\n• **Wali Kelas TK A & Psikologi**: Ustadzah Annisa Dwi Lestari, S.Psi.\n• **Wali Kelas KB & Daycare**: Ustadzah Indah Permatasari, S.Pd.\n• **Koordinator Tahfidz**: Ustadz Ahmad Fauzi Al-Hafidz, S.Pd.I.\n\nSetiap kelas didampingi oleh **2 ustadzah** sehingga perhatian dan kasih sayang pada tiap anak optimal.`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 12. Alamat, Lokasi, Peta
+  if (/(alamat|lokasi|dimana|peta|maps|jalan|teluk)/i.test(q)) {
+    return {
+      reply: `**Lokasi Kampus ${schoolName}:**\n\n• **Alamat**: ${alamat}\n• **NPSN**: ${npsn} • Terakreditasi **A (Unggul)** BAN-PAUD\n• **Aksesibilitas**: Lokasi sangat strategis, asri, bebas polusi dan bising jalan raya, serta dilengkapi area parkir antar-jemput yang aman dan luas.\n• **Jam Layanan**: Senin – Jumat (07.00 – 16.00 WIB) & Sabtu (08.00 – 12.00 WIB).`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 13. Kurikulum, 7 Sentra, Karakter, Nilai Fitrah
+  if (/(kurikulum|sentra|merdeka|cambridge|karakter|pilar|metode|tilawati|tahfidz|qur'?an)/i.test(q)) {
+    return {
+      reply: `**Kurikulum & Metode Pembelajaran Terpadu ${schoolName}:**\n\n1. **Kurikulum Merdeka PAUD Kemendikdasmen**: Berpusat pada fitrah anak, bermain bermakna, dan eksplorasi minat.\n2. **Metode 7 Sentra Tematik Ber-AC**:\n   • Sentra Balok Montessori (Logika spasial & konstruksi)\n   • Sentra Alam Cair & Sains (Eksperimen air, tekstur, & sebab-akibat)\n   • Sentra Main Peran Mikro/Makro (Komunikasi, empati, & sosial)\n   • Sentra Seni Kriya (Motorik halus, melukis, & kreasi)\n   • Sentra Olah Tubuh & Motorik (Kelincahan motorik kasar & senam ceria)\n   • Sentra Persiapan Literasi 1 & 2 (Pra-membaca fonik & numerasi)\n3. **Tahfidz Tilawati PAUD**: Pembiasaan membaca Al-Qur'an berirama rost yang riang dan target hafalan surat pendek Juz 30.\n4. **5 Pilar Karakter**: Faith (Iman), Honesty (Jujur), Respect (Hormat), Responsibility (Tanggung Jawab), Cleanliness (Bersih).`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 14. Fasilitas & Keamanan
+  if (/(fasilitas|gedung|playground|taman|kebun|cctv|musholla|toilet|keamanan)/i.test(q)) {
+    return {
+      reply: `**Fasilitas Kampus Ramah Anak ${schoolName}:**\n\n• **7 Ruang Sentra Tematik Ber-AC** dengan peredam ramah anak dan sanitasi bersih\n• **Playground Alam Terbuka** dengan rumput hijau segar, ayunan safety, dan jembatan titian motorik\n• **Kebun Hidroponik & Rumah Edukasi Satwa Merpati** jinak untuk menumbuhkan cinta alam\n• **Sirkuit Mini Lalu Lintas** lengkap dengan zebra cross edukasi dan rambu keselamatan\n• **Musholla Anak Raudhatul Jannah** untuk pembiasaan sholat Dhuha berjamaah dan wudhu mandiri\n• **Sanitasi Ramah Balita**: Wastafel rendah 55 cm & toilet balita anti-slip\n• **CCTV 24 Jam Aktif** dan keamanan satu gerbang (*one-gate system*).`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 15. Science, Nature, General Knowledge
+  if (/(kenapa langit|mengapa hujan|pelangi|dinosaurus|planet|tata surya|gravitasi|hewan|tumbuhan|matahari)/i.test(q)) {
+    return {
+      reply: `**Wawasan Sains & Keajaiban Alam Ciptaan Allah SWT:**\n\nAlam semesta penuh keajaiban yang memicu rasa ingin tahu anak-anak:\n• **Mengapa Langit Berwarna Biru?** Cahaya matahari merambat melalui atmosfer bumi, dan partikel gas membiaskan spektrum cahaya biru dengan panjang gelombang pendek ke segala arah (*hukum Rayleigh scattering*).\n• **Bagaimana Pelangi Terjadi?** Ketika sinar matahari menyinari butiran air hujan, butiran air membiaskan dan memantulkan spektrum cahaya menjadi 7 warna indah (merah, jingga, kuning, hijau, biru, nila, ungu).\n\nDi ${schoolName}, rasa ingin tahu anak difasilitasi lewat eksperimen nyata di **Sentra Sains dan Kebun Hijau** agar anak takjub pada kebesaran Sang Pencipta.`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 16. Storytelling / Dongeng Teladan
+  if (/(cerita|dongeng|kisah|fabel|kancil|singa|burung)/i.test(q)) {
+    return {
+      reply: `**Kisah Dongeng: Kejujuran Burung Pipit Kecil di Kebun Buah**\n\nDi sebuah kebun yang asri, seekor burung pipit kecil bernama Piko melihat sebutir buah manis tergeletak di rumput. Perutnya berbunyi lapar, dan teman-temannya menyuruh Piko langsung melahapnya.\n\nNamun Piko teringat pesan ibunya: *"Setiap benda yang bukan milik kita, tanyakan dulu kepada pemiliknya."*\n\nPiko terbang ke arah Pak Kebun dan berkicau riang sambil menunjuk buah itu. Pak Kebun tersenyum hangat dan berkata: *"Terima kasih sudah jujur, burung kecil. Karena kamu jujur, ini semangkuk penuh buah segar untuk kamu dan teman-temanmu."*\n\n**Hikmah Dongeng:** Kejujuran selalu mendatangkan kebaikan dan disukai semua orang. Kisah pembangun karakter seperti ini selalu kami sampaikan di sesi cerita interaktif di ${schoolName}.`,
+      suggestedActions: ['open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // 17. Default Contextual Solutive Response
   return {
-    reply: `Assalamu’alaikum Ayah & Bunda. Terima kasih atas pertanyaannya mengenai **"${query}"**.\n\nBerikut informasi penting dari **${schoolName} Purwokerto** (NPSN: ${schoolContext?.npsn || '69981337'} • Terakreditasi A Unggul):\n\n1. **Program Pendidikan Sesuai Usia**: Kami menyelenggarakan jenjang **Daycare & Batita (1.5–3 thn)**, **Kelompok Bermain/KB (3–4 thn)**, **TK A (4–5 thn)**, dan **TK B (5–6 thn / Persiapan SD)** dengan rasio pendampingan 2 ustadzah per kelas.\n2. **Kurikulum Terpadu**: Memadukan Kurikulum Merdeka PAUD, Tahfidz Metode Tilawati berirama rost, Cambridge Fun English, 5 Pilar Karakter, dan 8 Basis Pembelajaran Ramah Fitrah.\n3. **Biaya & Lokasi**: Pendaftaran Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A/B Rp 350.000/bln. Kampus beralamat di **${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan'}** (tersedia Free Trial Class & School Tour).\n\nUntuk konsultasi lebih lanjut, Ayah & Bunda dapat langsung mengklik tombol **Buka Formulir PPDB** atau chat WhatsApp Sekretariat kami di bawah ini.`,
+    reply: `Assalamu’alaikum Ayah & Bunda. Terima kasih telah menghubungi Asisten Cerdas **${schoolName}**.\n\nTerkait pertanyaan Ayah & Bunda mengenai **"${query}"**, saya siap membantu menjelaskan lebih rinci:\n1. **Program Sekolah**: Pendaftaran SPMB 2026/2027 (Daycare, KB, TK A, TK B) & Free Trial Class 100% gratis.\n2. **Kurikulum & Karakter**: 7 Sentra Tematik Ber-AC, Tahfidz Tilawati, dan 5 Pilar Karakter.\n3. **Konsultasi Parenting**: Tips psikologi anak (tantrum, susah makan, gadget, kemandirian).\n\nSilakan klik salah satu menu di bawah atau hubungi WhatsApp Sekretariat kami di **${wa}** untuk konsultasi langsung dengan tim kami!`,
     suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
     isHighConfidence: false,
   };
@@ -538,7 +632,7 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// 2. Super-Responsive Multi-Turn Chatbot Endpoint using Gemini 3.1 Flash Lite + Instant Encyclopedic Engine
+// 2. State-of-the-art Multi-Turn Chatbot Endpoint powered by Gemini 3.8 Flash
 app.post('/api/chat', async (req: Request, res: Response) => {
   try {
     const { message, history, schoolContext } = req.body;
@@ -546,60 +640,79 @@ app.post('/api/chat', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Pesan tidak boleh kosong' });
     }
 
-    const fallbackData = generateIntelligentReply(message, schoolContext);
+    const trimmedMsg = message.trim();
+    const schoolName = schoolContext?.nama || 'TK ISLAM LUKMAN HAKIM PURWOKERTO';
+    const npsn = schoolContext?.npsn || '69981337';
+    const alamat = schoolContext?.alamat || 'Jl. HOS Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas';
+    const wa = schoolContext?.whatsapp || '+62 877-1355-1412';
 
-    // If query has domain match, return INSTANTLY (sub-15ms)
-    if (fallbackData.isHighConfidence) {
-      return res.json({
-        reply: fallbackData.reply,
-        source: 'instant_knowledge_base',
-        suggestedActions: fallbackData.suggestedActions,
-      });
-    }
-
-    // For open-ended or custom questions, try Gemini with intelligent streaming/fast completion
+    // Primary: Call modern Gemini 3.8 Flash with comprehensive domain knowledge & general intelligence
     if (ai) {
       try {
-        const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK LUKMAN HAKIM'} Purwokerto (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A).
-Jawablah pertanyaan secara sangat cepat, cerdas, ramah, to-the-point, dan informatif dalam 2-4 kalimat atau poin ringkas tanpa emotikon/emoji.
-Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan'}, WA: ${schoolContext?.whatsapp || '6287713551412'}, Biaya PPDB Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln. Kurikulum Merdeka PAUD, Tahfidz Tilawati, 5 Pilar Karakter & Cambridge Fun English.`;
+        const systemPrompt = `Anda adalah Asisten AI Cerdas, Bijaksana, dan Ramah dari ${schoolName} (NPSN: ${npsn}, Terakreditasi A Unggul BAN-PAUD).
+Anda ditenagai model Google Gemini 3.8 Flash tercanggih dengan kemampuan bernalar tinggi, komunikatif, empatik, dan berwawasan luas.
 
-        let fullPrompt = message;
+PRINSIP JAWABAN:
+1. NADA & GAYA: Bersahabat, hangat, cerdas, solutif, dan profesional. Gunakan bahasa Indonesia yang luwes dan alami (seperti berbicara dengan konsultan ahli). Gunakan format Markdown yang rapi (bullet points, paragraf jelas, bold untuk penekanan penting).
+2. INFORMASI LEMBAGA (Rujukan Utama Saat Ditanya Tentang Sekolah):
+   - Nama Resmi: ${schoolName} (Purwokerto)
+   - NPSN: ${npsn} | Akreditasi: A (Unggul) dari BAN PAUD-PNF
+   - Alamat: ${alamat} (Lingkungan asri, aman, nyaman, dan jauh dari polusi jalan raya)
+   - Narahubung WhatsApp: ${wa}
+   - 4 Jenjang Kelas:
+     * Daycare & Batita Ceria (1.5 – 3 Tahun) - Rasio 1:3
+     * Kelompok Bermain / Playgroup (3 – 4 Tahun) - Rasio 1:6
+     * TK Kelompok A (4 – 5 Tahun) - Rasio 1:10
+     * TK Kelompok B / Persiapan SD (5 – 6 Tahun) - Rasio 1:12
+   - Kurikulum: Kurikulum Merdeka PAUD Kemendikdasmen, Cambridge Fun English, 5 Pilar Karakter (Faith, Honesty, Respect, Responsibility, Cleanliness), dan 8 Basis Pembelajaran Ramah Fitrah.
+   - Metode Al-Qur'an: Tahfidz Surat Pendek Juz 30 dan Tilawati PAUD berirama rost yang riang gembira.
+   - 7 Sentra Tematik Ber-AC: Sentra Balok Montessori, Sentra Alam Cair & Sains, Sentra Main Peran Mikro/Makro, Sentra Seni Kriya, Sentra Olah Tubuh/Motorik, Sentra Persiapan Literasi.
+   - Biaya & Investasi: Pendaftaran & Observasi Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln, Katering sehat Rp 150.000/bln. Tersedia program 100% Free Trial Class (kelas percobaan gratis).
+   - Fasilitas: Playground alam hijau terbuka, kebun hidroponik & satwa burung jinak, sirkuit lalu lintas mini, musholla anak Raudhatul Jannah, wastafel rendah 55cm, toilet balita ramah anak, dan CCTV 24 jam.
+3. PERTANYAAN UMUM, PARENTING, SAINS, MATEMATIKA, LOGIKA, DAN LAIN-LAIN:
+   - Jawablah dengan kecerdasan Gemini yang sesungguhnya! Berikan penjelasan yang mendalam, logis, terstruktur, dan mudah dipahami.
+   - Jika ditanya seputar psikologi anak (tantrum, susah makan/GTM, speech delay, screen time, kemandirian), berikan tips ilmiah parenting positif yang solutif.
+   - Jika ditanya matematika, sains, coding, atau pengetahuan umum, jawablah dengan tepat dan edukatif.`;
+
+        const contents: any[] = [];
         if (Array.isArray(history) && history.length > 0) {
-          const recentHistory = history
-            .slice(-3)
-            .map((h: any) => `${h.sender === 'user' ? 'Wali' : 'AI'}: ${h.text}`)
-            .join('\n');
-          fullPrompt = `Riwayat Singkat:\n${recentHistory}\n\nPertanyaan:\n${message}`;
+          for (const h of history.slice(-6)) {
+            if (h && typeof h.text === 'string' && h.text.trim()) {
+              contents.push({
+                role: h.sender === 'user' ? 'user' : 'model',
+                parts: [{ text: h.text.trim() }],
+              });
+            }
+          }
         }
+        contents.push({
+          role: 'user',
+          parts: [{ text: trimmedMsg }],
+        });
 
-        const t0 = Date.now();
         const geminiCall = ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: fullPrompt,
+          model: 'gemini-3.8-flash',
+          contents: contents,
           config: {
             systemInstruction: systemPrompt,
-            temperature: 0.5,
-            maxOutputTokens: 250,
           },
         });
 
-        const response = await withTimeout(geminiCall, 6000, 'GEMINI_TIMEOUT_6S');
-        console.log(`Gemini response took ${Date.now() - t0}ms`);
-
+        const response = await withTimeout(geminiCall, 15000, 'GEMINI_TIMEOUT_15S');
         if (response && response.text) {
           return res.json({
             reply: response.text,
-            source: 'gemini-ai-live',
-            suggestedActions: fallbackData.suggestedActions,
-            latencyMs: Date.now() - t0,
+            source: 'gemini-3.8-flash',
+            suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
           });
         }
       } catch (geminiError: any) {
-        console.warn('Gemini chat warning:', geminiError.message);
+        console.warn('[Gemini 3.8 Flash Chat Warning]:', geminiError?.message || geminiError);
       }
     }
 
+    // Secondary fallback: Only if Gemini is offline or unconfigured
+    const fallbackData = generateIntelligentReply(trimmedMsg, schoolContext);
     return res.json({
       reply: fallbackData.reply,
       source: 'smart_knowledge_base',
@@ -611,7 +724,7 @@ Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Tel
   }
 });
 
-// 2b. AI Parenting Activity Generator (Ide Bermain & Belajar Islami di Rumah)
+// 2b. AI Parenting Activity Generator powered by Gemini 3.8 Flash
 app.post('/api/ai/parenting-activity', async (req: Request, res: Response) => {
   try {
     const { ageGroup, focusArea, availableTime, materials } = req.body;
@@ -630,24 +743,22 @@ Data anak:
 - Fokus: ${targetFocus}
 - Durasi: ${targetTime}
 - Bahan: ${targetMaterials}
-Format (ringkas, tanpa emotikon): 1. Nama Aktivitas 2. Nilai Karakter 3. Alat & Bahan 4. Langkah Bermain 5. Pertanyaan Pemantik.`;
+Format Markdown: 1. Nama Aktivitas 2. Nilai Karakter & Manfaat 3. Alat & Bahan 4. Langkah Bermain Bersama Ayah/Bunda 5. Pertanyaan Pemantik.`;
 
         const geminiCall = ai.models.generateContent({
-          model: 'gemini-3.1-flash-lite',
+          model: 'gemini-3.8-flash',
           contents: prompt,
           config: {
-            systemInstruction: 'Anda adalah Konsultan Ahli Parenting PAUD Islami dari TK Lukman Hakim Purwokerto. Ringkas dan tanpa emotikon.',
-            temperature: 0.65,
-            maxOutputTokens: 380,
+            systemInstruction: 'Anda adalah Konsultan Ahli Parenting PAUD Islami dari TK Lukman Hakim Purwokerto. Berikan panduan yang sangat aplikatif, kreatif, dan menstimulasi fitrah anak.',
           },
         });
 
-        const response = await withTimeout(geminiCall, 1500, 'ACTIVITY_TIMEOUT');
+        const response = await withTimeout(geminiCall, 12000, 'ACTIVITY_TIMEOUT');
         if (response && response.text) {
-          return res.json({ success: true, activity: response.text, source: 'gemini-3.1-flash-lite' });
+          return res.json({ success: true, activity: response.text, source: 'gemini-3.8-flash' });
         }
       } catch (err: any) {
-        // Fallback instantly
+        console.warn('Parenting activity generator fallback:', err?.message);
       }
     }
 
@@ -657,7 +768,7 @@ Format (ringkas, tanpa emotikon): 1. Nama Aktivitas 2. Nilai Karakter 3. Alat & 
   }
 });
 
-// 2c. AI Class & Stimulation Recommender (Rekomendasi Kelas & Stimulasi Santri)
+// 2c. AI Class & Stimulation Recommender powered by Gemini 3.8 Flash
 app.post('/api/ai/recommend-class', async (req: Request, res: Response) => {
   try {
     const { childName, childAgeYears, interests, currentSkills } = req.body;
@@ -675,24 +786,22 @@ app.post('/api/ai/recommend-class', async (req: Request, res: Response) => {
       try {
         const prompt = `Berikan analisis rekomendasi jenjang kelas dan stimulasi di TK Lukman Hakim untuk:
 Nama: ${name}, Usia: ${age} tahun, Minat: ${interests || 'Belum spesifik'}, Kemampuan: ${currentSkills || 'Aktif bermain'}.
-Format (ringkas, tanpa emotikon): 1. Rekomendasi Kelas 2. Fokus Stimulasi 3. Tips Transisi Masuk Sekolah.`;
+Format Markdown: 1. Rekomendasi Kelas 2. Fokus Stimulasi Sentra & Karakter 3. Tips Transisi Masuk Sekolah yang Nyaman.`;
 
         const geminiCall = ai.models.generateContent({
-          model: 'gemini-3.1-flash-lite',
+          model: 'gemini-3.8-flash',
           contents: prompt,
           config: {
-            systemInstruction: 'Anda adalah Tim Konselor & Guru PAUD TK Lukman Hakim Purwokerto. Ringkas dan tanpa emotikon.',
-            temperature: 0.65,
-            maxOutputTokens: 380,
+            systemInstruction: 'Anda adalah Tim Konselor & Guru PAUD Berpengalaman TK Lukman Hakim Purwokerto. Berikan panduan yang hangat, ilmiah, dan menenangkan orang tua.',
           },
         });
 
-        const response = await withTimeout(geminiCall, 1500, 'REC_TIMEOUT');
+        const response = await withTimeout(geminiCall, 12000, 'REC_TIMEOUT');
         if (response && response.text) {
-          return res.json({ success: true, recommendation: response.text, defaultClass, source: 'gemini-3.1-flash-lite' });
+          return res.json({ success: true, recommendation: response.text, defaultClass, source: 'gemini-3.8-flash' });
         }
       } catch (err: any) {
-        // Fallback instantly
+        console.warn('Class recommender fallback:', err?.message);
       }
     }
 

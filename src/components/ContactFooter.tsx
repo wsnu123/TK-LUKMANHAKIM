@@ -204,36 +204,20 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
                     <div className="absolute inset-2 rounded-full border border-amber-300/60 pointer-events-none" />
                     <div className="absolute inset-3 rounded-full border border-sky-200/60 pointer-events-none" />
 
-                    {/* Official Multi-Color Petal Logo Icon */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 relative flex items-center justify-center drop-shadow-md">
-                      <svg viewBox="0 0 100 100" className="w-full h-full transform group-hover:scale-105 transition-transform duration-500">
-                        <defs>
-                          <radialGradient id="logoGlow" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
-                            <stop offset="100%" stopColor="#f0f9ff" stopOpacity="0" />
-                          </radialGradient>
-                        </defs>
-                        <circle cx="50" cy="50" r="46" fill="url(#logoGlow)" />
-                        {/* 5 Petals representing 5 Pillars */}
-                        <path d="M50,50 C38,32 30,12 48,6 C66,0 68,26 50,50 Z" fill="#00a2e8" />
-                        <path d="M50,50 C68,38 88,30 94,48 C100,66 74,68 50,50 Z" fill="#00a896" />
-                        <path d="M50,50 C62,68 70,88 52,94 C34,100 32,74 50,50 Z" fill="#2ecc71" />
-                        <path d="M50,50 C32,62 12,70 6,52 C0,34 26,32 50,50 Z" fill="#3498db" />
-                        <path d="M50,50 C40,40 25,20 40,15 C55,10 60,35 50,50 Z" fill="#f59e0b" />
-                        {/* Golden Center Star & Knowledge Sun */}
-                        <circle cx="50" cy="50" r="10" fill="#ffffff" stroke="#f59e0b" strokeWidth="2.5" />
-                        <circle cx="50" cy="50" r="5" fill="#f59e0b" />
-                      </svg>
+                    {/* Official Logo Icon */}
+                    <div className="w-28 h-28 sm:w-32 sm:h-32 relative flex items-center justify-center drop-shadow-md p-1">
+                      <img
+                        src="/logo.png"
+                        alt="Logo Resmi TK Lukman Hakim"
+                        className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.src.includes('assets/logo.png')) {
+                            target.src = '/assets/logo.png';
+                          }
+                        }}
+                      />
                     </div>
-
-                    {/* School Official Typography */}
-                    <div className="text-center mt-1 sm:mt-1.5 z-10">
-                      <span className="block text-[13px] sm:text-[15px] font-black text-[#0F2937] tracking-tight leading-tight uppercase">
-                        TK LUKMAN HAKIM
-                      </span>
-                      <span className="block text-[9px] sm:text-[10px] font-black tracking-[0.18em] text-[#006699] uppercase mt-0.5">
-                        PURWOKERTO
-                      </span>
                       <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200">
                         <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-800">
                           NPSN {SCHOOL_IDENTITY.npsn} • TERAKREDITASI A
@@ -245,7 +229,6 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               </div>
             </div>
           </div>
-        </div>
       )}
 
       {/* ==================== 2. SCALLOPED WAVE BORDER & CONSISTENT BLUE/NAVY FOOTER ==================== */}

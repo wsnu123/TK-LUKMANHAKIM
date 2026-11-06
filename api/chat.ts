@@ -158,57 +158,78 @@ export default async function handler(req: any, res: any) {
     }
 
     const trimmedMsg = message.trim();
-    const instantReply = getComprehensiveReply(trimmedMsg, schoolContext);
+    const schoolName = schoolContext?.nama || 'TK ISLAM LUKMAN HAKIM PURWOKERTO';
+    const npsn = schoolContext?.npsn || '69981337';
+    const alamat = schoolContext?.alamat || 'Jl. HOS Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas';
+    const wa = schoolContext?.whatsapp || '+62 877-1355-1412';
 
-    // If Gemini client is active, call Gemini with strict timeout
+    // Primary: Call modern Gemini 3.8 Flash with state-of-the-art reasoning
     if (aiClient) {
       try {
-        const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK Lukman Hakim Purwokerto'} (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A) berkemampuan tinggi setara Google Gemini.
+        const systemPrompt = `Anda adalah Asisten AI Cerdas, Bijaksana, dan Ramah dari ${schoolName} (NPSN: ${npsn}, Terakreditasi A Unggul BAN-PAUD).
+Anda ditenagai model Google Gemini 3.8 Flash tercanggih dengan kemampuan bernalar tinggi, komunikatif, empatik, dan berwawasan luas.
 
-Karakter & Wawasan:
-1. Sangat cerdas, hangat, bijaksana, dan solutif. Anda mampu menjawab segala pertanyaan pengguna dengan fasih, akurat, dan berbobot (seputar sekolah, sains, matematika, bahasa, parenting usia dini, kisah teladan berkarakter, hingga wawasan umum).
-2. Data Lembaga:
-   - TK Lukman Hakim Purwokerto, NPSN: 69981337, Terakreditasi A (Unggul).
-   - Alamat: Jl. HOS Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas.
-   - Kontak WA: +62 877-1355-1412.
-   - Program: Daycare (1.5-3 th), KB (3-4 th), TK A (4-5 th), TK B (5-6 th).
-   - Metode: 7 Sentra bermain ber-AC, Tilawati PAUD, 5 Pilar Karakter.
-   - Free Trial Class 100% gratis, pendaftaran Rp 150.000.
-3. Gaya Respon:
-   - Format markdown rapi (bullet points / paragraf teratur).
-   - Hindari emoji berlebihan.
-   - Jawab langsung dengan cerdas tanpa kalimat penolakan kaku.`;
+PRINSIP JAWABAN:
+1. NADA & GAYA: Bersahabat, hangat, cerdas, solutif, dan profesional. Gunakan bahasa Indonesia yang luwes dan alami (seperti berbicara dengan konsultan ahli). Gunakan format Markdown yang rapi (bullet points, paragraf jelas, bold untuk penekanan penting).
+2. INFORMASI LEMBAGA (Rujukan Utama Saat Ditanya Tentang Sekolah):
+   - Nama Resmi: ${schoolName} (Purwokerto)
+   - NPSN: ${npsn} | Akreditasi: A (Unggul) dari BAN PAUD-PNF
+   - Alamat: ${alamat} (Lingkungan asri, aman, nyaman, dan jauh dari polusi jalan raya)
+   - Narahubung WhatsApp: ${wa}
+   - 4 Jenjang Kelas:
+     * Daycare & Batita Ceria (1.5 – 3 Tahun) - Rasio 1:3
+     * Kelompok Bermain / Playgroup (3 – 4 Tahun) - Rasio 1:6
+     * TK Kelompok A (4 – 5 Tahun) - Rasio 1:10
+     * TK Kelompok B / Persiapan SD (5 – 6 Tahun) - Rasio 1:12
+   - Kurikulum: Kurikulum Merdeka PAUD Kemendikdasmen, Cambridge Fun English, 5 Pilar Karakter (Faith, Honesty, Respect, Responsibility, Cleanliness), dan 8 Basis Pembelajaran Ramah Fitrah.
+   - Metode Al-Qur'an: Tahfidz Surat Pendek Juz 30 dan Tilawati PAUD berirama rost yang riang gembira.
+   - 7 Sentra Tematik Ber-AC: Sentra Balok Montessori, Sentra Alam Cair & Sains, Sentra Main Peran Mikro/Makro, Sentra Seni Kriya, Sentra Olah Tubuh/Motorik, Sentra Persiapan Literasi.
+   - Biaya & Investasi: Pendaftaran & Observasi Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln, Katering sehat Rp 150.000/bln. Tersedia program 100% Free Trial Class (kelas percobaan gratis).
+   - Fasilitas: Playground alam hijau terbuka, kebun hidroponik & satwa burung jinak, sirkuit lalu lintas mini, musholla anak Raudhatul Jannah, wastafel rendah 55cm, toilet balita ramah anak, dan CCTV 24 jam.
+3. PERTANYAAN UMUM, PARENTING, SAINS, MATEMATIKA, LOGIKA, DAN LAIN-LAIN:
+   - Jawablah dengan kecerdasan Gemini yang sesungguhnya! Berikan penjelasan yang mendalam, logis, terstruktur, dan mudah dipahami.
+   - Jika ditanya seputar psikologi anak (tantrum, susah makan/GTM, speech delay, screen time, kemandirian), berikan tips ilmiah parenting positif yang solutif.
+   - Jika ditanya matematika, sains, coding, atau pengetahuan umum, jawablah dengan tepat dan edukatif.`;
 
-        let promptContent = trimmedMsg;
+        const contents: any[] = [];
         if (Array.isArray(history) && history.length > 0) {
-          const recent = history.slice(-3).map((h: any) => `${h.sender === 'user' ? 'Wali' : 'AI'}: ${h.text}`).join('\n');
-          promptContent = `Riwayat percakapan:\n${recent}\n\nPertanyaan pengguna:\n${trimmedMsg}`;
+          for (const h of history.slice(-6)) {
+            if (h && typeof h.text === 'string' && h.text.trim()) {
+              contents.push({
+                role: h.sender === 'user' ? 'user' : 'model',
+                parts: [{ text: h.text.trim() }],
+              });
+            }
+          }
         }
+        contents.push({
+          role: 'user',
+          parts: [{ text: trimmedMsg }],
+        });
 
         const geminiCall = aiClient.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: promptContent,
+          model: 'gemini-3.8-flash',
+          contents: contents,
           config: {
             systemInstruction: systemPrompt,
-            temperature: 0.6,
-            maxOutputTokens: 350,
           },
         });
 
-        const geminiResponse = await withTimeout(geminiCall, 2500, 'GEMINI_TIMEOUT');
+        const geminiResponse = await withTimeout(geminiCall, 15000, 'GEMINI_TIMEOUT_15S');
         if (geminiResponse && geminiResponse.text) {
           return res.status(200).json({
             reply: geminiResponse.text,
-            source: 'gemini-live',
-            suggestedActions: instantReply.suggestedActions,
+            source: 'gemini-3.8-flash',
+            suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
           });
         }
       } catch (geminiErr: any) {
-        console.warn('[Gemini API Warning]:', geminiErr?.message || geminiErr);
+        console.warn('[Vercel Gemini 3.8 Flash Warning]:', geminiErr?.message || geminiErr);
       }
     }
 
-    // Fallback instantly to comprehensive knowledge base
+    // Fallback if Gemini client is not configured or times out
+    const instantReply = getComprehensiveReply(trimmedMsg, schoolContext);
     return res.status(200).json({
       reply: instantReply.reply,
       source: 'smart_knowledge_engine',

@@ -23,7 +23,8 @@
     "mapsQuery": "TK+Islam+Lukman+Hakim+Purwokerto+Jl+HOS+Notosuwiryo+No+5+Teluk",
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)",
     "facebookUrl": "https://www.facebook.com/tklukmanhakimpwt",
-    "youtubeUrl": "https://www.youtube.com/@tklukmanhakimpurwokerto"
+    "youtubeUrl": "https://www.youtube.com/@tklukmanhakimpurwokerto",
+    "customLogoUrl": "/logo.png"
   },
   "updatedAt": "2026-11-04T04:00:00.000Z"
 }

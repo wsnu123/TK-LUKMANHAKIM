@@ -184,7 +184,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
     setIsLoading(true);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 7000);
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
 
     try {
       const response = await fetch('/api/chat', {

@@ -436,25 +436,17 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
               Preview Logo Saat Ini:
             </span>
             <div className="w-28 h-28 rounded-2xl bg-white border border-slate-200 p-2 shadow-inner flex items-center justify-center overflow-hidden">
-              {form.customLogoUrl ? (
-                <img
-                  src={form.customLogoUrl}
-                  alt="Logo Sekolah"
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <div className="w-20 h-20">
-                  <svg viewBox="0 0 100 100" className="w-full h-full">
-                    <path d="M50,50 C38,32 30,12 48,6 C66,0 68,26 50,50 Z" fill="#00a2e8" />
-                    <path d="M50,50 C68,38 88,30 94,48 C100,66 74,68 50,50 Z" fill="#a349a4" />
-                    <path d="M50,50 C62,68 70,88 52,94 C34,100 32,74 50,50 Z" fill="#ff7f27" />
-                    <path d="M50,50 C32,68 12,70 6,52 C0,34 26,32 50,50 Z" fill="#fff200" />
-                    <path d="M50,50 C28,42 12,24 26,12 C40,0 48,26 50,50 Z" fill="#22b14c" />
-                    <circle cx="50" cy="50" r="16" fill="#ffffff" />
-                    <circle cx="50" cy="50" r="9" fill="#006699" />
-                  </svg>
-                </div>
-              )}
+              <img
+                src={form.customLogoUrl || '/logo.png'}
+                alt="Logo Sekolah"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes('assets/logo.png')) {
+                    target.src = '/assets/logo.png';
+                  }
+                }}
+              />
             </div>
             <span className="text-[11px] font-semibold text-slate-600 mt-2">
               {form.customLogoUrl ? 'Logo Kustom Terpasang' : 'Logo Standar TK Lukman Hakim'}
