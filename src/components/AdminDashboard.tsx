@@ -585,13 +585,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setStatusMessage(`Notifikasi gateway berhasil dikirim ke ${targetPhone} dan dicatat ke database!`);
   };
 
+  const handleAdminGoogleLogin = async () => {
+    try {
+      await signInWithGoogleAccount();
+    } catch (err: any) {
+      if (err?.code === 'auth/unauthorized-domain') {
+        const host = typeof window !== 'undefined' ? window.location.hostname : '';
+        setStatusMessage(
+          `Domain ${host} perlu ditambahkan di Firebase Console > Authentication > Settings > Authorized Domains.`
+        );
+      } else {
+        setStatusMessage(`Login Google: ${err?.message || 'Gagal login'}`);
+      }
+    }
+  };
+
   const handleSyncToFirestore = async () => {
     setIsSyncingCloud(true);
     try {
       if (!currentUser) {
-        const loggedIn = await signInWithGoogleAccount();
-        if (!loggedIn) {
-          setRestoreStatus('Silakan selesaikan login Google untuk menyinkronkan ke Cloud Firestore.');
+        try {
+          const loggedIn = await signInWithGoogleAccount();
+          if (!loggedIn) {
+            setRestoreStatus('Silakan selesaikan login Google untuk menyinkronkan ke Cloud Firestore.');
+            setIsSyncingCloud(false);
+            return;
+          }
+        } catch (authErr: any) {
+          const host = typeof window !== 'undefined' ? window.location.hostname : '';
+          setRestoreStatus(
+            authErr?.code === 'auth/unauthorized-domain'
+              ? `Domain ${host} belum terdaftar di Firebase Console Authorized Domains.`
+              : `Login Google dibatalkan: ${authErr?.message || 'Gagal login'}`
+          );
           setIsSyncingCloud(false);
           return;
         }
@@ -1619,7 +1645,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         <div className="flex flex-wrap gap-2">
                           {!currentUser ? (
                             <button
-                              onClick={signInWithGoogleAccount}
+                              onClick={handleAdminGoogleLogin}
                               className="px-4 py-2.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 cursor-pointer"
                             >
                               <Cloud className="w-4 h-4" /> Login Google untuk Cloud DB

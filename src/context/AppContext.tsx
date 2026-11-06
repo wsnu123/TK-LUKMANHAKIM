@@ -959,8 +959,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return null;
     } catch (err: any) {
-      console.warn('Google Sign-In popup interrupted or blocked:', err);
-      return null;
+      console.warn('Google Sign-In caught error in AppContext:', err);
+      throw err;
     }
   };
 

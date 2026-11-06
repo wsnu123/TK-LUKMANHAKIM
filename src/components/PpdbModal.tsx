@@ -109,7 +109,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequest
               if (onRequestLogin) {
                 onRequestLogin();
               } else {
-                signInWithGoogleAccount();
+                signInWithGoogleAccount().catch((e) => console.warn('Login catch:', e));
               }
             }}
             className="w-full py-3.5 px-4 rounded-2xl bg-[#006699] hover:bg-[#00527a] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition shadow-md cursor-pointer"
