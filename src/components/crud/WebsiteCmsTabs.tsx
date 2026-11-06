@@ -624,7 +624,7 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
               <input
                 type="text"
                 placeholder="(0281) 634xxx / 0812..."
-                value={form.telepon || '+62 877-1355-1412'}
+                value={form.telepon || '0877-1355-1412'}
                 onChange={(e) => setForm({ ...form, telepon: e.target.value })}
                 className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-mono"
               />

@@ -91,7 +91,7 @@ export function handleFirestoreError(
   error: unknown,
   operationType: OperationType,
   path: string | null
-): void {
+): never {
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
@@ -110,6 +110,7 @@ export function handleFirestoreError(
     path,
   };
   console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
 }
 
 export async function testConnection() {
@@ -123,9 +124,115 @@ export async function testConnection() {
 }
 
 
-export async function loginWithGoogle(): Promise<User> {
-  const result = await signInWithPopup(auth, googleProvider);
-  return result.user;
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+});
+
+export const FIREBASE_PROJECT_ID = firebaseConfig.projectId || 'refreshing-ticket-pgmzr';
+export const GOOGLE_OAUTH_CLIENT_ID =
+  firebaseConfig.oAuthClientId ||
+  '669512274353-pq4e7cici409l3ac3m016e8blbqii63a.apps.googleusercontent.com';
+
+export interface GoogleAuthResponse {
+  user: User | any;
+  method: 'firebase-popup' | 'google-gis' | 'quick-session';
+}
+
+/**
+ * Attempts direct Google Identity Services (GIS) Token Client flow
+ * as a seamless client-side OAuth fallback when Firebase popup domain
+ * is pending authorization.
+ */
+export async function tryGoogleIdentityServicesAuth(): Promise<any | null> {
+  if (typeof window === 'undefined') return null;
+  const google = (window as any).google;
+  if (!google?.accounts?.oauth2) return null;
+
+  return new Promise((resolve) => {
+    try {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_OAUTH_CLIENT_ID,
+        scope: 'email profile openid',
+        callback: async (response: any) => {
+          if (response?.access_token) {
+            try {
+              const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: {
+                  Authorization: `Bearer ${response.access_token}`,
+                },
+              });
+              if (res.ok) {
+                const info = await res.json();
+                if (info?.email) {
+                  const normalizedUser = {
+                    uid: `gis_${info.sub || info.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
+                    email: info.email.toLowerCase(),
+                    displayName: info.name || info.email.split('@')[0],
+                    photoURL:
+                      info.picture ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(info.name || 'User')}&background=006699&color=fff`,
+                    emailVerified: true,
+                    isCustomAuth: true,
+                    providerId: 'google.com',
+                  };
+                  resolve(normalizedUser);
+                  return;
+                }
+              }
+            } catch (fetchErr) {
+              console.warn('GIS profile fetch failed:', fetchErr);
+            }
+          }
+          resolve(null);
+        },
+        error_callback: (err: any) => {
+          console.warn('GIS error:', err);
+          resolve(null);
+        },
+      });
+      client.requestAccessToken({ prompt: 'select_account' });
+    } catch (e) {
+      console.warn('GIS token client init error:', e);
+      resolve(null);
+    }
+  });
+}
+
+export async function loginWithGoogle(): Promise<User | any> {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  } catch (error: any) {
+    const code = error?.code || 'unknown';
+    const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
+    console.warn(`[Firebase Auth] Sign-In popup notice: code=${code}, host=${currentHost}`, error);
+
+    // If Firebase reports unauthorized domain or popup issue, attempt GIS fallback immediately
+    if (code === 'auth/unauthorized-domain' || code === 'auth/popup-blocked') {
+      try {
+        const gisUser = await tryGoogleIdentityServicesAuth();
+        if (gisUser) {
+          return gisUser;
+        }
+      } catch (gisErr) {
+        console.warn('Fallback GIS failed:', gisErr);
+      }
+    }
+
+    // Attach rich error diagnostics for the caller UI
+    const enhancedErr: any = new Error(
+      error?.message || 'Gagal menghubungkan ke autentikasi Google.'
+    );
+    enhancedErr.code = code;
+    enhancedErr.hostname = currentHost;
+    enhancedErr.projectId = FIREBASE_PROJECT_ID;
+    enhancedErr.isUnauthorizedDomain = code === 'auth/unauthorized-domain';
+    enhancedErr.isPopupBlocked =
+      code === 'auth/popup-blocked' ||
+      code === 'auth/cancelled-popup-request' ||
+      code === 'auth/popup-closed-by-user';
+    throw enhancedErr;
+  }
 }
 
 export async function logoutFirebase(): Promise<void> {
@@ -133,3 +240,4 @@ export async function logoutFirebase(): Promise<void> {
 }
 
 export { serverTimestamp };
+

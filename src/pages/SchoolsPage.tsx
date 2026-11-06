@@ -498,7 +498,7 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                   <div className="absolute inset-0 rounded-full border-[14px] border-emerald-400/80 border-r-sky-400 border-b-sky-400" />
                   <div className="w-52 h-52 sm:w-58 sm:h-58 rounded-full overflow-hidden border-4 border-white shadow-xl">
                     <img
-                      src="/src/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg"
+                      src="/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg"
                       alt="Rutinitas Santri"
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"

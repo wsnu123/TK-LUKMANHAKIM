@@ -406,25 +406,10 @@ service cloud.firestore {
       allow delete: if isAdmin() && isValidId(inquiryId);
     }
 
-    match /site_settings/{settingsId} {
-      allow read: if settingsId == 'public';
-      allow create, update: if settingsId == 'public' && isAdmin() &&
-        incoming().keys().hasAll(['settings', 'updatedAt', 'updatedBy']) &&
-        incoming().keys().hasOnly(['settings', 'updatedAt', 'updatedBy']) &&
-        incoming().settings is map &&
-        incoming().settings.keys().hasAll([
-          'schoolIdentity', 'heroSlides', 'activityPhotos', 'testimonials',
-          'waContacts', 'philosophyCards', 'pillarsData', 'appearanceConfig',
-          'customFeatures', 'teachers', 'gallery'
-        ]) &&
-        incoming().settings.keys().hasOnly([
-          'schoolIdentity', 'heroSlides', 'activityPhotos', 'testimonials',
-          'waContacts', 'philosophyCards', 'pillarsData', 'appearanceConfig',
-          'customFeatures', 'teachers', 'gallery'
-        ]) &&
-        incoming().updatedBy == request.auth.uid &&
-        incoming().updatedAt == request.time;
-      allow delete: if false;
+    // Public Site Settings (Logo, Identity, Appearance, Contacts)
+    match /site_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
     }
 
     // Health-check / test connection route

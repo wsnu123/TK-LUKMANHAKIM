@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
+import { getCacheBustedUrl } from '../utils/cacheBuster';
 
 interface HeroBannerProps {
   onOpenPpdb: () => void;
@@ -61,7 +62,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               }`}
             >
               <img
-                src={s.image}
+                src={getCacheBustedUrl(s.image)}
                 alt={s.title}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center sm:object-top brightness-105 contrast-102"

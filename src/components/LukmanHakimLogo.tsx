@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 
+import { getCacheBustedUrl } from '../utils/cacheBuster';
+
 interface LukmanHakimLogoProps {
   className?: string;
   size?: number | string;
@@ -30,7 +32,8 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
     // If rendered outside AppProvider, fallback gracefully
   }
 
-  const activeLogoUrl = !imageError ? (propCustomLogoUrl || contextLogoUrl) : null;
+  const rawLogoUrl = !imageError ? (propCustomLogoUrl || contextLogoUrl) : null;
+  const activeLogoUrl = rawLogoUrl ? getCacheBustedUrl(rawLogoUrl) : null;
   const sizeValue = typeof size === 'number' ? `${size}px` : size;
 
   // Base Official Vector 5-Petal Pinwheel (Fallback & Default Emblem)

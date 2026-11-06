@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Play, Volume2, Settings, Maximize, X } from 'lucide-react';
+import { getCacheBustedUrl } from '../utils/cacheBuster';
 
 const CribMobileIcon = () => (
   <svg viewBox="0 0 48 48" className="w-14 h-14 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -403,7 +404,7 @@ export const PhilosophyCards: React.FC = () => {
                   <div className="relative w-22 h-22 sm:w-26 sm:h-26 rounded-full p-[3.5px] bg-gradient-to-tr from-[#2ecc71] via-[#00a8ff] to-[#38bdf8] shadow-lg shrink-0">
                     <div className="relative w-full h-full rounded-full overflow-hidden">
                       <img
-                        src={pillar.image}
+                        src={getCacheBustedUrl(pillar.image)}
                         alt={pillar.title}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"

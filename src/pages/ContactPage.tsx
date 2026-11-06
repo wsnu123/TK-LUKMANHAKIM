@@ -109,7 +109,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         <div className="max-w-[1560px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2 font-medium">
             <Phone className="w-3.5 h-3.5 text-amber-300" />
-            <span className="text-white/90">Ingin bertanya? Hubungi kami:</span>
+            <span className="text-white/90">Butuh Konsultasi atau Info Sekolah? Hubungi Kami Langsung:</span>
             <a
               href={`https://wa.me/${officialWhatsApp}`}
               target="_blank"
@@ -167,7 +167,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         {/* Subtle Campus Photography Background with Atmospheric Scrim */}
         <img
           src="/assets/budi_mulia_hero.jpg"
-          alt={`Lingkungan ${SCHOOL_IDENTITY.nama}`}
+          alt="TK Luqman Al Hakim Purwokerto"
           className="absolute inset-0 w-full h-full object-cover object-center opacity-20 mix-blend-luminosity scale-105"
         />
 
@@ -178,7 +178,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center py-16 sm:py-24 space-y-4">
           {/* Top Pill Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-sky-300/40 bg-white/10 backdrop-blur-md text-amber-300 text-xs sm:text-sm font-bold tracking-wide shadow-sm">
-            <span>Kenali lebih dekat • {SCHOOL_IDENTITY.nama}</span>
+            <span>Informasi & Layanan Resmi • {SCHOOL_IDENTITY.nama}</span>
           </div>
 
           {/* Huge Bold Title */}
@@ -188,7 +188,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
           {/* Description Paragraph */}
           <p className="text-xs sm:text-sm lg:text-base text-sky-100/90 leading-relaxed max-w-2xl mx-auto font-normal">
-            Pintu sekretariat {SCHOOL_IDENTITY.nama} selalu terbuka bagi Ayah & Bunda untuk berdiskusi mengenai kesiapan sekolah ananda, rincian kurikulum, jadwal kunjungan kampus, maupun pendaftaran siswa baru.
+            Pintu sekretariat {SCHOOL_IDENTITY.nama} selalu terbuka hangat bagi Ayah & Bunda untuk berkonsultasi mengenai kesiapan sekolah ananda, rincian kurikulum sentra, jadwal tour lingkungan, maupun pendaftaran siswa baru.
           </p>
         </div>
       </section>
@@ -214,7 +214,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                 {/* Description */}
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-3">
-                  Layanan panggilan telepon dan respon cepat konsultasi PPDB, reservasi trial class, serta jadwal temu ramah dengan panitia.
+                  Layanan telepon dan WhatsApp respon cepat untuk konsultasi SPMB, konfirmasi berkas, reservasi trial class santri, serta temu ramah ustadzah.
                 </p>
               </div>
 
@@ -229,7 +229,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <span className="w-5 h-5 rounded-full bg-[#006699] text-white flex items-center justify-center text-[10px]">
                     ➜
                   </span>
-                  <span>Chat WhatsApp</span>
+                  <span>Hubungi via WhatsApp</span>
                 </a>
               </div>
             </div>
@@ -262,7 +262,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-[10px]">
                     ➜
                   </span>
-                  <span className="text-amber-300 group-hover:underline">Kirim email</span>
+                  <span className="text-amber-300 group-hover:underline">Kirim Email Resmi</span>
                 </a>
               </div>
             </div>
@@ -297,7 +297,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <span className="w-5 h-5 rounded-full bg-[#006699] text-white flex items-center justify-center text-[10px]">
                     ➜
                   </span>
-                  <span>Lihat rute</span>
+                  <span>Petunjuk Rute Maps</span>
                 </a>
               </div>
             </div>
@@ -317,27 +317,27 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             <div className="lg:col-span-6 space-y-8">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-black text-[#0F2937] tracking-tight">
-                  Jam Layanan
+                  Jam Operasional & Pelayanan
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-3 max-w-xl">
-                  Sekretariat dan gerbang kampus kami terbuka melayani Ayah & Bunda untuk pengenalan lingkungan sekolah, konsultasi langsung, serta pendaftaran siswa baru pada jam kerja berikut:
+                  Sekretariat dan gerbang kampus kami terbuka melayani Ayah & Bunda untuk pengenalan lingkungan sekolah, konsultasi langsung, serta pendaftaran siswa baru pada jadwal berikut:
                 </p>
 
                 {/* Working Hours Schedule with Ocean Blue & Amber Theme */}
                 <div className="mt-6 space-y-3.5">
                   <div className="flex items-center gap-3 text-sm text-slate-700 font-semibold p-3.5 rounded-2xl bg-[#F0F7FF] border border-sky-100">
                     <Clock className="w-4 h-4 text-[#006699] shrink-0" />
-                    <span>Senin - Jumat: 07.00 - 14.00 WIB</span>
+                    <span>Senin – Jumat : 07.00 – 14.00 WIB</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-slate-700 font-semibold p-3.5 rounded-2xl bg-[#F0F7FF] border border-sky-100">
                     <Clock className="w-4 h-4 text-[#006699] shrink-0" />
-                    <span>Sabtu: 07.30 - 11.30 WIB</span>
+                    <span>Sabtu : 07.30 – 11.30 WIB</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-slate-700 font-semibold p-3.5 rounded-2xl bg-rose-50 border border-rose-100">
                     <X className="w-4 h-4 text-rose-600 shrink-0" />
-                    <span className="text-rose-700 font-bold">Minggu (libur)</span>
+                    <span className="text-rose-700 font-bold">Ahad & Hari Libur Nasional</span>
                     <span className="text-xs text-slate-500 font-normal hidden sm:inline">
-                      • Terbuka khusus Free Trial Class dengan janji temu
+                      • Pelayanan offline tutup (Buka khusus jadwal Trial Class berjanji)
                     </span>
                   </div>
                 </div>
@@ -346,14 +346,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({
               {/* Location & Embedded Map */}
               <div>
                 <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-4">
-                  Lokasi Sekolah
+                  Lokasi Kampus Sekolah :
                 </h3>
 
-                {/* Interactive Map Box */}
+                {/* Interactive Map Box dengan Koordinat Presisi TK Islam Lukman Hakim Purwokerto */}
                 <div className="rounded-2xl overflow-hidden border-2 border-sky-200 shadow-md bg-slate-100 h-72 sm:h-80 relative">
                   <iframe
-                    title="Peta Lokasi TK Lukman Hakim Purwokerto"
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(`${SCHOOL_IDENTITY.alamat}, Kel. ${SCHOOL_IDENTITY.desaKelurahan}, ${SCHOOL_IDENTITY.kecamatan}, ${SCHOOL_IDENTITY.kabupaten}, Jawa Tengah`)}&output=embed`}
+                    title="Peta Lokasi TK Islam Lukman Hakim Purwokerto"
+                    src="https://maps.google.com/maps?q=TK+Islam+Lukman+Hakim+Purwokerto,+Jl.+Hos+Noto+Suwiryo+No.+5,+Teluk,+Kec.+Purwokerto+Selatan,+Kabupaten+Banyumas&t=&z=17&ie=UTF8&iwloc=&output=embed"
                     className="w-full h-full border-0"
                     loading="lazy"
                   />
@@ -385,7 +385,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     rel="noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-[#006699] hover:text-[#0A2540] transition"
                   >
-                    <span>Buka Rute Langsung di Google Maps</span>
+                    <span>Buka Rute Navigasi Google Maps</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -399,13 +399,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({
               {/* Top Contact Us Pill Badge */}
               <div className="flex items-center justify-start">
                 <span className="px-5 py-1.5 rounded-full border border-sky-200 text-[#006699] bg-[#F0F7FF] text-xs font-bold uppercase tracking-wider shadow-2xs">
-                  Hubungi Kami
+                  Sambung Silaturahmi
                 </span>
               </div>
 
               {/* Title Heading */}
               <h2 className="text-3xl sm:text-5xl font-black text-[#0F2937] tracking-tight mt-3">
-                Ada yang ingin ditanyakan?
+                Kirim Pesan & Konsultasi
               </h2>
 
               {/* Form Card Container (Matching Reference Layout with Consistent Colors) */}
@@ -416,7 +416,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <h3 className="text-xl font-black text-slate-900">
-                      Alhamdulillah, pesan Ayah/Bunda sudah kami catat.
+                      Alhamdulillah, Pesan Berhasil Terkirim!
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
                       Terima kasih Ayah & Bunda. Pesan telah tercatat di sistem sekretariat kami. Jika membutuhkan konfirmasi cepat saat ini, klik tombol di bawah untuk langsung terhubung ke WhatsApp.
@@ -427,7 +427,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#006699] hover:bg-[#00527c] text-white text-xs font-bold transition cursor-pointer shadow-md"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>Lanjutkan percakapan lewat WhatsApp</span>
+                      <span>Lanjutkan Chat via WhatsApp</span>
                     </button>
                   </div>
                 ) : (
@@ -440,7 +440,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     {/* Field 1: Email */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-2">
-                        Alamat email
+                        Email
                       </label>
                       <input
                         type="email"
@@ -455,7 +455,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     {/* Field 2: Name */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-2">
-                        Nama Ayah/Bunda
+                        Name
                       </label>
                       <input
                         type="text"
@@ -470,7 +470,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     {/* Field 3: Phone / WhatsApp */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-2">
-                        Nomor telepon / WhatsApp
+                        Phone / WhatsApp
                       </label>
                       <input
                         type="tel"
@@ -485,7 +485,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     {/* Field 4: Message */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-2">
-                        Pesan
+                        Message
                       </label>
                       <textarea
                         rows={4}
@@ -504,7 +504,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                         className="px-9 py-4 rounded-full bg-gradient-to-r from-[#006699] to-[#0284c7] hover:from-[#00527c] hover:to-[#0274b0] text-white font-black text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg transition-all transform active:scale-95 inline-flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <Send className="w-4 h-4" />
-                        <span>Kirim pesan</span>
+                        <span>Submit Button</span>
                       </button>
                     </div>
                   </form>
