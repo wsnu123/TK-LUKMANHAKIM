@@ -567,11 +567,11 @@ export const INITIAL_HERO_SLIDES: HeroSlide[] = [
 
 export const WA_ADMIN_CONTACTS: WaAdminContact[] = [
   { id: 'wa-1', unit: 'Pusat Informasi & SPMB Online', name: 'Umi Hanifah, S.Sos.', phone: '6287713551412', role: 'Konsultasi Pendaftaran & Kuota' },
-  { id: 'wa-2', unit: 'Playgroup (Batita Ceria)', name: 'Ustadzah Indah, S.Pd.', phone: '6285747009821', role: 'Sentra Sensori & Kelas Bermain' },
-  { id: 'wa-3', unit: 'TK A (Usia 4-5 Tahun)', name: 'Ustadzah Annisa, S.Psi.', phone: '6281229883456', role: 'Wali Kelas TK A Al-Kautsar' },
-  { id: 'wa-4', unit: 'TK B (Persiapan Masuk SD)', name: 'Ustadzah Rahma, S.Pd.', phone: '6281391223445', role: 'Wali Kelas TK B Ar-Rahman' },
-  { id: 'wa-5', unit: 'Kelas Tahfidz Quran Cilik', name: 'Ustadz Fauzi Al-Hafidz', phone: '6285290114567', role: 'Bimbingan Murojaah & Adab' },
-  { id: 'wa-6', unit: 'Admin Pembayaran & SPP Digital', name: 'Ibu Ningsih (Keuangan)', phone: '6281390445566', role: 'Verifikasi Kuitansi & VA Bank' },
+  { id: 'wa-2', unit: 'Playgroup (Batita Ceria)', name: 'Ustadzah Indah, S.Pd.', phone: '6287713551412', role: 'Sentra Sensori & Kelas Bermain' },
+  { id: 'wa-3', unit: 'TK A (Usia 4-5 Tahun)', name: 'Ustadzah Annisa, S.Psi.', phone: '6287713551412', role: 'Wali Kelas TK A Al-Kautsar' },
+  { id: 'wa-4', unit: 'TK B (Persiapan Masuk SD)', name: 'Ustadzah Rahma, S.Pd.', phone: '6287713551412', role: 'Wali Kelas TK B Ar-Rahman' },
+  { id: 'wa-5', unit: 'Kelas Tahfidz Quran Cilik', name: 'Ustadz Fauzi Al-Hafidz', phone: '6287713551412', role: 'Bimbingan Murojaah & Adab' },
+  { id: 'wa-6', unit: 'Admin Pembayaran & SPP Digital', name: 'Ibu Ningsih (Keuangan)', phone: '6287713551412', role: 'Verifikasi Kuitansi & VA Bank' },
   { id: 'wa-7', unit: 'Kepala Sekolah & Sekretariat SPMB', name: 'Hj. Siti Nur Azizah, M.Pd.', phone: '6287713551412', role: 'Konsultasi Khusus & Pendaftaran' },
 ];
 
@@ -660,7 +660,7 @@ export const SCHOOL_IDENTITY: SchoolIdentity = {
   telepon: '+62 877-1355-1412',
   email: 'tklukmanhakim.pwt@gmail.com',
   mapsQuery: 'TK+Islam+Lukman+Hakim+Purwokerto+Jl+HOS+Notosuwiryo+No+5+Teluk',
-  googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)',
+  googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas',
   facebookUrl: 'https://www.facebook.com/tklukmanhakimpwt',
   youtubeUrl: 'https://www.youtube.com/@tklukmanhakimpurwokerto',
   tagline: 'Mendidik dengan Hati, Menumbuhkan Fitrah Rabbani Sejak Dini',

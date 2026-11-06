@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { GalleryItem } from '../types';
 import { Calendar, Tag, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -14,6 +14,31 @@ export const FacilityGallery: React.FC = () => {
     activeCategory === 'Semua'
       ? gallery
       : gallery.filter((item) => item.category === activeCategory);
+
+  const showAdjacentPhoto = (direction: -1 | 1) => {
+    if (!selectedPhoto || filteredGallery.length < 2) return;
+    const currentIndex = filteredGallery.findIndex((item) => item.id === selectedPhoto.id);
+    const nextIndex = (currentIndex + direction + filteredGallery.length) % filteredGallery.length;
+    setSelectedPhoto(filteredGallery[nextIndex]);
+  };
+
+  useEffect(() => {
+    if (!selectedPhoto) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedPhoto(null);
+      if (event.key === 'ArrowLeft') showAdjacentPhoto(-1);
+      if (event.key === 'ArrowRight') showAdjacentPhoto(1);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto, filteredGallery]);
+
+  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const image = event.currentTarget;
+    if (image.dataset.fallback) return;
+    image.dataset.fallback = 'true';
+    image.src = '/assets/budi_mulia_hero.jpg';
+  };
 
   return (
     <section id="facilities" className="py-16 sm:py-20 bg-slate-50">
@@ -54,12 +79,20 @@ export const FacilityGallery: React.FC = () => {
             <div
               key={item.id}
               onClick={() => setSelectedPhoto(item)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') setSelectedPhoto(item);
+              }}
               className="group bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-xl border border-slate-200/80 transition-all duration-300 cursor-pointer flex flex-col justify-between"
             >
               <div className="relative h-48 overflow-hidden bg-slate-100">
                 <img
                   src={item.imageUrl}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  onError={handleImageError}
                   className="w-full h-full object-cover group-hover:scale-108 transition duration-500"
                 />
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -102,10 +135,31 @@ export const FacilityGallery: React.FC = () => {
               <X className="w-5 h-5" />
             </button>
 
+            {filteredGallery.length > 1 && (
+              <>
+                <button
+                  onClick={() => showAdjacentPhoto(-1)}
+                  aria-label="Foto sebelumnya"
+                  className="absolute left-3 top-1/3 z-10 w-10 h-10 rounded-full bg-black/55 text-white hover:bg-black/75 flex items-center justify-center"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => showAdjacentPhoto(1)}
+                  aria-label="Foto berikutnya"
+                  className="absolute right-3 top-1/3 z-10 w-10 h-10 rounded-full bg-black/55 text-white hover:bg-black/75 flex items-center justify-center"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+
             <div className="relative max-h-[60vh] bg-slate-900 flex items-center justify-center">
               <img
                 src={selectedPhoto.imageUrl}
                 alt={selectedPhoto.title}
+                decoding="async"
+                onError={handleImageError}
                 className="max-h-[60vh] w-full object-contain"
               />
             </div>
@@ -122,6 +176,11 @@ export const FacilityGallery: React.FC = () => {
               <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                 {selectedPhoto.title}
               </h3>
+              {filteredGallery.length > 1 && (
+                <p className="text-xs text-slate-500">
+                  {filteredGallery.findIndex((item) => item.id === selectedPhoto.id) + 1} dari {filteredGallery.length} foto
+                </p>
+              )}
               <p className="text-sm text-slate-600 leading-relaxed">
                 {selectedPhoto.description}
               </p>

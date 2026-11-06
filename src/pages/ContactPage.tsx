@@ -36,6 +36,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     addInquiry,
     schoolIdentity: SCHOOL_IDENTITY,
   } = useApp();
+  const officialWhatsApp = SCHOOL_IDENTITY.whatsapp.replace(/\D/g, '');
 
   // "Get In Touch" Form State
   const [email, setEmail] = useState('');
@@ -43,6 +44,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [copiedAddress, setCopiedAddress] = useState(false);
 
   const handleCopyAddress = () => {
@@ -62,22 +64,28 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         message || 'Mohon informasi jadwal kunjungan sekolah & brosur PPDB.'
       }`
     );
-    window.open(`https://wa.me/${SCHOOL_IDENTITY.whatsapp}?text=${text}`, '_blank');
+    window.open(`https://wa.me/${officialWhatsApp}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     const combinedMessage = email
       ? `[Email: ${email}] ${message || 'Mohon informasi pendaftaran & jadwal kunjungan.'}`
       : message || 'Mohon informasi pendaftaran & jadwal trial class.';
 
-    await addInquiry({
-      name: name || 'Orang Tua Calon Santri',
-      phone: phone || SCHOOL_IDENTITY.telepon,
-      childAge: 'Usia TK / KB',
-      interest: 'Konsultasi Kontak & Kunjungan Kampus',
-      message: combinedMessage,
-    });
+    try {
+      await addInquiry({
+        name: name || 'Orang Tua Calon Santri',
+        phone: phone || SCHOOL_IDENTITY.telepon,
+        childAge: 'Usia TK / KB',
+        interest: 'Konsultasi Kontak & Kunjungan Kampus',
+        message: combinedMessage,
+      });
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Pesan belum berhasil disimpan.');
+      return;
+    }
 
     setIsSubmitted(true);
     triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, 70);
@@ -103,7 +111,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             <Phone className="w-3.5 h-3.5 text-amber-300" />
             <span className="text-white/90">Ingin bertanya? Hubungi kami:</span>
             <a
-              href={`https://wa.me/${SCHOOL_IDENTITY.whatsapp}`}
+              href={`https://wa.me/${officialWhatsApp}`}
               target="_blank"
               rel="noreferrer"
               className="font-bold text-amber-300 hover:text-white transition underline sm:no-underline"
@@ -213,7 +221,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
               {/* Bottom Link */}
               <div className="pt-6 mt-6 border-t border-slate-100">
                 <a
-                  href={`https://wa.me/${SCHOOL_IDENTITY.whatsapp}`}
+                  href={`https://wa.me/${officialWhatsApp}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 text-xs sm:text-sm font-black text-slate-800 group-hover:text-[#006699] transition"
@@ -424,6 +432,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
+                    {submitError && (
+                      <p role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800">
+                        {submitError} Hubungi kami lewat WhatsApp bila perlu segera.
+                      </p>
+                    )}
                     {/* Field 1: Email */}
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-2">

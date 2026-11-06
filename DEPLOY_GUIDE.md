@@ -36,28 +36,34 @@ Akun Pengembang:
 
 ### Konfigurasi Email Gmail
 
-Pengiriman email langsung memakai SMTP Gmail. Atur rahasia berikut pada environment hosting (jangan masukkan App Password ke source code atau repository):
+Di Vercel, buka **Project → Settings → Environment Variables** dan isi nilai berikut. Jangan memasukkan service-account JSON atau App Password ke source code, GitHub, atau chat.
 
 ```env
-SMTP_USER=alamat-gmail-pengirim@gmail.com
-SMTP_PASS=app-password-gmail-16-karakter
+FIREBASE_SERVICE_ACCOUNT=<seluruh isi JSON service account Firebase dalam satu baris>
 FIREBASE_PROJECT_ID=refreshing-ticket-pgmzr
+FIREBASE_DATABASE_ID=ai-studio-tklukmanhakimpur-8395c4ff-b3ba-4cd2-86ee-4d3936c47055
 ADMIN_EMAILS=ml0752960@gmail.com
+SMTP_USER=alamat-gmail-pengirim@gmail.com
+SMTP_PASS=<Google App Password>
 ```
 
-Gunakan Google App Password dengan verifikasi dua langkah aktif. Endpoint email admin menerima Firebase ID token dari akun admin yang emailnya terverifikasi. Login admin lokal di browser bukan pengganti autentikasi server.
+Gunakan Google App Password dengan verifikasi dua langkah aktif. Service account dibuat dari Firebase Console → Project settings → Service accounts. Setelah mengubah environment variable, jalankan redeploy di Vercel. Endpoint admin menerima Firebase ID token dari akun Google yang emailnya terverifikasi.
+
+API Express dipasang sebagai Vercel Function melalui `api/[...path].ts`. Pastikan domain Vercel tercantum di Firebase Authentication → Settings → Authorized domains, dan deploy `firestore.rules` ke database yang ID-nya tercantum di atas.
 
 Setelah kode berada di GitHub Anda (`ml0752960`), Anda dapat memilih platform hosting berikut:
 
-#### Opsi 1: Vercel (Sangat Direkomendasikan & Gratis)
+#### Vercel (repository hosting: wsnu123/TK-LUKMANHAKIM)
 1. Buka [https://vercel.com](https://vercel.com) dan login menggunakan akun GitHub Anda (`ml0752960`).
-2. Klik **Add New...** -> **Project**.
-3. Pilih repository `tk-lukman-hakim-purwokerto` lalu klik **Import**.
-4. Framework Preset: **Vite**.
-5. Klik **Deploy**.
-6. Dalam 1 menit, website Anda sudah aktif dengan URL live HTTPS gratis (contoh: `tk-lukman-hakim.vercel.app`) dan bisa dipasang domain sekolah sendiri (seperti `tklukmanhakim.sch.id`).
+2. Pastikan project `tklukmanhakim` terhubung ke repo `wsnu123/TK-LUKMANHAKIM` dengan Production Branch `main`.
+3. Aktifkan Auto-Deploy untuk push ke branch `main`, atau redeploy commit terbaru secara manual.
+4. Build command: `npm run build`; output frontend: `dist`.
+5. Setelah deploy berstatus **Ready**, buka domain Production dan refresh paksa.
 
-#### Opsi 2: Netlify (Gratis)
+#### Hosting lain
+Jika memakai Render/Railway/Cloud Run, gunakan build `npm run build` dan start `npm start`; set environment variable yang sama.
+
+#### Netlify (statis saja)
 1. Buka [https://netlify.com](https://netlify.com) dan login dengan akun GitHub Anda.
 2. Klik **Add new site** -> **Import an existing project**.
 3. Pilih GitHub -> pilih repository Anda.

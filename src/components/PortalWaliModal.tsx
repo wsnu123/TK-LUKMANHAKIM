@@ -242,7 +242,7 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
                 <strong className="text-emerald-700">{currentReport.attendance.hadir ?? currentReport.attendance.present ?? 56} Hari Hadir</strong>
               </div>
               <a
-                href={`https://wa.me/${schoolIdentity.whatsapp}?text=${encodeURIComponent(
+                href={`https://wa.me/${schoolIdentity.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
                   `Assalamu’alaikum Ustadzah, saya wali murid dari ${currentReport.studentName} (NIS: ${currentReport.nis}) ingin berkonsultasi.`
                 )}`}
                 target="_blank"

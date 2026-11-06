@@ -260,15 +260,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setStatusMessage(`Berhasil menambahkan ${newItems.length} foto ke ${sentraName}!`);
   };
 
-  const handleSaveWebsiteSettings = async () => {
-    const saved = await saveAllSettingsToServer();
-    setStatusMessage(
-      saved
-        ? 'Pengaturan website berhasil disimpan ke Firestore.'
-        : 'Pengaturan gagal disimpan. Pastikan login Google admin aktif dan ukuran konten tidak melebihi batas Firestore.'
-    );
-  };
-
   const handleAdminDeleteSentraPhoto = (id: string) => {
     const updated = adminUserPhotos.filter((p) => p.id !== id);
     setAdminUserPhotos(updated);
@@ -1092,7 +1083,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Sinkronisasi Konten Website
                     </h3>
                     <p className="text-xs text-sky-100 mt-1 leading-relaxed">
-                      Simpan identitas, banner, teks, dan galeri agar tampil konsisten di semua perangkat.
+                      Identitas, banner, teks, kontak, guru, dan galeri tersimpan otomatis ke Firestore setelah diedit.
                     </p>
 
                     <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -1101,14 +1092,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         className="px-4 py-2 rounded-xl bg-white hover:bg-sky-50 text-[#0F2937] text-xs font-extrabold transition cursor-pointer"
                       >
                         Lihat Website
-                      </button>
-                      <button
-                        onClick={handleSaveWebsiteSettings}
-                        disabled={!isAdminUser}
-                        className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-[11px] font-bold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                        title={isAdminUser ? 'Simpan pengaturan ke Firestore' : 'Masuk dengan akun Google admin untuk menyimpan ke cloud'}
-                      >
-                        <Cloud className="w-3.5 h-3.5" /> Simpan ke Cloud
                       </button>
                       <button
                         onClick={() => {

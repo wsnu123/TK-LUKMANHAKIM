@@ -28,13 +28,14 @@ interface PpdbModalProps {
 }
 
 export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
-  const { addRegistration, registrations, schoolIdentity } = useApp();
+  const { submitPublicRegistration, registrations, schoolIdentity } = useApp();
 
   const [activeTab, setActiveTab] = useState<'form' | 'status'>('form');
   const [step, setStep] = useState(1);
   const [submittedReg, setSubmittedReg] = useState<Registration | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form states (Direct without Gmail requirement)
   const [childName, setChildName] = useState('');
@@ -47,6 +48,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   const [parentName, setParentName] = useState('');
   const [motherName, setMotherName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
@@ -116,35 +118,39 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     setTimeout(() => setCopyStatus(null), 4000);
   };
 
-  const handleSubmitRegistration = (e: React.FormEvent) => {
+  const handleSubmitRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!parentName.trim() || !phone.trim()) {
       setFormError('Mohon lengkapi Nama Orang Tua dan Nomor WhatsApp aktif.');
       return;
     }
     setFormError(null);
-
-    const reg = addRegistration({
-      childName: childName.trim(),
-      nickname: nickname.trim() || childName.trim().split(' ')[0],
-      nik: nik.trim() || '3302000000000000',
-      birthPlace: birthPlace.trim() || 'Purwokerto',
-      birthDate,
-      gender,
-      program,
-      parentName: parentName.trim(),
-      motherName: motherName.trim(),
-      email: '',
-      phone: phone.trim(),
-      occupation: occupation.trim(),
-      address: address.trim(),
-      status: 'Menunggu Verifikasi',
-      notes: notes.trim(),
-    });
-
-    setSubmittedReg(reg);
-    setStep(3);
-
+    setIsSubmitting(true);
+    try {
+      const reg = await submitPublicRegistration({
+        childName: childName.trim(),
+        nickname: nickname.trim() || childName.trim().split(' ')[0],
+        nik: nik.trim(),
+        birthPlace: birthPlace.trim() || 'Purwokerto',
+        birthDate,
+        gender,
+        program,
+        parentName: parentName.trim(),
+        motherName: motherName.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        occupation: occupation.trim(),
+        address: address.trim(),
+        notes: notes.trim(),
+      });
+      setSubmittedReg(reg);
+      setStep(3);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Pendaftaran gagal disimpan. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSearchStatus = (e: React.FormEvent) => {
@@ -171,6 +177,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
     setParentName('');
     setMotherName('');
     setPhone('');
+    setEmail('');
     setAddress('');
     setNotes('');
     setStep(1);
@@ -414,7 +421,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                           Langkah 2: Data Orang Tua & Kontak WhatsApp
                         </h4>
                         <p className="text-[11px] text-emerald-800">
-                          Data akan langsung terhubung ke WhatsApp Panitia PPDB: {schoolIdentity.whatsapp}
+                          Setelah data tersimpan, Ayah/Bunda dapat mengirimkannya ke WhatsApp panitia: {schoolIdentity.whatsapp}
                         </p>
                       </div>
                     </div>
@@ -477,6 +484,19 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Email Wali (opsional)
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="nama@email.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:border-[#006699] focus:ring-1 focus:ring-[#006699] text-xs"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
                         Alamat Domisili Lengkap
                       </label>
                       <textarea
@@ -513,10 +533,11 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                     <button
                       type="submit"
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition cursor-pointer shadow-md"
+                      disabled={isSubmitting}
+                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition cursor-pointer shadow-md"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>Kirim Pendaftaran via WhatsApp</span>
+                      <span>{isSubmitting ? 'Menyimpan pendaftaran...' : 'Simpan dan lanjutkan'}</span>
                     </button>
                   </div>
                 </form>
@@ -531,7 +552,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
 
                   <div className="space-y-1.5">
                     <h3 className="text-xl sm:text-2xl font-extrabold text-[#0F2937]">
-                      Alhamdulillah, Pendaftaran Berhasil!
+                      Data pendaftaran sudah tersimpan
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
                       Data pendaftaran ananda sudah tercatat di perangkat ini. Untuk memastikan panitia menerima datanya, pilih WhatsApp (lebih cepat) atau email resmi sekolah.
@@ -543,7 +564,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                     <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                       <div>
                         <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                          Nomor Registrasi Resmi
+                          Nomor Referensi Pendaftaran
                         </span>
                         <span className="font-mono font-black text-base sm:text-lg text-[#006699]">
                           {submittedReg.regNumber}

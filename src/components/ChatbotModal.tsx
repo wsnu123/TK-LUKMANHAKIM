@@ -568,7 +568,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                         )}
                         {msg.suggestedActions.includes('wa_admin') && (
                           <a
-                            href={`https://wa.me/${schoolIdentity.whatsapp}?text=${encodeURIComponent(
+                            href={`https://wa.me/${schoolIdentity.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
                               `Assalamu’alaikum Admin ${schoolIdentity.nama}, saya ingin berkonsultasi lebih lanjut.`
                             )}`}
                             target="_blank"

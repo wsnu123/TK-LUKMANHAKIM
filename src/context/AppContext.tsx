@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import {
   collection,
@@ -47,14 +47,8 @@ import {
 import {
   INITIAL_TEACHERS,
   INITIAL_GALLERY,
-  INITIAL_REGISTRATIONS,
-  INITIAL_TUITION_BILLS,
-  INITIAL_REPORTS,
-  INITIAL_NOTIFICATION_LOGS,
-  INITIAL_INQUIRIES,
   INITIAL_HERO_SLIDES,
   SCHOOL_IDENTITY,
-  TESTIMONIALS,
   WA_ADMIN_CONTACTS,
   SCHOOL_ACTIVITY_PHOTOS,
 } from '../data/initialData';
@@ -70,6 +64,7 @@ interface AppContextType {
   signOutAccount: () => Promise<void>;
   syncLocalDataToFirestore: () => Promise<void>;
   sendPpdbConfirmationEmail: (reg: Registration) => Promise<{ success: boolean; messageId?: string; previewUrl?: string }>;
+  submitPublicRegistration: (reg: Omit<Registration, 'id' | 'regNumber' | 'createdAt' | 'waSent' | 'status'>) => Promise<Registration>;
   sendAnnouncementEmail: (data: {
     to: string;
     subject: string;
@@ -197,18 +192,18 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const STORAGE_KEYS = {
   TEACHERS: 'tklh_teachers_v1',
   GALLERY: 'tklh_gallery_v3',
-  REGISTRATIONS: 'tklh_registrations_v1',
-  TUITION: 'tklh_tuition_v1',
-  REPORTS: 'tklh_reports_v1',
-  NOTIFICATIONS: 'tklh_notifications_v1',
-  INQUIRIES: 'tklh_inquiries_v1',
+  REGISTRATIONS: 'tklh_registrations_v2',
+  TUITION: 'tklh_tuition_v2',
+  REPORTS: 'tklh_reports_v2',
+  NOTIFICATIONS: 'tklh_notifications_v2',
+  INQUIRIES: 'tklh_inquiries_v2',
   LARAVEL_CFG: 'tklh_laravel_cfg_v1',
   LOGGED_GMAIL_USER: 'tklh_logged_gmail_user_v1',
   SCHOOL_IDENTITY: 'tklh_school_identity_v1',
   HERO_SLIDES: 'tklh_hero_slides_v3',
   ACTIVITY_PHOTOS: 'tklh_school_activity_photos_v3',
-  TESTIMONIALS: 'tklh_testimonials_v1',
-  WA_CONTACTS: 'tklh_wa_contacts_v1',
+  TESTIMONIALS: 'tklh_testimonials_v2',
+  WA_CONTACTS: 'tklh_wa_contacts_v2',
   PHILOSOPHY_CARDS: 'tklh_philosophy_cards_v2',
   PILLARS_DATA: 'tklh_pillars_data_v3',
   APPEARANCE_CFG: 'tklh_appearance_cfg_v5',
@@ -384,7 +379,28 @@ function safeGetJson<T>(key: string, fallback: T): T {
   }
 }
 
+function normalizeSchoolIdentity(identity: SchoolIdentity): SchoolIdentity {
+  const legacyPhone = '6281228990111';
+  const officialPhone = '+62 877-1355-1412';
+  const officialMapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
+  const digits = (identity.whatsapp || '').replace(/\D/g, '');
+  const landlineDigits = (identity.telepon || '').replace(/\D/g, '');
+
+  return {
+    ...identity,
+    instagram: 'pg.tk.lukmanhakimpwt',
+    instagramUrl: 'https://www.instagram.com/pg.tk.lukmanhakimpwt',
+    whatsapp: digits === legacyPhone ? officialPhone : identity.whatsapp,
+    telepon: landlineDigits === legacyPhone ? officialPhone : identity.telepon,
+    googleMapsUrl: identity.googleMapsUrl?.includes('-7.4397,109.2492')
+      ? officialMapsUrl
+      : identity.googleMapsUrl,
+  };
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const siteSettingsLoaded = useRef(false);
+  const lastSiteSettingsJson = useRef('');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [isCloudSynced, setIsCloudSynced] = useState(false);
@@ -397,7 +413,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 
   const [schoolIdentity, setSchoolIdentity] = useState<SchoolIdentity>(() =>
-    safeGetJson(STORAGE_KEYS.SCHOOL_IDENTITY, SCHOOL_IDENTITY)
+    normalizeSchoolIdentity(safeGetJson(STORAGE_KEYS.SCHOOL_IDENTITY, SCHOOL_IDENTITY))
   );
 
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>(() =>
@@ -411,7 +427,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>(() =>
-    safeGetJson(STORAGE_KEYS.TESTIMONIALS, TESTIMONIALS)
+    safeGetJson(STORAGE_KEYS.TESTIMONIALS, [] as TestimonialItem[])
   );
 
   const [waContacts, setWaContacts] = useState<WaAdminContact[]>(() =>
@@ -490,25 +506,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 
   const [registrations, setRegistrations] = useState<Registration[]>(() =>
-    safeGetJson(STORAGE_KEYS.REGISTRATIONS, INITIAL_REGISTRATIONS)
+    safeGetJson(STORAGE_KEYS.REGISTRATIONS, [] as Registration[])
   );
 
   const [tuitionBills, setTuitionBills] = useState<TuitionBill[]>(() =>
-    safeGetJson(STORAGE_KEYS.TUITION, INITIAL_TUITION_BILLS)
+    safeGetJson(STORAGE_KEYS.TUITION, [] as TuitionBill[])
   );
 
   const [reports, setReports] = useState<StudentReport[]>(() =>
-    safeGetJson(STORAGE_KEYS.REPORTS, INITIAL_REPORTS)
+    safeGetJson(STORAGE_KEYS.REPORTS, [] as StudentReport[])
   );
 
   const [notificationLogs, setNotificationLogs] = useState<NotificationLog[]>(() =>
-    safeGetJson(STORAGE_KEYS.NOTIFICATIONS, INITIAL_NOTIFICATION_LOGS)
+    safeGetJson(STORAGE_KEYS.NOTIFICATIONS, [] as NotificationLog[])
   );
 
-  const [inquiries, setInquiries] = useState<Inquiry[]>(() => {
-    const parsed = safeGetJson<Inquiry[] | null>(STORAGE_KEYS.INQUIRIES, null);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_INQUIRIES;
-  });
+  const [inquiries, setInquiries] = useState<Inquiry[]>(() =>
+    safeGetJson(STORAGE_KEYS.INQUIRIES, [] as Inquiry[])
+  );
 
   const [laravelConfig, setLaravelConfig] = useState<LaravelBridgeConfig>(() =>
     safeGetJson(STORAGE_KEYS.LARAVEL_CFG, {
@@ -945,9 +960,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const toEmail = reg.email || '';
     if (!toEmail) return { success: false };
     try {
+      const headers = await getAdminRequestHeaders();
       const res = await fetch('/api/mail/send-ppdb-confirmation', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           to: toEmail,
           childName: reg.childName,
@@ -960,6 +976,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }),
       });
       const data = await res.json();
+      if (!res.ok) return { success: false, ...data };
       if (data && (data.gmailWebLink || data.gmailInboxLink)) {
         setRegistrations((prev) =>
           prev.map((r) =>
@@ -981,6 +998,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.warn('Failed to send PPDB confirmation email:', err);
       return { success: false };
     }
+  };
+
+  const submitPublicRegistration = async (
+    registration: Omit<Registration, 'id' | 'regNumber' | 'createdAt' | 'waSent' | 'status'>
+  ): Promise<Registration> => {
+    const response = await fetch('/api/registrations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registration),
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success || !result.registration) {
+      throw new Error(result.error || 'Pendaftaran belum berhasil disimpan.');
+    }
+    const savedRegistration = result.registration as Registration;
+    setRegistrations((prev) => [savedRegistration, ...prev.filter((item) => item.id !== savedRegistration.id)]);
+    return savedRegistration;
   };
 
   const sendAnnouncementEmail = async (params: {
@@ -1768,6 +1802,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // ==================== 7. INQUIRIES (BUKU TAMU & KONSULTASI) CRUD ====================
   const addInquiry = async (inquiry: Omit<Inquiry, 'id' | 'createdAt'>): Promise<Inquiry> => {
+    if (!auth.currentUser?.emailVerified) {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inquiry),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success || !result.inquiry) {
+        throw new Error(result.error || 'Pesan belum berhasil disimpan.');
+      }
+      const savedInquiry = result.inquiry as Inquiry;
+      setInquiries((prev) => [savedInquiry, ...prev]);
+      return savedInquiry;
+    }
+
     const safeId = sanitizeId(`inq_${Date.now()}`);
     const now = new Date();
     const createdAt = `${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID', {
@@ -1847,14 +1896,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const settingsRef = doc(db, 'site_settings', 'public');
     return onSnapshot(settingsRef, (snapshot) => {
-      if (!snapshot.exists()) return;
+      siteSettingsLoaded.current = true;
+      if (!snapshot.exists()) {
+        lastSiteSettingsJson.current = '';
+        return;
+      }
       const settings = snapshot.data().settings;
       if (!settings || typeof settings !== 'object') return;
-      if (settings.schoolIdentity) setSchoolIdentity(settings.schoolIdentity);
+      lastSiteSettingsJson.current = JSON.stringify(settings);
+      if (settings.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(settings.schoolIdentity));
       if (Array.isArray(settings.heroSlides)) setHeroSlides(settings.heroSlides);
       if (Array.isArray(settings.activityPhotos)) setActivityPhotos(settings.activityPhotos);
       if (Array.isArray(settings.testimonials)) setTestimonials(settings.testimonials);
-      if (Array.isArray(settings.waContacts)) setWaContacts(settings.waContacts);
+      if (Array.isArray(settings.waContacts)) {
+        const legacyPhones = new Set([
+          '6281228990111',
+          '6285747009821',
+          '6281229883456',
+          '6281391223445',
+          '6285290114567',
+          '6281390445566',
+        ]);
+        setWaContacts(settings.waContacts.map((contact: WaAdminContact) => {
+          const cleanPhone = contact.phone.replace(/\D/g, '');
+          return {
+            ...contact,
+            phone: legacyPhones.has(cleanPhone) ? '6287713551412' : contact.phone,
+          };
+        }));
+      }
       if (Array.isArray(settings.philosophyCards)) setPhilosophyCards(settings.philosophyCards);
       if (Array.isArray(settings.pillarsData)) setPillarsData(settings.pillarsData);
       if (settings.appearanceConfig) setAppearanceConfig(settings.appearanceConfig);
@@ -1865,6 +1935,58 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       handleFirestoreError(error, OperationType.GET, 'site_settings/public');
     });
   }, []);
+
+  useEffect(() => {
+    if (!siteSettingsLoaded.current || !auth.currentUser?.emailVerified || !isAdminUser) return;
+
+    const settings = {
+      schoolIdentity,
+      heroSlides,
+      activityPhotos,
+      testimonials,
+      waContacts,
+      philosophyCards,
+      pillarsData,
+      appearanceConfig,
+      customFeatures,
+      teachers,
+      gallery,
+    };
+    const serializedSettings = JSON.stringify(settings);
+    if (serializedSettings === lastSiteSettingsJson.current) return;
+
+    const timer = window.setTimeout(async () => {
+      if (new TextEncoder().encode(serializedSettings).length > 900_000) {
+        console.error('CMS website terlalu besar untuk disimpan sebagai satu dokumen Firestore.');
+        return;
+      }
+      try {
+        await setDoc(doc(db, 'site_settings', 'public'), {
+          settings,
+          updatedAt: serverTimestamp(),
+          updatedBy: auth.currentUser?.uid,
+        });
+        lastSiteSettingsJson.current = serializedSettings;
+      } catch (error) {
+        handleFirestoreError(error, OperationType.WRITE, 'site_settings/public');
+      }
+    }, 800);
+
+    return () => window.clearTimeout(timer);
+  }, [
+    isAdminUser,
+    schoolIdentity,
+    heroSlides,
+    activityPhotos,
+    testimonials,
+    waContacts,
+    philosophyCards,
+    pillarsData,
+    appearanceConfig,
+    customFeatures,
+    teachers,
+    gallery,
+  ]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.HERO_SLIDES, JSON.stringify(heroSlides));
@@ -1917,7 +2039,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [customFeatures]);
 
   const addCustomFeature = (feat: Omit<CustomFeature, 'id' | 'createdAt'>) => {
-    if (!isAdminAuthenticated) return;
+    if (!isAdminUser) return;
     const newFeat: CustomFeature = {
       ...feat,
       id: `feat_${Date.now()}`,
@@ -1927,17 +2049,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateCustomFeature = (id: string, updated: Partial<CustomFeature>) => {
-    if (!isAdminAuthenticated) return;
+    if (!isAdminUser) return;
     setCustomFeatures((prev) => prev.map((f) => (f.id === id ? { ...f, ...updated } : f)));
   };
 
   const deleteCustomFeature = (id: string) => {
-    if (!isAdminAuthenticated) return;
+    if (!isAdminUser) return;
     setCustomFeatures((prev) => prev.filter((f) => f.id !== id));
   };
 
   const toggleCustomFeature = (id: string) => {
-    if (!isAdminAuthenticated) return;
+    if (!isAdminUser) return;
     setCustomFeatures((prev) =>
       prev.map((f) => (f.id === id ? { ...f, isActive: !f.isActive } : f))
     );
@@ -2162,18 +2284,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSchoolIdentity(SCHOOL_IDENTITY);
     setHeroSlides(INITIAL_HERO_SLIDES);
     setActivityPhotos(SCHOOL_ACTIVITY_PHOTOS);
-    setTestimonials(TESTIMONIALS);
+    setTestimonials([]);
     setWaContacts(WA_ADMIN_CONTACTS);
     setPhilosophyCards(DEFAULT_PHILOSOPHY_CARDS);
     setPillarsData(DEFAULT_PILLARS_DATA);
     setAppearanceConfig(DEFAULT_APPEARANCE_CONFIG);
     setTeachers(INITIAL_TEACHERS);
     setGallery(INITIAL_GALLERY);
-    setRegistrations(INITIAL_REGISTRATIONS);
-    setTuitionBills(INITIAL_TUITION_BILLS);
-    setReports(INITIAL_REPORTS);
-    setNotificationLogs(INITIAL_NOTIFICATION_LOGS);
-    setInquiries(INITIAL_INQUIRIES);
+    setRegistrations([]);
+    setTuitionBills([]);
+    setReports([]);
+    setNotificationLogs([]);
+    setInquiries([]);
     localStorage.clear();
   };
 
@@ -2190,6 +2312,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         signOutAccount,
         syncLocalDataToFirestore,
         sendPpdbConfirmationEmail,
+        submitPublicRegistration,
         sendAnnouncementEmail,
         sendTuitionReceiptEmail,
         fetchInboxEmails,

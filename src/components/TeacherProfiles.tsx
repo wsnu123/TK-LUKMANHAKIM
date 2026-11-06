@@ -3,13 +3,14 @@ import { useApp } from '../context/AppContext';
 import { GraduationCap, Award, Phone, BookOpen } from 'lucide-react';
 
 export const TeacherProfiles: React.FC = () => {
-  const { teachers } = useApp();
+  const { teachers, schoolIdentity } = useApp();
 
-  const handleContactTeacher = (phone: string, name: string) => {
+  const handleContactTeacher = (name: string) => {
     const text = encodeURIComponent(
       `Assalamu’alaikum Warahmatullahi Wabarakatuh ${name}. Saya orang tua calon siswa ingin bersilaturahmi dan bertanya mengenai kegiatan belajar di TK Lukman Hakim Purwokerto.`
     );
-    window.open(`https://wa.me/62${phone.replace(/^0/, '')}?text=${text}`, '_blank');
+    const schoolPhone = schoolIdentity.whatsapp.replace(/\D/g, '');
+    window.open(`https://wa.me/${schoolPhone}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -65,7 +66,7 @@ export const TeacherProfiles: React.FC = () => {
 
               <div className="p-5 sm:px-6 pt-0">
                 <button
-                  onClick={() => handleContactTeacher(teacher.phone, teacher.name)}
+                  onClick={() => handleContactTeacher(teacher.name)}
                   className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-emerald-600 text-slate-800 hover:text-white text-xs font-bold flex items-center justify-center gap-2 transition duration-200 cursor-pointer"
                 >
                   <Phone className="w-3.5 h-3.5" />

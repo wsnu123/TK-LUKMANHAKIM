@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { verify as verifySignature } from 'node:crypto';
+import { randomUUID, verify as verifySignature } from 'node:crypto';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 import nodemailer, { Transporter } from 'nodemailer';
+import { cert, getApps, initializeApp } from 'firebase-admin/app';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 
 dotenv.config();
 
@@ -17,12 +17,11 @@ process.on('unhandledRejection', (reason) => {
   console.error('[Server Error] Unhandled Rejection:', reason);
 });
 
-const __filenameResolved = typeof __filename !== 'undefined' ? __filename : fileURLToPath(import.meta.url);
-const __dirnameResolved = typeof __dirname !== 'undefined' ? __dirname : path.dirname(__filenameResolved);
-
 const app = express();
+app.set('trust proxy', 1);
 
 const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'refreshing-ticket-pgmzr';
+const FIREBASE_DATABASE_ID = process.env.FIREBASE_DATABASE_ID || 'ai-studio-tklukmanhakimpur-8395c4ff-b3ba-4cd2-86ee-4d3936c47055';
 const ADMIN_EMAILS = new Set(
   (process.env.ADMIN_EMAILS || 'ml0752960@gmail.com')
     .split(',')
@@ -87,6 +86,194 @@ const requireAdmin: express.RequestHandler = (req: Request, res: Response, next:
     })
     .catch(() => res.status(503).json({ success: false, error: 'Layanan verifikasi login sedang tidak tersedia.' }));
 };
+
+function getAdminFirestore() {
+  if (!getApps().length) {
+    const rawServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
+    if (!rawServiceAccount) throw new Error('FIREBASE_SERVICE_ACCOUNT belum diatur pada environment hosting.');
+    const serviceAccount = JSON.parse(rawServiceAccount);
+    serviceAccount.private_key = serviceAccount.private_key?.replace(/\\n/g, '\n');
+    initializeApp({
+      credential: cert(serviceAccount),
+      projectId: FIREBASE_PROJECT_ID,
+    });
+  }
+  return getFirestore(undefined, FIREBASE_DATABASE_ID);
+}
+
+const publicRequestAttempts = new Map<string, number[]>();
+const REGISTRATION_RATE_WINDOW_MS = 15 * 60 * 1000;
+const REGISTRATION_RATE_LIMIT = 5;
+
+function allowPublicRequest(req: Request): boolean {
+  const now = Date.now();
+  const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+  const recentAttempts = (publicRequestAttempts.get(clientIp) || []).filter(
+    (timestamp) => now - timestamp < REGISTRATION_RATE_WINDOW_MS
+  );
+  if (recentAttempts.length >= REGISTRATION_RATE_LIMIT) return false;
+  recentAttempts.push(now);
+  publicRequestAttempts.set(clientIp, recentAttempts);
+
+  if (publicRequestAttempts.size > 2000) {
+    for (const [ip, timestamps] of publicRequestAttempts) {
+      if (timestamps.every((timestamp) => now - timestamp >= REGISTRATION_RATE_WINDOW_MS)) {
+        publicRequestAttempts.delete(ip);
+      }
+    }
+  }
+  return true;
+}
+
+app.post('/api/registrations', express.json(), async (req: Request, res: Response) => {
+  if (!allowPublicRequest(req)) {
+    return res.status(429).json({ success: false, error: 'Terlalu banyak percobaan. Silakan coba kembali beberapa saat lagi.' });
+  }
+
+  const body = req.body || {};
+  const textFields: Record<string, number> = {
+    childName: 120,
+    nickname: 60,
+    birthPlace: 80,
+    birthDate: 30,
+    parentName: 120,
+    motherName: 120,
+    phone: 30,
+    occupation: 100,
+    address: 400,
+    notes: 500,
+  };
+  const invalidTextField = Object.entries(textFields).find(([field, max]) =>
+    typeof body[field] !== 'string' || body[field].trim().length > max
+  );
+  if (invalidTextField) {
+    return res.status(400).json({
+      success: false,
+      error: `Kolom ${invalidTextField[0]} tidak valid atau terlalu panjang.`,
+    });
+  }
+
+  const allowedPrograms = [
+    'Playgroup (Usia 2-3 Th)',
+    'TK A (Usia 4-5 Th)',
+    'TK B (Usia 5-6 Th)',
+    'Kelas Tahfidz Cilik (Usia 4-6 Th)',
+  ];
+  const normalizedPhone = body.phone.replace(/\D/g, '');
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+  if (!body.childName.trim() || !body.parentName.trim() || normalizedPhone.length < 8 || normalizedPhone.length > 15 ||
+    !allowedPrograms.includes(body.program) || !['Laki-laki', 'Perempuan'].includes(body.gender) ||
+    (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+    return res.status(400).json({ success: false, error: 'Periksa nama, nomor WhatsApp, jenjang, jenis kelamin, dan email.' });
+  }
+
+  try {
+    const db = getAdminFirestore();
+    const registrationId = `reg_${randomUUID().replace(/-/g, '')}`;
+    const regNumber = `PPDB-LHP-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`;
+    const registration = {
+      id: registrationId,
+      ownerId: 'public_spmb',
+      regNumber,
+      childName: body.childName.trim(),
+      nickname: body.nickname.trim() || body.childName.trim().split(/\s+/)[0],
+      nik: typeof body.nik === 'string' && body.nik.trim() ? body.nik.trim().slice(0, 32) : 'Belum diisi',
+      birthPlace: body.birthPlace.trim() || 'Belum diisi',
+      birthDate: body.birthDate.trim() || 'Belum diisi',
+      gender: body.gender,
+      program: body.program,
+      parentName: body.parentName.trim(),
+      motherName: body.motherName.trim(),
+      ...(email ? { email } : {}),
+      phone: normalizedPhone.startsWith('0') ? `62${normalizedPhone.slice(1)}` : normalizedPhone,
+      occupation: body.occupation.trim(),
+      address: body.address.trim() || 'Belum diisi',
+      status: 'Menunggu Verifikasi',
+      notes: body.notes.trim(),
+      waSent: false,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+    await db.collection('registrations').doc(registrationId).create(registration);
+    const savedAt = new Date().toISOString();
+    return res.status(201).json({
+      success: true,
+      registration: { ...registration, createdAt: savedAt, updatedAt: savedAt },
+    });
+  } catch (error: any) {
+    console.error('Public SPMB registration could not be saved:', error?.message);
+    return res.status(503).json({
+      success: false,
+      error: 'Pendaftaran belum dapat disimpan ke sistem. Silakan hubungi panitia melalui WhatsApp.',
+    });
+  }
+});
+
+app.post('/api/inquiries', express.json(), async (req: Request, res: Response) => {
+  if (!allowPublicRequest(req)) {
+    return res.status(429).json({ success: false, error: 'Terlalu banyak pesan. Silakan coba kembali beberapa saat lagi.' });
+  }
+  const body = req.body || {};
+  const fields: Record<string, number> = {
+    name: 120,
+    phone: 30,
+    childAge: 40,
+    interest: 150,
+    message: 1000,
+  };
+  const invalidField = Object.entries(fields).find(([field, max]) =>
+    typeof body[field] !== 'string' || body[field].trim().length > max
+  );
+  if (invalidField) {
+    return res.status(400).json({ success: false, error: `Kolom ${invalidField[0]} tidak valid atau terlalu panjang.` });
+  }
+  const phone = body.phone.replace(/\D/g, '');
+  if (!body.name.trim() || !body.interest.trim() || !body.message.trim() || phone.length < 8 || phone.length > 15) {
+    return res.status(400).json({ success: false, error: 'Mohon periksa nama, nomor WhatsApp, topik, dan pesan.' });
+  }
+
+  try {
+    const db = getAdminFirestore();
+    const id = `inq_${randomUUID().replace(/-/g, '')}`;
+    const inquiry = {
+      id,
+      ownerId: 'public_contact',
+      name: body.name.trim(),
+      phone: phone.startsWith('0') ? `62${phone.slice(1)}` : phone,
+      childAge: body.childAge.trim(),
+      interest: body.interest.trim(),
+      message: body.message.trim(),
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+    await db.collection('inquiries').doc(id).create(inquiry);
+
+    if (mailTransporter) {
+      try {
+        await mailTransporter.sendMail({
+          from: `"Website TK Lukman Hakim" <${mailConfig.user}>`,
+          to: process.env.SCHOOL_NOTIFICATION_EMAIL || 'tklukmanhakim.pwt@gmail.com',
+          subject: `Pesan baru dari website: ${inquiry.interest}`,
+          text: `Nama: ${inquiry.name}\nWhatsApp: ${inquiry.phone}\nUsia ananda: ${inquiry.childAge || '-'}\nTopik: ${inquiry.interest}\n\nPesan:\n${inquiry.message}`,
+        });
+      } catch (error: any) {
+        console.error('School inquiry email notification failed:', error?.message);
+      }
+    }
+
+    const nowIso = new Date().toISOString();
+    return res.status(201).json({
+      success: true,
+      inquiry: { ...inquiry, createdAt: nowIso, updatedAt: nowIso },
+    });
+  } catch (error: any) {
+    console.error('Public inquiry could not be saved:', error?.message);
+    return res.status(503).json({
+      success: false,
+      error: 'Pesan belum dapat disimpan. Silakan hubungi sekolah melalui WhatsApp.',
+    });
+  }
+});
 
 // Parse CLI flags or fall back to port 3000
 const portArgIndex = process.argv.indexOf('--port');
@@ -662,71 +849,6 @@ app.post('/api/mail/config', requireAdmin, (_req: Request, res: Response) => {
   });
 });
 
-// ==================== PERMANENT SITE SETTINGS ENGINE (DISK & CLOUD PERSISTENCE) ====================
-const SETTINGS_FILE_PATH = path.join(process.cwd(), 'data', 'site_settings.json');
-
-function loadPersistedSettings() {
-  try {
-    if (fs.existsSync(SETTINGS_FILE_PATH)) {
-      const raw = fs.readFileSync(SETTINGS_FILE_PATH, 'utf-8');
-      return JSON.parse(raw);
-    }
-  } catch (err: any) {
-    console.warn('Failed to read site_settings.json:', err.message);
-  }
-  return null;
-}
-
-function savePersistedSettings(data: any): boolean {
-  try {
-    const dir = path.dirname(SETTINGS_FILE_PATH);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(SETTINGS_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
-    return true;
-  } catch (err: any) {
-    console.error('Failed to write site_settings.json:', err.message);
-    return false;
-  }
-}
-
-app.get('/api/settings', requireAdmin, (_req: Request, res: Response) => {
-  const settings = loadPersistedSettings();
-  res.json({
-    success: true,
-    hasPersistedSettings: !!settings,
-    settings: settings || null,
-  });
-});
-
-app.post('/api/settings', requireAdmin, (req: Request, res: Response) => {
-  try {
-    const payload = req.body;
-    if (!payload || typeof payload !== 'object') {
-      return res.status(400).json({ error: 'Payload tidak valid' });
-    }
-    const current = loadPersistedSettings() || {};
-    const merged = {
-      ...current,
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    };
-    const saved = savePersistedSettings(merged);
-    if (saved) {
-      res.json({
-        success: true,
-        message: 'Pengaturan website berhasil disimpan secara permanen di server & database!',
-        updatedAt: merged.updatedAt,
-      });
-    } else {
-      res.status(500).json({ error: 'Gagal menulis file konfigurasi server' });
-    }
-  } catch (err: any) {
-    res.status(500).json({ error: 'Gagal memperbarui pengaturan website', details: err?.message });
-  }
-});
-
 // Test Dispatch directly to user's Gmail with fully interactive buttons
 app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response) => {
   try {
@@ -742,7 +864,7 @@ app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response
       });
     }
     const baseUrl = getBaseUrl(req);
-    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)';
+    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
     const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent('Assalamu’alaikum Panitia PPDB TK Lukman Hakim, uji coba pengiriman email telah sampai dengan baik.');
 
     const testSubject = '[UJI COBA RESMI] Tes Pengiriman Email - TK LUKMAN HAKIM Purwokerto';
@@ -908,7 +1030,7 @@ WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
 
     const baseUrl = getBaseUrl(req);
     const ppdbPortalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber)}`;
-    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)';
+    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
     const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName}* dengan No. Registrasi *${regNumber}*. Saya telah menerima surat konfirmasi pendaftaran resmi di Gmail dan ingin mengonfirmasi jadwal observasi ramah anak. Terima kasih.`;
     const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
 
@@ -1067,7 +1189,7 @@ app.post('/api/mail/send-announcement', requireAdmin, async (req: Request, res: 
     const isAccepted = status === 'Diterima';
 
     const baseUrl = getBaseUrl(req);
-    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)';
+    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
     const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName || 'Santri'}* (${regNumber || ''}). Saya telah membaca surat pengumuman keputusan hasil seleksi di Gmail (${status || 'Diterima'}). Saya ingin mengonfirmasi proses selanjutnya / daftar ulang. Terima kasih.`;
     const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
     const portalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber || '')}`;
@@ -1191,7 +1313,7 @@ app.post('/api/mail/send-spp-receipt', requireAdmin, async (req: Request, res: R
     }
     const baseUrl = getBaseUrl(req);
     const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent(`Assalamu’alaikum Keuangan TK Lukman Hakim, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${studentName} (${nis}) No: ${receiptNumber || '-'}.`);
-    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=-7.4397,109.2492+(TK+Islam+Lukman+Hakim+Purwokerto)';
+    const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
 
     const subject = `[KUITANSI PEMBAYARAN RESMI] SPP Periode ${month} ${year} - ${studentName} (${nis})`;
     const bodyText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Wali dari ${studentName},\n\nPembayaran SPP bulan ${month} ${year} sebesar Rp ${Number(totalAmount).toLocaleString('id-ID')} melalui ${paymentMethod} telah diverifikasi LUNAS.\nNomor Kuitansi: ${receiptNumber || 'KW-' + Date.now()}.\n\nBagian Keuangan TK Lukman Hakim Purwokerto`;
@@ -1417,4 +1539,8 @@ async function startServer() {
   }
 }
 
-startServer();
+export default app;
+
+if (process.env.VERCEL !== '1') {
+  void startServer();
+}

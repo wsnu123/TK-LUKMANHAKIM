@@ -57,10 +57,10 @@ const ALL_FACILITIES: FacilityItem[] = [
     title: 'Playground Alam & Sirkuit Rambu Lalu Lintas',
     subtitle: 'Area bermain motorik kasar & simulasi keselamatan jalan raya',
     category: 'Outdoor & Alam',
-    badge: 'Paling Populer',
-    rating: 4.9,
-    reviewsCount: 142,
-    areaSize: '± 450 m²',
+    badge: 'Fasilitas sekolah',
+    rating: 0,
+    reviewsCount: 0,
+    areaSize: 'Area luar ruang',
     locationZone: 'Halaman Terbuka Kampus',
     image: '/assets/gallery/foto9-jembatan-motorik.jpg',
     galleryImages: [
@@ -69,18 +69,13 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/assets/gallery/foto4-snack-area-bermain.jpg',
     ],
     description:
-      'Dilengkapi jembatan titian kayu keseimbangan warna-warni, lintasan jalan raya mini dengan zebra cross dan rambu edukatif, ayunan pengaman ganda, serta taman rumput asri yang teduh.',
-    highlights: [
-      'Jembatan titian kayu vestibular untuk melatih keseimbangan',
-      'Lintasan aspal mini bersimulasi Zebra Cross & rambu lalu lintas',
-      'Wahana putaran & ayunan ramah balita berpagar pengaman',
-      'Area rumput alami terawat dengan pepohonan peneduh',
-    ],
-    safetyStandard: 'Permukaan pijakan anti-benturan & selalu dalam pengawasan 2-3 ustadzah.',
+      'Foto kegiatan anak bermain dan mengenal lingkungan sekolah. Untuk mengetahui fasilitas yang tersedia saat ini, Ayah dan Bunda dapat menjadwalkan kunjungan.',
+    highlights: [],
+    safetyStandard: '',
     coordinator: {
-      name: 'Ustadzah Rahmawati, S.Pd.',
-      role: 'Koordinator Motorik & Outbound',
-      avatar: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=200&q=80',
+      name: '',
+      role: '',
+      avatar: '',
     },
   },
   {
@@ -102,7 +97,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/src/assets/images/sentra_balok_montessori_1790826050585.jpg',
     ],
     description:
-      'Ruang kelas sentra ber-AC Daikin Inverter sejuk dan higienis, menaungi 7 sentra unggulan: Sentra Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1, dan Persiapan 2 dengan media belajar konkret.',
+      'Foto kegiatan belajar di ruang sentra. Ayah dan Bunda dapat melihat kondisi ruang dan perlengkapan secara langsung saat berkunjung.',
     highlights: [
       'Pendingin ruangan (AC) Daikin Inverter sejuk & sirkulasi HEPA',
       'Balok kayu natural berbagai bentuk geometris bersertifikasi SNI',
@@ -133,7 +128,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/src/assets/images/sholat_berjamaah_1789701704780.jpg',
     ],
     description:
-      'Pusat pembinaan ruhiyah dan adab islami anak. Digunakan setiap pagi untuk ikrar bersama, Sholat Dhuha berjamaah, serta bimbingan tahsin makhorijul huruf dengan metode Tilawati ceria.',
+      'Foto kegiatan ibadah dan belajar Al-Qur’an. Jadwal kegiatan dan metode yang digunakan dapat ditanyakan langsung kepada sekolah.',
     highlights: [
       'Karpet empuk bersih dengan jadwal vacuum cleaner harian',
       'Tempat wudhu khusus anak dengan tinggi keran 45–55 cm',
@@ -164,7 +159,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/src/assets/images/rumah_burung_nature_1789701916669.jpg',
     ],
     description:
-      'Tempat santri belajar sains langsung dari alam nyata. Anak diajak menyemai bibit sayur hidroponik, menyiram tanaman, serta mengamati perilaku burung merpati putih jinak di sangkar taman sekolah.',
+      'Foto aktivitas eksplorasi alam. Ketersediaan kebun dan area satwa dapat dikonfirmasi saat Ayah dan Bunda berkunjung.',
     highlights: [
       'Instalasi pipa hidroponik vertikal ramah jangkauan anak',
       'Kandang rumah merpati jinak bersih dengan jadwal pakan teratur',
@@ -194,7 +189,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/src/assets/images/wisuda_pentas_seni_1790826113606.jpg',
     ],
     description:
-      'Ruang kreasi ekspresif untuk melatih motorik halus, kepekaan ritme musikal, serta kepercayaan diri tampil di hadapan umum melalui angklung bambu cilik, cat air ramah anak, dan kolase.',
+      'Foto aktivitas seni dan kreasi anak. Jadwal dan perlengkapan kegiatan dapat ditanyakan kepada pihak sekolah.',
     highlights: [
       'Set lengkap angklung bambu bernada pentatonik anak-anak',
       'Meja lukis easel kayu rendah & kuas spons ramah tangan kecil',
@@ -225,7 +220,7 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/src/assets/images/makan_siang_santri_1789701844034.jpg',
     ],
     description:
-      'Area makan bersama berlantai bersih dengan meja ergonomis rendah untuk mengajarkan adab makan islami, menu gizi seimbang non-MSG, didukung wastafel cuci tangan 55 cm dan toilet balita anti-slip.',
+      'Foto kegiatan makan bersama. Untuk informasi menu dan layanan yang tersedia, silakan hubungi sekolah.',
     highlights: [
       'Penyajian katering higienis non-MSG dengan sertifikasi gizi',
       'Wastafel baris dengan ketinggian khusus anak & sabun antiseptik',
@@ -300,8 +295,8 @@ const CATEGORIES_DATA = [
   },
   {
     id: 'k3l-cctv',
-    name: 'Sistem K3L & CCTV',
-    metric: '16 Kamera & One-Gate',
+    name: 'Sanitasi dan kebersihan',
+    metric: 'Area kebersihan sekolah',
     icon: ShieldCheck,
     filterKey: 'Kesehatan & Sanitasi',
     tag: 'Keamanan Berlapis',
@@ -311,23 +306,23 @@ const CATEGORIES_DATA = [
 const FAQ_ITEMS = [
   {
     q: 'Apakah fasilitas di TK Lukman Hakim aman bagi balita usia 3–5 tahun?',
-    a: 'Sangat aman. Seluruh perabot (meja, kursi, lemari) dirancang bersudut tumpul (Child-Safe Furniture). Lantai playground berlapis rumput dan pasir pelindung benturan, serta seluruh sudut ruangan dimonitor kamera CCTV 24 jam dan didampingi ustadzah dengan rasio 1 guru untuk 8–10 anak.',
+    a: 'Ayah dan Bunda dapat melihat area belajar dan bermain saat kunjungan, serta menanyakan langsung pendampingan yang diterapkan sesuai usia ananda.',
   },
   {
     q: 'Bagaimana sistem pendingin udara (AC) dan sirkulasi di ruang kelas sentra?',
-    a: 'Setiap ruang kelas sentra dilengkapi AC Daikin Inverter sejuk dengan filter udara berkala. Selain itu, jendela berukuran besar tetap memungkinkan pertukaran sirkulasi udara alami dan cahaya matahari pagi saat kegiatan awal ikrar.',
+    a: 'Kondisi ruang belajar dan fasilitas yang tersedia dapat dilihat langsung saat berkunjung ke sekolah.',
   },
   {
     q: 'Apakah orang tua diperbolehkan melakukan kunjungan (School Tour) sebelum mendaftar?',
-    a: 'Tentu saja sangat dianjurkan! Kami menyelenggarakan School Tour setiap hari kerja (Senin–Jumat pukul 08.00–14.00 WIB dan Sabtu pukul 08.00–12.00 WIB). Ayah Bunda beserta ananda dapat melihat langsung kelas yang aktif dan mencoba free trial bermain di playground.',
+    a: 'Tentu. Hubungi panitia untuk mengatur waktu kunjungan, supaya kami dapat menyambut Ayah dan Bunda serta ananda dengan baik.',
   },
   {
     q: 'Bagaimana standar kebersihan toilet balita dan area makan katering?',
-    a: 'Toilet santri menggunakan lantai bertekstur anti-slip khusus balita dengan wastafel rendah (55 cm). Area makan disterilisasi setiap hari sebelum jam makan siang bersama, dan katering disajikan hangat non-MSG dengan menu 4 sehat 5 sempurna yang diawasi ustadzah gizi.',
+    a: 'Silakan tanyakan kondisi area sanitasi, kebiasaan kebersihan, dan layanan makan yang tersedia langsung kepada sekolah saat berkunjung.',
   },
   {
     q: 'Bagaimana sistem keamanan One-Gate System saat jam pulang sekolah?',
-    a: 'Sekolah hanya memiliki satu pintu gerbang utama yang dijaga petugas keamanan. Santri hanya boleh dijemput oleh orang tua atau pihak keluarga yang telah terdaftar di buku penjemputan resmi. Pihak selain yang terdaftar wajib konfirmasi langsung ke wali kelas.',
+    a: 'Tanyakan prosedur antar-jemput dan penjemputan yang berlaku kepada panitia sebelum ananda mulai bersekolah.',
   },
 ];
 
@@ -701,19 +696,10 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
-                    <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                    <div className="absolute top-3.5 left-3.5">
                       <span className="bg-[#006699]/90 backdrop-blur-xs text-white text-xs font-extrabold px-3 py-1.5 rounded-md shadow-xs">
                         {item.category}
                       </span>
-                      <span className="bg-[#fbbf24] text-[#0F2937] text-[11px] font-black px-2.5 py-1.5 rounded-md shadow-xs">
-                        {item.badge}
-                      </span>
-                    </div>
-
-                    <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-xs text-slate-900 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-md">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                      <span>{item.rating.toFixed(1)}</span>
-                      <span className="text-slate-400 text-xs">({item.reviewsCount})</span>
                     </div>
                   </div>
 
@@ -722,8 +708,6 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                     <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
                       <MapPin className="w-4 h-4 text-[#006699]" />
                       <span className="truncate">{item.locationZone}</span>
-                      <span>•</span>
-                      <span className="text-[#006699] font-bold">{item.areaSize}</span>
                     </div>
 
                     <h3
@@ -737,39 +721,14 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                       {item.description}
                     </p>
 
-                    {/* Features list */}
-                    <div className="space-y-2 pt-1">
-                      {item.highlights.slice(0, 2).map((h, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="truncate">{h}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
 
                 {/* Card Footer matching DreamGigs */}
-                <div className="px-6 py-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <img
-                      src={item.coordinator.avatar}
-                      alt={item.coordinator.name}
-                      className="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0"
-                    />
-                    <div className="min-w-0">
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 truncate">
-                        {item.coordinator.name}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 truncate">
-                        {item.coordinator.role}
-                      </p>
-                    </div>
-                  </div>
-
+                <div className="px-6 py-4 bg-slate-50/80 border-t border-slate-100">
                   <button
                     onClick={() => setSelectedFacilityModal(item)}
-                    className="px-4 py-2 rounded-lg bg-[#006699] hover:bg-[#005585] text-white text-xs sm:text-sm font-bold shadow-xs transition shrink-0 cursor-pointer"
+                    className="w-full px-4 py-2 rounded-lg bg-[#006699] hover:bg-[#005585] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer"
                   >
                     Detail
                   </button>
@@ -954,52 +913,17 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
       {/* 7. TESTIMONIAL SPOTLIGHT ("Why People Love TK Lukman Hakim")             */}
       {/* ======================================================================== */}
       <section className="py-12 pb-24 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-        <div className="bg-white rounded-3xl p-6 sm:p-12 border border-slate-200 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            {/* Photo left */}
-            <div className="md:col-span-4 flex justify-center">
-              <div className="relative w-56 h-64 sm:w-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border-4 border-slate-50">
-                <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                  alt="Ibu dr. Farida Hasan"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xs text-white p-2.5 rounded-xl text-center">
-                  <span className="text-xs sm:text-sm font-bold block">dr. Farida Hasan</span>
-                  <span className="text-[11px] text-sky-200 block">Wali Santri TK B</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial right */}
-            <div className="md:col-span-8 space-y-4">
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className="w-5 h-5 text-amber-400 fill-amber-400" />
-                ))}
-                <span className="text-xs sm:text-sm font-bold text-slate-700 ml-2">5.0 / 5.0 Ulasan Terverifikasi</span>
-              </div>
-
-              <blockquote className="text-base sm:text-xl text-slate-800 font-medium italic leading-relaxed">
-                "Fasilitas di TK Lukman Hakim sangat bersih dan luas. Anak saya paling antusias setiap jam bermain di playground luar dan sentra balok ber-AC. Keamanan One-Gate System dan CCTV-nya membuat saya sebagai orang tua bekerja merasa sangat tenang dan nyaman."
-              </blockquote>
-
-              <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">Ayah & Bunda Santri</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500">Alumni Angkatan 2024 & Santri Aktif 2025/2026</p>
-                </div>
-
-                <button
-                  onClick={() => onNavigate('contact')}
-                  className="text-xs sm:text-sm font-bold text-[#006699] hover:underline flex items-center gap-1"
-                >
-                  <span>Baca Ulasan Orang Tua Lainnya</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-y border-slate-200 py-6">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">Ingin melihat langsung?</h2>
+            <p className="text-sm text-slate-600 mt-1">Hubungi sekolah untuk mengatur waktu kunjungan kampus.</p>
           </div>
+          <button
+            onClick={() => onNavigate('contact')}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#006699] text-white text-sm font-bold hover:bg-[#005585]"
+          >
+            <Calendar className="w-4 h-4" /> Atur kunjungan
+          </button>
         </div>
       </section>
 
@@ -1028,12 +952,9 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+              <div className="absolute bottom-3 left-4 right-4 flex items-center text-white">
                 <span className="bg-[#006699] px-3.5 py-1.5 rounded-md text-xs font-extrabold">
                   {selectedFacilityModal.category}
-                </span>
-                <span className="text-xs font-bold bg-black/50 px-3 py-1.5 rounded-md">
-                  {selectedFacilityModal.areaSize}
                 </span>
               </div>
             </div>
@@ -1052,30 +973,6 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {selectedFacilityModal.description}
               </p>
-
-              <div>
-                <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-2">
-                  Fitur & Spesifikasi Unggulan:
-                </h4>
-                <div className="space-y-2">
-                  {selectedFacilityModal.highlights.map((h, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700">
-                      <CheckCircle2 className="w-4 h-4 text-[#006699] shrink-0 mt-0.5" />
-                      <span>{h}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs sm:text-sm text-emerald-800 space-y-0.5">
-                <span className="font-bold block flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  Standar Keamanan & Perawatan:
-                </span>
-                <p className="text-emerald-700 text-xs leading-relaxed">
-                  {selectedFacilityModal.safetyStandard}
-                </p>
-              </div>
 
               {/* Gallery mini preview */}
               {selectedFacilityModal.galleryImages.length > 1 && (
@@ -1097,23 +994,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
             </div>
 
             {/* Footer action */}
-            <div className="p-5 bg-slate-50 border-t border-slate-100 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={selectedFacilityModal.coordinator.avatar}
-                  alt={selectedFacilityModal.coordinator.name}
-                  className="w-9 h-9 rounded-full object-cover"
-                />
-                <div>
-                  <span className="text-xs sm:text-sm font-bold text-slate-800 block">
-                    {selectedFacilityModal.coordinator.name}
-                  </span>
-                  <span className="text-[11px] text-slate-500 block">
-                    {selectedFacilityModal.coordinator.role}
-                  </span>
-                </div>
-              </div>
-
+            <div className="p-5 bg-slate-50 border-t border-slate-100 flex items-center justify-end shrink-0">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {

@@ -11,10 +11,12 @@ export const TanyaAdminWA: React.FC<TanyaAdminWAProps> = () => {
   const { waContacts, schoolIdentity } = useApp();
 
   const handleOpenWA = (admin: WaAdminContact) => {
+    const digits = admin.phone.replace(/\D/g, '');
+    const phone = digits.startsWith('0') ? `62${digits.slice(1)}` : digits;
     const text = encodeURIComponent(
       `Assalamu’alaikum Warahmatullahi Wabarakatuh ${admin.name} (${admin.unit} ${schoolIdentity.nama}). Saya ingin berkonsultasi mengenai informasi ${admin.role}. Mohon dibantu ya Ustadzah. Terima kasih.`
     );
-    window.open(`https://wa.me/${admin.phone.replace(/^0/, '62')}?text=${text}`, '_blank');
+    window.open(`https://wa.me/${phone}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
