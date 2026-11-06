@@ -544,12 +544,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     <div
       className={
         isFullPage
-          ? 'w-full min-h-screen bg-[#EEF2F6] p-2 sm:p-3 lg:p-4 flex flex-col'
-          : 'fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-2 sm:p-4'
+          ? 'w-full min-h-screen bg-[#EEF2F6] p-3 sm:p-5 lg:p-6 flex flex-col items-center justify-start'
+          : 'fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto'
       }
     >
-      {/* FULL-WIDTH ROUNDED WORKSPACE IN CONSISTENT WEBSITE COLORS */}
-      <div className="w-full bg-[#F8FAFC] rounded-[28px] shadow-[0_16px_50px_rgba(15,41,55,0.1)] border border-slate-200/90 p-3 sm:p-4 lg:p-5 flex flex-col lg:flex-row gap-5 flex-1">
+      {/* BALANCED CENTERED WORKSPACE IN CONSISTENT WEBSITE COLORS */}
+      <div className="w-full max-w-[1440px] mx-auto bg-[#F8FAFC] rounded-[28px] shadow-[0_16px_50px_rgba(15,41,55,0.08)] border border-slate-200/90 p-4 sm:p-5 lg:p-6 flex flex-col lg:flex-row gap-6 flex-1 min-h-[calc(100vh-3rem)]">
         {/* ==================== LEFT ROUNDED NAVY SIDEBAR (#0F2937) ==================== */}
         <aside className="hidden lg:flex lg:w-[250px] xl:w-[265px] bg-[#0F2937] text-white rounded-[24px] p-4 flex-col justify-between shrink-0 shadow-md">
           <div className="space-y-4">

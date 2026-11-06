@@ -28,7 +28,6 @@ function MainApp() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isPortalWaliOpen, setIsPortalWaliOpen] = useState(false);
   const [portalWaliTab, setPortalWaliTab] = useState<'raport' | 'jadwal'>('raport');
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   // SPMB Route Guard: If user is authenticated, open SPMB; otherwise show Google OAuth Login Modal
@@ -255,11 +254,6 @@ function MainApp() {
       <ReportModal
         isOpen={isReportOpen}
         onClose={() => setIsReportOpen(false)}
-      />
-
-      <AdminDashboard
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
       />
     </div>
   );
