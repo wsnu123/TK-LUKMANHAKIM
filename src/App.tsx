@@ -20,10 +20,22 @@ import { ScrollProgressBar } from './components/effects/ScrollProgressBar';
 import { ClickEffect } from './components/effects/ClickEffect';
 import { PageTab } from './types';
 
+// ============================================================================
+// [PENJELASAN TEKNIS VIDEO - ROOT APPLICATION CONTROLLER]:
+// Komponen utama: MainApp
+// Fungsi: 
+// 1. Bertindak sebagai Router Single Page Application (SPA).
+// 2. Mengontrol pembukaan popup/modal secara terpusat (PPDB, Auth, AI Chat, QR, Portal).
+// 3. Mengatur alur proteksi (Route Guard) pendaftaran SPMB berbasis Google Auth.
+// ============================================================================
 function MainApp() {
   const { currentUser } = useApp();
+  
+  // State halaman yang aktif ('home' | 'about' | 'schools' | 'facilities' | 'contact' | 'admin')
   const [currentPage, setCurrentPage] = useState<PageTab>('home');
   const [activeSection, setActiveSection] = useState<string | undefined>(undefined);
+  
+  // State pengontrol modal interaktif
   const [isPpdbOpen, setIsPpdbOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authRedirectTarget, setAuthRedirectTarget] = useState<string | null>(null);
@@ -35,7 +47,9 @@ function MainApp() {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
-  // SPMB Route Guard: If user is authenticated, open SPMB; otherwise show Google OAuth Login Modal
+  // [LOGIKA TEKNIS 1]: SPMB Route Guard
+  // Jika wali santri sudah login Google -> langsung buka formulir pendaftaran SPMB.
+  // Jika belum -> tampilkan AuthGuardModal (Google OAuth) untuk memverifikasi akun pendaftar.
   const handleOpenProtectedPpdb = () => {
     if (currentUser) {
       setIsPpdbOpen(true);
@@ -45,13 +59,13 @@ function MainApp() {
     }
   };
 
-  // Direct login from Navbar/Home "Masuk Gmail" button
+  // Fungsi trigger login manual dari tombol Navbar 'Masuk Gmail'
   const handleOpenLogin = () => {
     setAuthRedirectTarget(null);
     setIsAuthModalOpen(true);
   };
 
-  // Post-login redirect handler
+  // Callback setelah login sukses: otomatis membuka target yang sempat tertunda (misal form SPMB)
   const handleAuthSuccess = () => {
     if (authRedirectTarget === 'spmb') {
       setIsPpdbOpen(true);

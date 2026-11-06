@@ -18,13 +18,21 @@ interface HeroBannerProps {
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   onOpenPpdb,
 }) => {
+  // Mengambil data banner slide dari Global Context
   const { heroSlides } = useApp();
+  
+  // State untuk melacak indeks slide aktif saat ini
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // State untuk mendeteksi apakah kursor mouse sedang berada di atas banner
   const [isHovered, setIsHovered] = useState(false);
 
+  // Mencegah error 'out of bounds' jika jumlah slide berubah dinamis
   const safeIndex = currentSlide >= heroSlides.length ? 0 : currentSlide;
 
-  // Smooth auto-slide every 6.5 seconds, paused on hover
+  // [LOGIKA TEKNIS 1]: Auto-Slide Otomatis setiap 6.5 detik
+  // Jika mouse hover aktif (isHovered = true), interval dihentikan sementara
+  // agar wali murid dapat membaca informasi slide dengan tenang tanpa terpotong.
   useEffect(() => {
     if (isHovered || heroSlides.length <= 1) return;
     const interval = setInterval(() => {
@@ -33,10 +41,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     return () => clearInterval(interval);
   }, [isHovered, heroSlides.length]);
 
+  // Fungsi navigasi manual: Slide Sebelumnya
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
   };
 
+  // Fungsi navigasi manual: Slide Berikutnya
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev >= heroSlides.length - 1 ? 0 : prev + 1));
   };
@@ -50,7 +60,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background Images: Smooth Stacked Cross-Fade (Zero layout flash / jitter) */}
+      {/* [LOGIKA TEKNIS 2]: Stacked Cross-Fade Background
+          Semua gambar dirender bertumpuk (stacked) dengan transisi CSS 'opacity'.
+          Teknik ini mencegah layout-shifting, flicker, atau jeda putih saat gambar berganti. */}
       <div className="absolute inset-0 w-full h-full">
         {heroSlides.map((s, idx) => {
           const isActive = idx === safeIndex;

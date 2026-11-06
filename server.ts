@@ -632,7 +632,17 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// 2. State-of-the-art Multi-Turn Chatbot Endpoint powered by Gemini 3.8 Flash
+// ============================================================================
+// [PENJELASAN TEKNIS VIDEO - ARSITEKTUR BACKEND AI]:
+// Endpoint: POST /api/chat
+// Fungsi: Jembatan aman (Backend Proxy) antara peramban client dan Google Gemini AI.
+// Mengapa di server?
+// 1. Keamanan API Key: GEMINI_API_KEY tidak pernah bocor ke Inspect Element browser.
+// 2. Kontrol Konteks: System Instruction disuntikkan di server agar jawaban konsisten
+//    dengan kurikulum dan data resmi TK Lukman Al Hakim Purwokerto.
+// 3. Ketahanan (Resilience): Memiliki proteksi timeout 15 detik dan cerdas beralih ke
+//    offline rule-based engine jika kuota atau internet sedang terganggu.
+// ============================================================================
 app.post('/api/chat', async (req: Request, res: Response) => {
   try {
     const { message, history, schoolContext } = req.body;
@@ -641,12 +651,12 @@ app.post('/api/chat', async (req: Request, res: Response) => {
     }
 
     const trimmedMsg = message.trim();
-    const schoolName = schoolContext?.nama || 'TK ISLAM LUKMAN HAKIM PURWOKERTO';
+    const schoolName = schoolContext?.nama || 'TK LUKMAN AL HAKIM PURWOKERTO';
     const npsn = schoolContext?.npsn || '69981337';
     const alamat = schoolContext?.alamat || 'Jl. HOS Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas';
     const wa = schoolContext?.whatsapp || '+62 877-1355-1412';
 
-    // Primary: Call modern Gemini 3.8 Flash with comprehensive domain knowledge & general intelligence
+    // [LOGIKA TEKNIS 1]: Pemanggilan Model Google Gemini 3.8 Flash
     if (ai) {
       try {
         const systemPrompt = `Anda adalah Asisten AI Cerdas, Bijaksana, dan Ramah dari ${schoolName} (NPSN: ${npsn}, Terakreditasi A Unggul BAN-PAUD).

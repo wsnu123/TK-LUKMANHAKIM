@@ -39,10 +39,13 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
 
   if (!isOpen) return null;
 
-  // Domain resmi TK Lukman Hakim Purwokerto
+  // [LOGIKA TEKNIS 1]: Alamat Domain Utama Sekolah
+  // Default URL diarahkan ke domain resmi https://tklukmanhakim.sch.id
   const officialDomain = schoolIdentity.websiteUrl || 'https://tklukmanhakim.sch.id';
   const cleanPhone = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
 
+  // [LOGIKA TEKNIS 2]: 4 Opsi Tujuan QR Code Dinamis
+  // Memungkinkan orang tua murid memilih jenis tautan yang ingin mereka scan/bagikan
   const TARGET_OPTIONS: {
     id: QrTarget;
     label: string;
@@ -57,7 +60,7 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
       sublabel: 'tklukmanhakim.sch.id',
       icon: Globe,
       url: officialDomain,
-      description: 'Scan untuk membuka website resmi TK Lukman Hakim Purwokerto (tklukmanhakim.sch.id).',
+      description: 'Scan untuk membuka website resmi TK Lukman Al Hakim Purwokerto (tklukmanhakim.sch.id).',
     },
     {
       id: 'spmb',
@@ -89,17 +92,21 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
 
   const currentOption = TARGET_OPTIONS.find((t) => t.id === selectedTarget) || TARGET_OPTIONS[0];
 
-  // High-Resolution QR Generator URL via qrserver with safety margins
+  // [LOGIKA TEKNIS 3]: Generator Gambar QR Beresolusi Tinggi (600x600 px)
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=15&format=png&data=${encodeURIComponent(
     currentOption.url
   )}`;
 
+  // Fungsi menyalin tautan ke clipboard pengguna
   const handleCopyLink = () => {
     navigator.clipboard.writeText(currentOption.url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // [LOGIKA TEKNIS 4]: Pengunduh File Gambar PNG Otomatis (Blob API)
+  // Menghindari ketergantungan server lokal dengan mengonversi response stream menjadi file Blob,
+  // lalu memicu klik download secara native di peramban (browser) pengguna.
   const handleDownloadQr = async () => {
     try {
       const response = await fetch(qrImageUrl);
@@ -113,7 +120,7 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
       document.body.removeChild(a);
       URL.revokeObjectURL(blobUrl);
     } catch {
-      // Fallback open in new tab
+      // Fallback cadangan: membuka gambar di tab baru jika browser membatasi Blob
       window.open(qrImageUrl, '_blank');
     }
   };
