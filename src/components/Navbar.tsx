@@ -106,29 +106,29 @@ export const Navbar: React.FC<NavbarProps> = ({
     >
 
 
-      <div className="w-full max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-        <div className="flex items-center justify-between gap-4 xl:gap-8">
+      <div className="w-full max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-4 xl:px-8">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 xl:gap-6">
           {/* Official Emblem & Brand (Left Zone) */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 xl:gap-3 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 flex items-center justify-center">
-              <LukmanHakimLogo variant="emblem" size={42} />
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 xl:w-11 xl:h-11 flex-shrink-0 flex items-center justify-center">
+              <LukmanHakimLogo variant="emblem" size={38} />
             </div>
 
             <div className="flex flex-col whitespace-nowrap">
-              <span className="font-extrabold text-base sm:text-[17px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition">
+              <span className="font-extrabold text-xs sm:text-sm xl:text-[16px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition">
                 {schoolIdentity.nama}
               </span>
-              <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1">
+              <span className="text-[8.5px] xl:text-[10px] font-bold tracking-[0.1em] text-[#006699] uppercase mt-1">
                 PURWOKERTO • NPSN {schoolIdentity.npsn}
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation Links (Center Zone - Single Line) */}
-          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-7 text-[13.5px] font-semibold text-slate-800 flex-1">
+          <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-6 text-xs xl:text-[13.5px] font-semibold text-slate-800 flex-1">
             {/* Home */}
             <button
               onClick={() => handleNavClick('home')}
@@ -269,10 +269,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Desktop Action Buttons (Right Zone - PPDB + Admin) */}
-          <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-shrink-0">
             <button
               onClick={onOpenPpdb}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 xl:px-4 xl:py-2 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-[11.5px] xl:text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
             >
               <span>SPMB 2026/2027</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -281,7 +281,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => handleNavClick('admin')}
               title="Buka Panel Admin Layar Penuh"
-              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 xl:px-3 xl:py-2 rounded-lg border text-[11.5px] xl:text-xs font-bold transition cursor-pointer whitespace-nowrap ${
                 currentPage === 'admin' || isAdminAuthenticated
                   ? 'bg-[#0F2937] text-white border-[#0F2937]'
                   : 'border-slate-200 bg-white/90 hover:bg-slate-100 text-slate-700 hover:text-[#0F2937]'

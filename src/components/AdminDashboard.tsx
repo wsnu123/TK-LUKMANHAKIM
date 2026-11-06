@@ -439,11 +439,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <span>Masuk ke Panel Admin</span>
             </button>
 
-            <div className="p-2.5 rounded-xl bg-sky-50/70 border border-sky-100 text-slate-600 text-[11px] flex items-center justify-between">
-              <span>Akun Default:</span>
-              <span className="font-mono font-bold text-[#006699]">admin / lukmanhakim</span>
-            </div>
-
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
               <span className="text-slate-400 flex items-center gap-1 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
