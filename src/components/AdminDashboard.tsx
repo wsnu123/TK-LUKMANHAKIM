@@ -97,6 +97,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const {
     currentUser,
     isAdminUser,
+    isAdminAuthenticated,
+    loginAdminWithCredentials,
     isCloudSynced,
     lastCloudSyncAt,
     signInWithGoogleAccount,
@@ -326,18 +328,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setIsFeatureModalOpen(false);
   };
 
+  const [adminUsernameInput, setAdminUsernameInput] = useState('');
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+
   if (!isOpen) return null;
 
-  const handleAdminGoogleLogin = async () => {
+  const handleAdminCredentialsLogin = (e: React.FormEvent) => {
+    e.preventDefault();
     setLoginError(null);
-    const user = await signInWithGoogleAccount();
-    if (!user || user.email?.toLowerCase() !== 'ml0752960@gmail.com' || !user.emailVerified) {
-      setLoginError('Gunakan akun Google admin sekolah yang sudah terverifikasi.');
-      if (user) await signOutAccount();
+    const success = loginAdminWithCredentials(adminUsernameInput, adminPasswordInput);
+    if (!success) {
+      setLoginError('Username atau password salah. Silakan coba kembali.');
+    } else {
+      setAdminUsernameInput('');
+      setAdminPasswordInput('');
     }
   };
 
-  if (!isAdminUser) {
+  // Proteksi Panel Admin: Wajib login dengan Username & Password (Kredensial Pengelola Resmi)
+  if (!isAdminAuthenticated) {
     return (
       <div
         className={
@@ -346,7 +356,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             : 'fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4'
         }
       >
-        <div className="w-full max-w-md bg-white rounded-3xl shadow-[0_24px_60px_rgba(15,41,55,0.16)] border border-slate-200 overflow-hidden p-2">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-[0_24px_60px_rgba(15,41,55,0.16)] border border-slate-200 overflow-hidden p-2 animate-fadeIn">
           <div className="bg-gradient-to-br from-[#0F2937] to-[#006699] text-white rounded-2xl p-6 text-center relative">
             <button
               onClick={onClose}
@@ -362,46 +372,92 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               SISTEM KEAMANAN TERPROTEKSI
             </span>
             <h3 className="text-lg sm:text-xl font-extrabold mt-1">
-              Otentikasi Panel Admin
+              Login Panel Pengelola
             </h3>
             <p className="text-xs text-sky-100 mt-1">
-              Hanya dapat diakses oleh Pengelola Resmi {schoolIdentity.nama}
+              Masuk menggunakan Username dan Password resmi {schoolIdentity.nama}
             </p>
           </div>
 
-          <div className="p-5 sm:p-6 space-y-4 text-xs">
+          <form onSubmit={handleAdminCredentialsLogin} className="p-5 sm:p-6 space-y-4 text-xs">
             {loginError && (
               <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl font-semibold flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>{loginError}</span>
               </div>
             )}
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Masuk menggunakan akun Google admin sekolah. Perubahan panel hanya dapat disimpan oleh akun yang sudah diverifikasi.
-            </p>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Username Admin
+              </label>
+              <div className="relative">
+                <UserCheck className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  required
+                  value={adminUsernameInput}
+                  onChange={(e) => setAdminUsernameInput(e.target.value)}
+                  placeholder="Masukkan username admin..."
+                  autoComplete="username"
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold focus:outline-hidden focus:border-[#006699] focus:bg-white transition"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showAdminPassword ? 'text' : 'password'}
+                  required
+                  value={adminPasswordInput}
+                  onChange={(e) => setAdminPasswordInput(e.target.value)}
+                  placeholder="Masukkan password admin..."
+                  autoComplete="current-password"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs font-semibold focus:outline-hidden focus:border-[#006699] focus:bg-white transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPassword(!showAdminPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
+                  title={showAdminPassword ? 'Sembunyikan password' : 'Lihat password'}
+                >
+                  {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
             <button
-              type="button"
-              onClick={handleAdminGoogleLogin}
-              className="w-full py-3.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+              type="submit"
+              className="w-full py-3.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
               <KeyRound className="w-4 h-4" />
-              <span>Masuk dengan Google Admin</span>
+              <span>Masuk ke Panel Admin</span>
             </button>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <div className="p-2.5 rounded-xl bg-sky-50/70 border border-sky-100 text-slate-600 text-[11px] flex items-center justify-between">
+              <span>Akun Default:</span>
+              <span className="font-mono font-bold text-[#006699]">admin / lukmanhakim</span>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
               <span className="text-slate-400 flex items-center gap-1 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Akses Terenkripsi & Terbatas</span>
+                <span>Otentikasi Kredensial Khusus</span>
               </span>
               <button
                 type="button"
                 onClick={onClose}
-                className="text-slate-500 hover:text-slate-900 font-semibold cursor-pointer"
+                className="text-[#006699] hover:underline font-bold"
               >
                 Kembali ke Website
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     );
@@ -661,9 +717,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </button>
 
                 <button
-                  onClick={async () => {
+                  onClick={() => {
                     logoutAdminSession();
-                    await signOutAccount();
                   }}
                   title="Kunci & Keluar Menu Admin"
                   className="px-3 py-2 rounded-xl bg-[#0F2937] hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shrink-0"

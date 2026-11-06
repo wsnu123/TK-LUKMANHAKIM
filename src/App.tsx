@@ -138,13 +138,11 @@ function MainApp() {
           activeSection={activeSection}
           onNavigate={handleNavigate}
           onOpenPpdb={handleOpenProtectedPpdb}
-          onOpenLogin={handleOpenLogin}
           onOpenSpp={() => handleOpenPortalWali('spp')}
           onOpenReport={() => handleOpenPortalWali('raport')}
           onOpenPortalWali={handleOpenPortalWali}
           onOpenChatbot={() => setIsChatbotOpen(true)}
           onOpenAdmin={() => handleNavigate('admin')}
-          onOpenQr={() => setIsQrModalOpen(true)}
         />
       )}
 
@@ -221,11 +219,12 @@ function MainApp() {
         />
       )}
 
-      {/* Vertical Stacked Tanya AI & Official WhatsApp Launcher (Hidden in Admin Panel) */}
+      {/* Vertical Stacked Tanya AI, QR Web & Official WhatsApp Launcher (Hidden in Admin Panel) */}
       {currentPage !== 'admin' && (
         <FloatingAssistant
           onOpenChatbot={() => setIsChatbotOpen(true)}
           onOpenPortalWali={() => handleOpenPortalWali('spp')}
+          onOpenQr={() => setIsQrModalOpen(true)}
         />
       )}
 

@@ -269,54 +269,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Desktop Action Buttons (Right Zone - PPDB + Admin) */}
-          <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
-            {currentUser ? (
-              <div
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-sky-50 border border-sky-200 text-xs text-sky-900 font-semibold"
-                title={`Akun Google aktif: ${currentUser.email}`}
-              >
-                {currentUser.photoURL ? (
-                  <img
-                    src={currentUser.photoURL}
-                    alt="Avatar"
-                    className="w-4 h-4 rounded-full"
-                  />
-                ) : (
-                  <Mail className="w-3.5 h-3.5 text-rose-500" />
-                )}
-                <span className="max-w-[110px] truncate">
-                  {currentUser.displayName?.split(' ')[0] || currentUser.email?.split('@')[0]}
-                </span>
-                <button
-                  onClick={signOutAccount}
-                  title="Keluar akun Google"
-                  className="text-[10px] text-slate-400 hover:text-rose-600 ml-0.5 cursor-pointer"
-                >
-                  &times;
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={handleNavLogin}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition cursor-pointer whitespace-nowrap shadow-2xs"
-                title="Masuk Akun Google (Gmail)"
-              >
-                <Mail className="w-3.5 h-3.5 text-rose-500" />
-                <span>Masuk Gmail</span>
-              </button>
-            )}
-
-            {onOpenQr && (
-              <button
-                onClick={onOpenQr}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-sky-50 text-slate-700 hover:text-[#006699] text-xs font-bold transition cursor-pointer whitespace-nowrap shadow-2xs"
-                title="Scan & Bagikan QR Code Website"
-              >
-                <QrCode className="w-3.5 h-3.5 text-[#006699]" />
-                <span>QR Web</span>
-              </button>
-            )}
-
+          <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
             <button
               onClick={onOpenPpdb}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
@@ -440,49 +393,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-2 flex flex-col gap-2">
-            {currentUser ? (
-              <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-rose-500" />
-                  <div className="text-left">
-                    <span className="font-bold text-slate-800 block truncate max-w-[180px]">
-                      {currentUser.displayName || currentUser.email}
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-mono">{currentUser.email}</span>
-                  </div>
-                </div>
-                <button
-                  onClick={signOutAccount}
-                  className="text-xs text-rose-600 hover:underline font-bold"
-                >
-                  Keluar
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleNavLogin();
-                }}
-                className="w-full py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 font-bold text-xs text-center cursor-pointer flex items-center justify-center gap-2 shadow-2xs"
-              >
-                <Mail className="w-4 h-4 text-rose-500" />
-                <span>Masuk Akun Google (Gmail)</span>
-              </button>
-            )}
-
-            {onOpenQr && (
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  onOpenQr();
-                }}
-                className="w-full py-2.5 rounded-xl border border-sky-200 bg-sky-50 text-[#006699] font-bold text-xs text-center cursor-pointer flex items-center justify-center gap-2 shadow-2xs"
-              >
-                <QrCode className="w-4 h-4 text-[#006699]" />
-                <span>Scan &amp; Bagikan QR Code Website</span>
-              </button>
-            )}
 
             <button
               onClick={() => {
