@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tklukmanhakim.vercel.app/sitemap.xml
+Sitemap: https://www.tklukmanhakim.sch.id/sitemap.xml
