@@ -514,53 +514,63 @@ export const INITIAL_INQUIRIES: Inquiry[] = [
 
 export const INITIAL_HERO_SLIDES: HeroSlide[] = [
   {
-    id: 'budi-mulia-style-hero',
-    image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.52.51_76a8e247.jpeg',
-    welcome: 'Selamat Datang di',
-    title: 'TK ISLAM LUKMAN HAKIM',
-    subtitle: 'BERSEKOLAH DENGAN SENANG, TUMBUH DENGAN TENANG',
+    id: 'hero-slide-1-welcome',
+    image: '/assets/images/school_hero_students_1789608020715.jpg',
+    welcome: 'Selamat Datang di Portal Resmi',
+    title: 'TK LUKMAN AL HAKIM PURWOKERTO',
+    subtitle: 'HAPPY CHILDREN, BRIGHT FUTURES • TERAKREDITASI A',
     description:
-      'Membina masa emas ananda dengan cinta kasih, pondasi tauhid kokoh, adab islami, serta kegembiraan bereksplorasi melalui metode 7 sentra ramah fitrah anak.',
+      'Membina masa emas ananda dengan cinta kasih, pondasi tauhid kokoh, adab islami, serta kegembiraan bereksplorasi melalui metode 7 sentra ramah fitrah anak di Teluk, Purwokerto Selatan.',
     primaryButton: 'Daftar SPMB 2026/2027',
   },
   {
-    id: 'sentra-montessori-hero',
-    image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.53.14_f4ff428a.jpeg',
-    welcome: '7 Ruang Kelas Sentra Ber-AC',
-    title: 'BELAJAR AKTIF & KREATIF',
-    subtitle: 'KURIKULUM MERDEKA PAUD, CAMBRIDGE & ISLAMIC MONTESSORI',
-    description:
-      'Setiap anak belajar melalui eksplorasi benda konkret, balok edukatif, dan permainan terarah yang mengasah logika, keaksaraan, serta kemandirian.',
-    primaryButton: 'Daftar SPMB 2026/2027',
-  },
-  {
-    id: 'tahfidz-tilawati-hero',
-    image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.53.01__1__8276c776.jpeg',
+    id: 'hero-slide-2-tahfidz',
+    image: '/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
     welcome: 'Pondasi Tauhid & Al-Qur’an',
-    title: 'TAHFIDZ METODE TILAWATI',
-    subtitle: 'MENCINTAI AL-QUR’AN & IBADAH HARIAN SEJAK USIA EMAS',
+    title: 'TAHFIDZ METODE TILAWATI CERIA',
+    subtitle: 'MENCINTAI AL-QUR’AN & DOA HARIAN SEJAK USIA EMAS',
     description:
-      'Pembiasaan Sholat Dhuha berjamaah, dzikir pagi, doa harian, dan halaqah Tilawati dengan irama yang riang dan mudah dihafal anak.',
+      'Pembiasaan Sholat Dhuha berjamaah, dzikir pagi, hafalan Juz 30, dan halaqah Tilawati berirama riang yang menyenangkan dan mudah diresapi anak.',
     primaryButton: 'Daftar SPMB 2026/2027',
   },
   {
-    id: 'kebun-sains-hero',
-    image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.52.47_c3fc0d83.jpeg',
-    welcome: 'Eksplorasi Alam & Sains',
-    title: 'SEKOLAH HIJAU RAMAH ANAK',
-    subtitle: 'BERKEBUN HIDROPONIK, TAMAN LALU LINTAS & RUMAH MERPATI',
+    id: 'hero-slide-3-montessori',
+    image: '/assets/images/sentra_balok_montessori_1790826050585.jpg',
+    welcome: '7 Ruang Kelas Sentra Ber-AC',
+    title: 'KURIKULUM MERDEKA & MONTESSORI',
+    subtitle: 'BELAJAR AKTIF, EKSPLORATIF & ZERO TANTRUM',
     description:
-      'Halaman kampus seluas ±1.200 m² yang asri tempat ananda mengenal alam ciptaan Allah, melatih motorik kasar, dan bersosialisasi dengan gembira.',
+      'Setiap sentra dilengkapi media konkret dan balok edukatif berstandar SNI yang mengasah logika, keaksaraan awal, serta kemandirian motorik ananda.',
     primaryButton: 'Daftar SPMB 2026/2027',
   },
   {
-    id: 'pentas-kreasi-hero',
-    image: '/assets/aistudio/WhatsApp_Image_2026-10-21_at_12.53.01_031c3324.jpeg',
-    welcome: 'Bakat, Seni & Keberanian',
-    title: 'TUMBUH PERCAYA DIRI',
+    id: 'hero-slide-4-sains-kebun',
+    image: '/assets/images/sains_kebun_hidroponik_1790826078024.jpg',
+    welcome: 'Eksplorasi Alam & Sains Anak',
+    title: 'KAMPUS HIJAU & TAMAN LALU LINTAS',
+    subtitle: 'KEBUN HIDROPONIK, RUMAH MERPATI & PLAYGROUND LUAS',
+    description:
+      'Halaman kampus seluas ±1.200 m² yang asri dan sejuk. Tempat santri mengenal kebesaran ciptaan Allah, melatih motorik kasar, dan bersosialisasi gembira.',
+    primaryButton: 'Daftar SPMB 2026/2027',
+  },
+  {
+    id: 'hero-slide-5-seni-angklung',
+    image: '/assets/images/seni_lukis_angklung_1790826091504.jpg',
+    welcome: 'Bakat, Seni & Percaya Diri',
+    title: 'PANGGUNG KREASI & SENI ANGKLUNG',
     subtitle: 'SETIAP ANAK UNIK, ISTIMEWA, DAN BERPRESTASI',
     description:
-      'Mengembangkan keberanian tampil di depan umum melalui kegiatan seni lukis, musik angklung, panggung kreasi, dan kepemimpinan cilik.',
+      'Mengembangkan keberanian tampil di depan umum melalui kegiatan seni lukis, musik tradisional angklung, tari islami, dan kepemimpinan cilik.',
+    primaryButton: 'Daftar SPMB 2026/2027',
+  },
+  {
+    id: 'hero-slide-6-wisuda-prestasi',
+    image: '/assets/images/wisuda_pentas_seni_1790826113606.jpg',
+    welcome: 'Generasi Qur’ani Berprestasi',
+    title: 'SIAP MELANGKAH KE JENJANG SD',
+    subtitle: 'LULUSAN BERAKHLAK MULIA, MANDIRI & FASIH MEMBACA',
+    description:
+      'Membekali ananda dengan adab harian, kemandirian toilet training, kelancaran membaca, dan kecintaan belajar untuk sukses di jenjang sekolah dasar.',
     primaryButton: 'Daftar SPMB 2026/2027',
   },
 ];
@@ -644,7 +654,7 @@ export const TESTIMONIALS: TestimonialItem[] = [
 ];
 
 export const SCHOOL_IDENTITY: SchoolIdentity = {
-  nama: 'TK ISLAM LUKMAN HAKIM PURWOKERTO',
+  nama: 'TK LUKMAN AL HAKIM PURWOKERTO',
   npsn: '69981337',
   alamat: 'Jl. HOS Notosuwiryo No. 5, RT 01/RW 03, Teluk',
   desaKelurahan: 'TELUK',
