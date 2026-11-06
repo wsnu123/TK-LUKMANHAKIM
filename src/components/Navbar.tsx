@@ -13,6 +13,7 @@ import {
   Bot,
   Sparkles,
   Mail,
+  QrCode,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -29,6 +30,7 @@ interface NavbarProps {
   onOpenPortalWali?: (tab?: 'spp' | 'raport' | 'jadwal') => void;
   onOpenChatbot?: () => void;
   onOpenAdmin: () => void;
+  onOpenQr?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -42,6 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPortalWali,
   onOpenChatbot,
   onOpenAdmin,
+  onOpenQr,
 }) => {
   const { schoolIdentity, appearanceConfig, isAdminAuthenticated, currentUser, signInWithGoogleAccount, signOutAccount } = useApp();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -303,6 +306,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
+            {onOpenQr && (
+              <button
+                onClick={onOpenQr}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 bg-white hover:bg-sky-50 text-slate-700 hover:text-[#006699] text-xs font-bold transition cursor-pointer whitespace-nowrap shadow-2xs"
+                title="Scan & Bagikan QR Code Website"
+              >
+                <QrCode className="w-3.5 h-3.5 text-[#006699]" />
+                <span>QR Web</span>
+              </button>
+            )}
+
             <button
               onClick={onOpenPpdb}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
@@ -454,6 +468,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <Mail className="w-4 h-4 text-rose-500" />
                 <span>Masuk Akun Google (Gmail)</span>
+              </button>
+            )}
+
+            {onOpenQr && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenQr();
+                }}
+                className="w-full py-2.5 rounded-xl border border-sky-200 bg-sky-50 text-[#006699] font-bold text-xs text-center cursor-pointer flex items-center justify-center gap-2 shadow-2xs"
+              >
+                <QrCode className="w-4 h-4 text-[#006699]" />
+                <span>Scan &amp; Bagikan QR Code Website</span>
               </button>
             )}
 

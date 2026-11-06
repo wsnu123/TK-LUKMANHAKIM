@@ -10,4 +10,5 @@ coverage/
 firebase-service-account*.json
 .firebase/
 .aistudio/
+bun.lock*
 

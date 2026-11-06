@@ -15,6 +15,7 @@ import { PortalWaliModal } from './components/PortalWaliModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { FloatingAssistant } from './components/FloatingAssistant';
 import { ChatbotModal } from './components/ChatbotModal';
+import { QrCodeModal } from './components/QrCodeModal';
 import { ScrollProgressBar } from './components/effects/ScrollProgressBar';
 import { ClickEffect } from './components/effects/ClickEffect';
 import { PageTab } from './types';
@@ -32,6 +33,7 @@ function MainApp() {
   const [portalWaliTab, setPortalWaliTab] = useState<'spp' | 'raport' | 'jadwal'>('spp');
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   // SPMB Route Guard: If user is authenticated, open SPMB; otherwise show Google OAuth Login Modal
   const handleOpenProtectedPpdb = () => {
@@ -128,6 +130,7 @@ function MainApp() {
           onOpenPortalWali={handleOpenPortalWali}
           onOpenChatbot={() => setIsChatbotOpen(true)}
           onOpenAdmin={() => handleNavigate('admin')}
+          onOpenQr={() => setIsQrModalOpen(true)}
         />
       )}
 
@@ -199,6 +202,7 @@ function MainApp() {
           onOpenSpp={() => handleOpenPortalWali('spp')}
           onOpenReport={() => handleOpenPortalWali('raport')}
           onOpenAdmin={() => handleNavigate('admin')}
+          onOpenQr={() => setIsQrModalOpen(true)}
           onNavigate={handleNavigate}
         />
       )}
@@ -271,6 +275,12 @@ function MainApp() {
       <AdminDashboard
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
+      />
+
+      {/* Official QR Code Modal with Download PNG & Copy Link */}
+      <QrCodeModal
+        isOpen={isQrModalOpen}
+        onClose={() => setIsQrModalOpen(false)}
       />
     </div>
   );

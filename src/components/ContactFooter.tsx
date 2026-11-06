@@ -10,6 +10,7 @@ import {
   MessageCircle,
   Heart,
   ShieldCheck,
+  QrCode,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -23,6 +24,7 @@ interface ContactFooterProps {
   onOpenReport: () => void;
   onOpenChatbot?: () => void;
   onOpenAdmin: () => void;
+  onOpenQr?: () => void;
   onScrollTo?: (sectionId: string) => void;
   onNavigate?: (page: PageTab) => void;
 }
@@ -34,6 +36,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
   onOpenSpp,
   onOpenReport,
   onOpenAdmin,
+  onOpenQr,
   onScrollTo,
   onNavigate,
 }) => {
@@ -183,6 +186,17 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
                   >
                     <span>Daftar SPMB</span>
                   </button>
+
+                  {onOpenQr && (
+                    <button
+                      onClick={onOpenQr}
+                      className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs sm:text-sm shadow-2xs transition cursor-pointer"
+                      title="Lihat & Unduh QR Code Resmi"
+                    >
+                      <QrCode className="w-4 h-4 text-amber-600" />
+                      <span>Scan QR Web</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
