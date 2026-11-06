@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { NotificationLog } from '../types';
+import { compressImageFile } from '../utils/imageCompressor';
 import { PpdbCrudTab, TeachersCrudTab, GalleryCrudTab } from './crud/MainCrudTabs';
 import { TuitionCrudTab, ReportsCrudTab, InquiriesCrudTab } from './crud/AcademicCrudTabs';
 import {
@@ -162,6 +163,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     exportCloudBackup,
     restoreCloudBackup,
     resetToDefaultData,
+    sentraPhotos,
+    addSentraPhoto,
+    deleteSentraPhoto,
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<AdminTabId>('dashboard');
@@ -204,67 +208,51 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     appearanceConfig.announcementBar?.enabled ?? false
   );
 
-  // Sentra Photos Admin State
+  // Sentra Photos Admin State (Terhubung langsung ke AppContext & Firestore Cloud)
   const [adminSentraTarget, setAdminSentraTarget] = useState<string>('sentra-alam-cair');
   const [adminSentraTitle, setAdminSentraTitle] = useState<string>('');
   const [adminSentraDesc, setAdminSentraDesc] = useState<string>('');
   const [adminSentraFiles, setAdminSentraFiles] = useState<string[]>([]);
-  const [adminUserPhotos, setAdminUserPhotos] = useState<any[]>(() => {
-    try {
-      const saved = localStorage.getItem('tk_sentra_additional_photos_v1');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const adminUserPhotos = sentraPhotos;
 
-  const handleAdminSentraFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAdminSentraFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const urls: string[] = [];
-    let count = 0;
-    Array.from(files).forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          urls.push(reader.result);
-        }
-        count++;
-        if (count === files.length) {
-          setAdminSentraFiles((prev) => [...prev, ...urls]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of Array.from(files)) {
+      try {
+        const compressed = await compressImageFile(file, { maxDimension: 1200, quality: 0.78 });
+        urls.push(compressed);
+      } catch (err) {
+        console.warn('Gagal mengompresi gambar sentra:', err);
+      }
+    }
+    setAdminSentraFiles((prev) => [...prev, ...urls]);
   };
 
-  const handleAdminSaveSentraPhotos = (e: React.FormEvent) => {
+  const handleAdminSaveSentraPhotos = async (e: React.FormEvent) => {
     e.preventDefault();
     if (adminSentraFiles.length === 0) return;
     const targetSentraObj = SEVEN_SENTRA_DATA.find((s) => s.id === adminSentraTarget);
     const sentraName = targetSentraObj ? targetSentraObj.name : 'Sentra Belajar';
-    const newItems = adminSentraFiles.map((url, idx) => ({
-      id: `custom-photo-${Date.now()}-${idx}`,
-      src: url,
-      sentraId: adminSentraTarget,
-      sentraName: sentraName,
-      title: adminSentraTitle.trim() || `Dokumentasi ${sentraName}`,
-      desc: adminSentraDesc.trim() || 'Foto kegiatan nyata santri TK Lukman Hakim.',
-    }));
-    const updated = [...adminUserPhotos, ...newItems];
-    setAdminUserPhotos(updated);
-    localStorage.setItem('tk_sentra_additional_photos_v1', JSON.stringify(updated));
+    for (const url of adminSentraFiles) {
+      await addSentraPhoto({
+        src: url,
+        sentraId: adminSentraTarget,
+        sentraName: sentraName,
+        title: adminSentraTitle.trim() || `Dokumentasi ${sentraName}`,
+        desc: adminSentraDesc.trim() || 'Foto kegiatan nyata santri TK Lukman Hakim.',
+      });
+    }
     setAdminSentraFiles([]);
     setAdminSentraTitle('');
     setAdminSentraDesc('');
-    setStatusMessage(`Berhasil menambahkan ${newItems.length} foto ke ${sentraName}!`);
+    setStatusMessage(`Berhasil menambahkan ${adminSentraFiles.length} foto ke ${sentraName}! Langsung terpublikasi ke publik.`);
   };
 
   const handleAdminDeleteSentraPhoto = (id: string) => {
-    const updated = adminUserPhotos.filter((p) => p.id !== id);
-    setAdminUserPhotos(updated);
-    localStorage.setItem('tk_sentra_additional_photos_v1', JSON.stringify(updated));
-    setStatusMessage('Foto dokumentasi sentra berhasil dihapus!');
+    deleteSentraPhoto(id);
+    setStatusMessage('Foto dokumentasi sentra berhasil dihapus dari sistem publik!');
   };
 
   // Custom Feature Builder State
@@ -484,20 +472,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleSyncToFirestore = async () => {
     setIsSyncingCloud(true);
     try {
-      if (!isAdminUser) {
-        const loggedIn = await signInWithGoogleAccount();
-        if (!loggedIn || loggedIn.email?.toLowerCase() !== 'ml0752960@gmail.com' || !loggedIn.emailVerified) {
-          setRestoreStatus('Silakan masuk dengan akun Google admin sekolah yang sudah terverifikasi.');
-          setIsSyncingCloud(false);
-          return;
-        }
-      }
       const saved = await saveAllSettingsToServer();
-      if (!saved) throw new Error('Ukuran konten melebihi batas Firestore atau izin admin ditolak.');
-      setRestoreStatus('Pengaturan website berhasil disimpan ke Firestore.');
-      setStatusMessage('Pengaturan website berhasil disimpan ke cloud.');
+      if (!saved) throw new Error('Sinkronisasi cloud gagal. Silakan periksa koneksi.');
+      setRestoreStatus('Pengaturan website & semua gambar berhasil dipublikasikan ke publik!');
+      setStatusMessage('Pengaturan website & gambar berhasil dipublikasikan ke publik!');
     } catch (err: any) {
-      setRestoreStatus(`Gagal sinkronisasi: ${err?.message || 'Periksa izin akun Google Anda.'}`);
+      setRestoreStatus(`Gagal sinkronisasi: ${err?.message || 'Periksa koneksi internet.'}`);
     } finally {
       setIsSyncingCloud(false);
     }
@@ -662,6 +642,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-hidden focus:border-[#006699]"
                   />
                 </div>
+
+                <button
+                  onClick={handleSyncToFirestore}
+                  disabled={isSyncingCloud}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center gap-1.5 transition shadow-sm cursor-pointer whitespace-nowrap"
+                  title="Publikasikan semua perubahan teks & gambar langsung ke publik"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingCloud ? 'animate-spin' : ''}`} />
+                  <span>{isSyncingCloud ? 'Menyimpan...' : 'Publikasikan ke Web'}</span>
+                </button>
 
                 <button
                   onClick={onClose}
@@ -1517,29 +1507,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                          {!isAdminUser ? (
-                            <button
-                              onClick={signInWithGoogleAccount}
-                              className="px-4 py-2.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 cursor-pointer"
-                            >
-                              <Cloud className="w-4 h-4" /> Login Google untuk Cloud DB
-                            </button>
-                          ) : (
-                            <button
-                              onClick={handleSyncToFirestore}
-                              disabled={isSyncingCloud}
-                              className="px-4 py-2.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
-                            >
-                              <RefreshCw
-                                className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`}
-                              />
-                              <span>
-                                {isSyncingCloud
-                                  ? 'Menyinkronkan...'
-                                  : 'Sinkronisasi Semua Data ke Firestore'}
-                              </span>
-                            </button>
-                          )}
+                          <button
+                            onClick={handleSyncToFirestore}
+                            disabled={isSyncingCloud}
+                            className="px-4 py-2.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-sm"
+                          >
+                            <RefreshCw
+                              className={`w-4 h-4 ${isSyncingCloud ? 'animate-spin' : ''}`}
+                            />
+                            <span>
+                              {isSyncingCloud
+                                ? 'Menyinkronkan...'
+                                : 'Sinkronisasi Semua Data & Gambar ke Firestore'}
+                            </span>
+                          </button>
                         </div>
                       </div>
 

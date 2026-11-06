@@ -298,3 +298,12 @@ export interface CustomFeature {
 
 export type PageTab = 'home' | 'about' | 'schools' | 'facilities' | 'contact' | 'admin';
 
+
+export interface UserUploadedPhoto {
+  id: string;
+  src: string;
+  sentraId: string;
+  sentraName: string;
+  title: string;
+  desc: string;
+}

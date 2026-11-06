@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Teacher, GalleryItem, Registration } from '../../types';
+import { compressImageFile } from '../../utils/imageCompressor';
 import {
   Plus,
   Edit3,
@@ -1072,16 +1073,21 @@ export const TeachersCrudTab: React.FC<TeachersCrudTabProps> = ({
     setIsFormOpen(true);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setPhoto(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImageFile(file, { maxDimension: 800, quality: 0.8 });
+      setPhoto(compressed);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setPhoto(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1431,16 +1437,21 @@ export const GalleryCrudTab: React.FC<GalleryCrudTabProps> = ({
     setIsFormOpen(true);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setImageUrl(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImageFile(file, { maxDimension: 1200, quality: 0.78 });
+      setImageUrl(compressed);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {

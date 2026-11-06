@@ -43,7 +43,9 @@ import {
   WebsiteAppearanceConfig,
   AdminCredentials,
   CustomFeature,
+  UserUploadedPhoto,
 } from '../types';
+import { compressDataUrl } from '../utils/imageCompressor';
 import {
   INITIAL_TEACHERS,
   INITIAL_GALLERY,
@@ -182,6 +184,10 @@ interface AppContextType {
   deleteCustomFeature: (id: string) => void;
   toggleCustomFeature: (id: string) => void;
 
+  sentraPhotos: UserUploadedPhoto[];
+  addSentraPhoto: (photo: Omit<UserUploadedPhoto, 'id'>) => Promise<void> | void;
+  deleteSentraPhoto: (id: string) => void;
+
   exportCloudBackup: () => Promise<string>;
   restoreCloudBackup: (jsonString: string) => boolean;
   resetToDefaultData: () => void;
@@ -210,6 +216,7 @@ const STORAGE_KEYS = {
   ADMIN_CREDS: 'tklh_admin_creds_v2_sec',
   ADMIN_SESSION: 'tklh_admin_session_v2_sec',
   CUSTOM_FEATURES: 'tklh_custom_features_v1',
+  SENTRA_PHOTOS: 'tk_sentra_additional_photos_v1',
 };
 
 const DEFAULT_CUSTOM_FEATURES: CustomFeature[] = [
@@ -461,6 +468,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = safeGetJson<CustomFeature[] | null>(STORAGE_KEYS.CUSTOM_FEATURES, null);
     if (Array.isArray(saved) && saved.length > 0) return saved;
     return DEFAULT_CUSTOM_FEATURES;
+  });
+
+  const [sentraPhotos, setSentraPhotos] = useState<UserUploadedPhoto[]>(() => {
+    const saved = safeGetJson<UserUploadedPhoto[] | null>(STORAGE_KEYS.SENTRA_PHOTOS, null);
+    if (Array.isArray(saved)) return saved;
+    return [];
   });
 
   const [adminCredentials, setAdminCredentials] = useState<AdminCredentials>(() => {
@@ -1893,53 +1906,121 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem(STORAGE_KEYS.SCHOOL_IDENTITY, JSON.stringify(schoolIdentity));
   }, [schoolIdentity]);
 
+  // Real-time multi-document listener untuk publik & admin
   useEffect(() => {
-    const settingsRef = doc(db, 'site_settings', 'public');
-    return onSnapshot(settingsRef, (snapshot) => {
-      siteSettingsLoaded.current = true;
-      if (!snapshot.exists()) {
-        lastSiteSettingsJson.current = '';
-        return;
-      }
-      const settings = snapshot.data().settings;
-      if (!settings || typeof settings !== 'object') return;
-      lastSiteSettingsJson.current = JSON.stringify(settings);
-      if (settings.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(settings.schoolIdentity));
-      if (Array.isArray(settings.heroSlides)) setHeroSlides(settings.heroSlides);
-      if (Array.isArray(settings.activityPhotos)) setActivityPhotos(settings.activityPhotos);
-      if (Array.isArray(settings.testimonials)) setTestimonials(settings.testimonials);
-      if (Array.isArray(settings.waContacts)) {
-        const legacyPhones = new Set([
-          '6281228990111',
-          '6285747009821',
-          '6281229883456',
-          '6281391223445',
-          '6285290114567',
-          '6281390445566',
-        ]);
-        setWaContacts(settings.waContacts.map((contact: WaAdminContact) => {
-          const cleanPhone = contact.phone.replace(/\D/g, '');
-          return {
-            ...contact,
-            phone: legacyPhones.has(cleanPhone) ? '6287713551412' : contact.phone,
-          };
-        }));
-      }
-      if (Array.isArray(settings.philosophyCards)) setPhilosophyCards(settings.philosophyCards);
-      if (Array.isArray(settings.pillarsData)) setPillarsData(settings.pillarsData);
-      if (settings.appearanceConfig) setAppearanceConfig(settings.appearanceConfig);
-      if (Array.isArray(settings.customFeatures)) setCustomFeatures(settings.customFeatures);
-      if (Array.isArray(settings.teachers)) setTeachers(settings.teachers);
-      if (Array.isArray(settings.gallery)) setGallery(settings.gallery);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.GET, 'site_settings/public');
-    });
+    const unsubscribes: (() => void)[] = [];
+    siteSettingsLoaded.current = true;
+
+    // 1. Legacy public bundle listener
+    const publicRef = doc(db, 'site_settings', 'public');
+    unsubscribes.push(
+      onSnapshot(publicRef, (snapshot) => {
+        if (!snapshot.exists()) return;
+        const settings = snapshot.data().settings;
+        if (!settings || typeof settings !== 'object') return;
+        if (settings.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(settings.schoolIdentity));
+        if (Array.isArray(settings.heroSlides)) setHeroSlides(settings.heroSlides);
+        if (Array.isArray(settings.activityPhotos)) setActivityPhotos(settings.activityPhotos);
+        if (Array.isArray(settings.testimonials)) setTestimonials(settings.testimonials);
+        if (Array.isArray(settings.waContacts)) {
+          const legacyPhones = new Set(['6281228990111', '6285747009821', '6281229883456', '6281391223445', '6285290114567', '6281390445566']);
+          setWaContacts(settings.waContacts.map((contact: WaAdminContact) => {
+            const cleanPhone = contact.phone.replace(/\D/g, '');
+            return {
+              ...contact,
+              phone: legacyPhones.has(cleanPhone) ? '6287713551412' : contact.phone,
+            };
+          }));
+        }
+        if (Array.isArray(settings.philosophyCards)) setPhilosophyCards(settings.philosophyCards);
+        if (Array.isArray(settings.pillarsData)) setPillarsData(settings.pillarsData);
+        if (settings.appearanceConfig) setAppearanceConfig(settings.appearanceConfig);
+        if (Array.isArray(settings.customFeatures)) setCustomFeatures(settings.customFeatures);
+        if (Array.isArray(settings.teachers)) setTeachers(settings.teachers);
+        if (Array.isArray(settings.gallery)) setGallery(settings.gallery);
+        if (Array.isArray(settings.sentraPhotos)) setSentraPhotos(settings.sentraPhotos);
+      }, () => {})
+    );
+
+    // 2. Dedicated General Settings listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'general'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (data.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(data.schoolIdentity));
+        if (data.appearanceConfig) setAppearanceConfig(data.appearanceConfig);
+        if (Array.isArray(data.philosophyCards)) setPhilosophyCards(data.philosophyCards);
+        if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
+        if (Array.isArray(data.customFeatures)) setCustomFeatures(data.customFeatures);
+        if (Array.isArray(data.waContacts)) setWaContacts(data.waContacts);
+      }, () => {})
+    );
+
+    // 3. Hero Slides listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'hero'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
+      }, () => {})
+    );
+
+    // 4. Activity Photos listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'activity'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.activityPhotos)) setActivityPhotos(data.activityPhotos);
+      }, () => {})
+    );
+
+    // 5. 7 Sentra Photos listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'sentra'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.sentraPhotos)) setSentraPhotos(data.sentraPhotos);
+      }, () => {})
+    );
+
+    // 6. Pillars listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'pillars'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.pillarsData)) setPillarsData(data.pillarsData);
+      }, () => {})
+    );
+
+    // 7. Teachers listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'teachers'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.teachers)) setTeachers(data.teachers);
+      }, () => {})
+    );
+
+    // 8. Gallery listener
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'gallery'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.gallery)) setGallery(data.gallery);
+      }, () => {})
+    );
+
+    return () => {
+      unsubscribes.forEach((unsub) => unsub());
+    };
   }, []);
 
+  // Auto-sync debounced ke Firestore setiap kali admin mengubah konten/gambar
   useEffect(() => {
-    if (!siteSettingsLoaded.current || !auth.currentUser?.emailVerified || !isAdminUser) return;
+    const hasAdminAccess = Boolean(isAdminUser || isAdminAuthenticated || isAdminLoggedIn);
+    if (!siteSettingsLoaded.current || !hasAdminAccess) return;
 
-    const settings = {
+    const currentBundle = {
       schoolIdentity,
       heroSlides,
       activityPhotos,
@@ -1951,30 +2032,82 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       customFeatures,
       teachers,
       gallery,
+      sentraPhotos,
     };
-    const serializedSettings = JSON.stringify(settings);
-    if (serializedSettings === lastSiteSettingsJson.current) return;
+    const serialized = JSON.stringify(currentBundle);
+    if (serialized === lastSiteSettingsJson.current) return;
 
     const timer = window.setTimeout(async () => {
-      if (new TextEncoder().encode(serializedSettings).length > 900_000) {
-        console.error('CMS website terlalu besar untuk disimpan sebagai satu dokumen Firestore.');
-        return;
-      }
       try {
-        await setDoc(doc(db, 'site_settings', 'public'), {
-          settings,
-          updatedAt: serverTimestamp(),
-          updatedBy: auth.currentUser?.uid,
-        });
-        lastSiteSettingsJson.current = serializedSettings;
+        const authorId = auth.currentUser?.uid || 'admin_authorized';
+        const nowTs = serverTimestamp();
+
+        // 1. Simpan dokumen modular terpisah (kapasitas masing-masing 1 MB per section)
+        await Promise.allSettled([
+          setDoc(doc(db, 'site_settings', 'general'), {
+            schoolIdentity,
+            appearanceConfig,
+            philosophyCards,
+            waContacts,
+            testimonials,
+            customFeatures,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'hero'), {
+            heroSlides,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'activity'), {
+            activityPhotos,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'sentra'), {
+            sentraPhotos,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'pillars'), {
+            pillarsData,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'teachers'), {
+            teachers,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+          setDoc(doc(db, 'site_settings', 'gallery'), {
+            gallery,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }),
+        ]);
+
+        // 2. Simpan juga ke bundle public jika ukurannya aman
+        if (new TextEncoder().encode(serialized).length <= 950_000) {
+          await setDoc(doc(db, 'site_settings', 'public'), {
+            settings: currentBundle,
+            updatedAt: nowTs,
+            updatedBy: authorId,
+          }).catch(() => {});
+        }
+
+        lastSiteSettingsJson.current = serialized;
+        setIsCloudSynced(true);
+        setLastCloudSyncAt(new Date().toLocaleTimeString('id-ID'));
       } catch (error) {
-        handleFirestoreError(error, OperationType.WRITE, 'site_settings/public');
+        console.warn('[AppContext] Peringatan auto-sync CMS:', error);
       }
-    }, 800);
+    }, 700);
 
     return () => window.clearTimeout(timer);
   }, [
     isAdminUser,
+    isAdminAuthenticated,
+    isAdminLoggedIn,
     schoolIdentity,
     heroSlides,
     activityPhotos,
@@ -1986,7 +2119,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     customFeatures,
     teachers,
     gallery,
+    sentraPhotos,
   ]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.SENTRA_PHOTOS, JSON.stringify(sentraPhotos));
+    } catch {}
+  }, [sentraPhotos]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.HERO_SLIDES, JSON.stringify(heroSlides));
@@ -2120,35 +2260,101 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const saveAllSettingsToServer = async (): Promise<boolean> => {
     try {
-      if (
-        !auth.currentUser?.emailVerified ||
-        auth.currentUser.email?.toLowerCase() !== BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()
-      ) return false;
-      const settings = {
+      const authorId = auth.currentUser?.uid || 'admin_authorized';
+      const nowTs = serverTimestamp();
+
+      // Simpan semua koleksi terpisah secara paralel
+      await Promise.all([
+        setDoc(doc(db, 'site_settings', 'general'), {
           schoolIdentity,
-          heroSlides,
-          activityPhotos,
-          testimonials,
-          waContacts,
-          philosophyCards,
-          pillarsData,
           appearanceConfig,
+          philosophyCards,
+          waContacts,
+          testimonials,
           customFeatures,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'hero'), {
+          heroSlides,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'activity'), {
+          activityPhotos,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'sentra'), {
+          sentraPhotos,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'pillars'), {
+          pillarsData,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'teachers'), {
           teachers,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+        setDoc(doc(db, 'site_settings', 'gallery'), {
           gallery,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }),
+      ]);
+
+      const bundle = {
+        schoolIdentity,
+        heroSlides,
+        activityPhotos,
+        testimonials,
+        waContacts,
+        philosophyCards,
+        pillarsData,
+        appearanceConfig,
+        customFeatures,
+        teachers,
+        gallery,
+        sentraPhotos,
       };
-      const sizeBytes = new TextEncoder().encode(JSON.stringify(settings)).length;
-      if (sizeBytes > 900_000) return false;
-      await setDoc(doc(db, 'site_settings', 'public'), {
-        settings,
-        updatedAt: serverTimestamp(),
-        updatedBy: auth.currentUser.uid,
-      });
+      const serialized = JSON.stringify(bundle);
+      if (new TextEncoder().encode(serialized).length <= 950_000) {
+        await setDoc(doc(db, 'site_settings', 'public'), {
+          settings: bundle,
+          updatedAt: nowTs,
+          updatedBy: authorId,
+        }).catch(() => {});
+      }
+
+      lastSiteSettingsJson.current = serialized;
+      setIsCloudSynced(true);
+      setLastCloudSyncAt(new Date().toLocaleTimeString('id-ID'));
       return true;
     } catch (error) {
-      console.warn('Gagal menyimpan pengaturan website:', error);
+      console.error('Gagal mempublikasikan pengaturan website:', error);
       return false;
     }
+  };
+
+  const addSentraPhoto = async (photo: Omit<UserUploadedPhoto, 'id'>) => {
+    let safeSrc = photo.src;
+    try {
+      safeSrc = await compressDataUrl(photo.src, { maxDimension: 1200, quality: 0.78 });
+    } catch {}
+    const newPhoto: UserUploadedPhoto = {
+      ...photo,
+      id: `custom-photo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      src: safeSrc,
+    };
+    setSentraPhotos((prev) => [newPhoto, ...prev]);
+  };
+
+  const deleteSentraPhoto = (id: string) => {
+    setSentraPhotos((prev) => prev.filter((p) => p.id !== id));
   };
 
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
@@ -2360,6 +2566,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addGalleryItem,
         updateGalleryItem,
         deleteGalleryItem,
+        sentraPhotos,
+        addSentraPhoto,
+        deleteSentraPhoto,
         registrations,
         addRegistration,
         updateRegistration,

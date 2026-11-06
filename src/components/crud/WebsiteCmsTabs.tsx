@@ -9,6 +9,7 @@ import {
   WebsiteAppearanceConfig,
   AdminCredentials,
 } from '../../types';
+import { compressImageFile } from '../../utils/imageCompressor';
 import {
   Plus,
   Edit3,
@@ -156,16 +157,21 @@ export const PhilosophyAndPillarsCrudTab: React.FC<PhilosophyCrudProps> = ({
     onNotify('Pilar Karakter berhasil diperbarui!');
   };
 
-  const handlePillarPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePillarPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editingPillar) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setEditingPillar({ ...editingPillar, image: reader.result });
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImageFile(file, { maxDimension: 1000, quality: 0.8 });
+      setEditingPillar({ ...editingPillar, image: compressed });
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setEditingPillar({ ...editingPillar, image: reader.result });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -348,7 +354,7 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
   const [form, setForm] = useState<SchoolIdentity>(schoolIdentity);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -357,19 +363,20 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
       return;
     }
 
-    if (file.size > 3 * 1024 * 1024) {
-      setUploadError('Ukuran gambar maksimal 3 MB.');
-      return;
-    }
-
     setUploadError(null);
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      setForm((prev) => ({ ...prev, customLogoUrl: result }));
-      onNotify('Logo baru berhasil dimuat. Klik "Simpan Perubahan" untuk menerapkan permanen.');
-    };
-    reader.readAsDataURL(file);
+    try {
+      const compressed = await compressImageFile(file, { maxDimension: 600, quality: 0.85 });
+      setForm((prev) => ({ ...prev, customLogoUrl: compressed }));
+      onNotify('Logo baru berhasil dimuat & dioptimasi. Klik "Simpan Perubahan" untuk publikasi.');
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        setForm((prev) => ({ ...prev, customLogoUrl: result }));
+        onNotify('Logo baru berhasil dimuat. Klik "Simpan Perubahan" untuk publikasi.');
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleResetToDefaultLogo = () => {
@@ -773,20 +780,29 @@ export const HeroSlidesCrudTab: React.FC<HeroSlidesCrudProps> = ({
   const [primaryButton, setPrimaryButton] = useState('Daftar SPMB 2026/2027');
   const [image, setImage] = useState('/assets/gallery/foto1-menara-teratai.jpg');
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        if (isEdit && editingSlide) {
-          setEditingSlide({ ...editingSlide, image: reader.result });
-        } else {
-          setImage(reader.result);
-        }
+    try {
+      const compressed = await compressImageFile(file, { maxDimension: 1400, quality: 0.78 });
+      if (isEdit && editingSlide) {
+        setEditingSlide({ ...editingSlide, image: compressed });
+      } else {
+        setImage(compressed);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          if (isEdit && editingSlide) {
+            setEditingSlide({ ...editingSlide, image: reader.result });
+          } else {
+            setImage(reader.result);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleCreate = (e: React.FormEvent) => {

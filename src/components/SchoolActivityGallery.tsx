@@ -13,6 +13,7 @@ import {
 import { SCHOOL_ACTIVITY_PHOTOS } from '../data/initialData';
 import { SchoolActivityPhoto } from '../types';
 import { useApp } from '../context/AppContext';
+import { compressImageFile } from '../utils/imageCompressor';
 
 interface SchoolActivityGalleryProps {
   onSelectPhotoForHero?: (photoUrl: string) => void;
@@ -25,35 +26,47 @@ export const SchoolActivityGallery: React.FC<SchoolActivityGalleryProps> = () =>
   const [uploadSuccessId, setUploadSuccessId] = useState<string | null>(null);
   const [isManageMode, setIsManageMode] = useState<boolean>(false);
 
-  const handleFileUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
+    try {
+      const dataUrl = await compressImageFile(file, { maxDimension: 1200, quality: 0.78 });
       updateActivityPhoto(id, { customDataUrl: dataUrl });
       setUploadSuccessId(id);
       setTimeout(() => setUploadSuccessId(null), 3000);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleBatchUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    Array.from(files).forEach((file: File, index: number) => {
-      const targetPhoto = photos[index];
-      if (!targetPhoto) return;
-
+    } catch {
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
-        updateActivityPhoto(targetPhoto.id, { customDataUrl: dataUrl });
+        updateActivityPhoto(id, { customDataUrl: dataUrl });
+        setUploadSuccessId(id);
+        setTimeout(() => setUploadSuccessId(null), 3000);
       };
       reader.readAsDataURL(file);
-    });
+    }
+  };
+
+  const handleBatchUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+      const targetPhoto = photos[index];
+      if (!targetPhoto) continue;
+      try {
+        const dataUrl = await compressImageFile(file, { maxDimension: 1200, quality: 0.78 });
+        updateActivityPhoto(targetPhoto.id, { customDataUrl: dataUrl });
+      } catch {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          updateActivityPhoto(targetPhoto.id, { customDataUrl: dataUrl });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
     setUploadSuccessId('batch');
     setTimeout(() => setUploadSuccessId(null), 4000);

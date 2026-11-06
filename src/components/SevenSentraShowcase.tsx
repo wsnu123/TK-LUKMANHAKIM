@@ -33,38 +33,26 @@ import {
   ALL_SENTRA_CLIENT_PHOTOS,
   SentraItem,
 } from '../data/sentraData';
-import { PageTab } from '../types';
+import { PageTab, UserUploadedPhoto } from '../types';
 import { useApp } from '../context/AppContext';
+import { compressImageFile } from '../utils/imageCompressor';
 
 interface SevenSentraShowcaseProps {
   onOpenPpdb?: () => void;
   onNavigate?: (page: PageTab) => void;
 }
 
-interface UserUploadedPhoto {
-  id: string;
-  src: string;
-  sentraId: string;
-  sentraName: string;
-  title: string;
-  desc: string;
-}
-
-const LOCAL_STORAGE_KEY = 'tk_sentra_additional_photos_v1';
-
 export const SevenSentraShowcase: React.FC<SevenSentraShowcaseProps> = ({
   onOpenPpdb,
   onNavigate,
 }) => {
-  const { isAdminAuthenticated } = useApp();
+  const { sentraPhotos: userPhotos, addSentraPhoto, deleteSentraPhoto, isAdminAuthenticated } = useApp();
   const [activeSentraId, setActiveSentraId] = useState<string>('sentra-alam-cair');
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
   const [activeTabMode, setActiveTabMode] = useState<'sentra' | 'gallery'>('sentra');
   const [galleryFilter, setGalleryFilter] = useState<string>('all');
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
-  // Additional user uploaded photos (to complete 37 photos or more)
-  const [userPhotos, setUserPhotos] = useState<UserUploadedPhoto[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [uploadTargetSentra, setUploadTargetSentra] = useState<string>('sentra-alam-cair');
   const [uploadTitle, setUploadTitle] = useState<string>('');
@@ -77,32 +65,10 @@ export const SevenSentraShowcase: React.FC<SevenSentraShowcaseProps> = ({
     { src: string; title: string; desc: string; sentraName?: string; isCustom?: boolean; id?: string }[]
   >([]);
 
-  // Load additional photos from localStorage
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) {
-        setUserPhotos(JSON.parse(saved));
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
   // Reset active photo index when active sentra changes
   useEffect(() => {
     setActivePhotoIndex(0);
   }, [activeSentraId]);
-
-  // Save additional photos to localStorage
-  const saveUserPhotos = (newPhotos: UserUploadedPhoto[]) => {
-    setUserPhotos(newPhotos);
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newPhotos));
-    } catch {
-      // ignore
-    }
-  };
 
   const activeSentra: SentraItem =
     SEVEN_SENTRA_DATA.find((s) => s.id === activeSentraId) || SEVEN_SENTRA_DATA[0];
@@ -225,46 +191,38 @@ export const SevenSentraShowcase: React.FC<SevenSentraShowcaseProps> = ({
     }
   };
 
-  const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelection = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     const urls: string[] = [];
-    let count = 0;
-
-    Array.from(files).forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          urls.push(reader.result);
-        }
-        count++;
-        if (count === files.length) {
-          setSelectedFileDataUrls((prev) => [...prev, ...urls]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of Array.from(files)) {
+      try {
+        const compressed = await compressImageFile(file, { maxDimension: 1200, quality: 0.78 });
+        urls.push(compressed);
+      } catch (err) {
+        console.warn('Gagal mengompresi foto:', err);
+      }
+    }
+    setSelectedFileDataUrls((prev) => [...prev, ...urls]);
   };
 
-  const handleSaveUploadedPhotos = () => {
+  const handleSaveUploadedPhotos = async () => {
     if (!isAdminAuthenticated) return;
     if (selectedFileDataUrls.length === 0) return;
 
     const targetSentraObj = SEVEN_SENTRA_DATA.find((s) => s.id === uploadTargetSentra);
     const sentraName = targetSentraObj ? targetSentraObj.name : 'Sentra Belajar';
 
-    const newItems: UserUploadedPhoto[] = selectedFileDataUrls.map((url, idx) => ({
-      id: `custom-photo-${Date.now()}-${idx}`,
-      src: url,
-      sentraId: uploadTargetSentra,
-      sentraName: sentraName,
-      title: uploadTitle.trim() || `Dokumentasi Tambahan ${sentraName}`,
-      desc: uploadDesc.trim() || 'Foto kegiatan nyata santri TK Lukman Hakim.',
-    }));
-
-    const updated = [...userPhotos, ...newItems];
-    saveUserPhotos(updated);
+    for (const url of selectedFileDataUrls) {
+      await addSentraPhoto({
+        src: url,
+        sentraId: uploadTargetSentra,
+        sentraName: sentraName,
+        title: uploadTitle.trim() || `Dokumentasi Tambahan ${sentraName}`,
+        desc: uploadDesc.trim() || 'Foto kegiatan nyata santri TK Lukman Hakim.',
+      });
+    }
 
     setSelectedFileDataUrls([]);
     setUploadTitle('');
@@ -274,8 +232,7 @@ export const SevenSentraShowcase: React.FC<SevenSentraShowcaseProps> = ({
 
   const handleDeleteUserPhoto = (id: string) => {
     if (!isAdminAuthenticated) return;
-    const updated = userPhotos.filter((p) => p.id !== id);
-    saveUserPhotos(updated);
+    deleteSentraPhoto(id);
     if (lightboxIndex !== null) {
       setLightboxIndex(null);
     }
