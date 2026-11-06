@@ -669,6 +669,7 @@ export const SCHOOL_IDENTITY: SchoolIdentity = {
   jamOperasional: 'Senin – Jumat (07.00 – 16.00 WIB) & Sabtu (08.00 – 12.00 WIB)',
   yayasan: 'Yayasan Pendidikan Teknologi Banyumas',
   customLogoUrl: '/logo.png',
+  websiteUrl: 'https://tklukmanhakim.sch.id',
 };
 
 export const SCHOOL_ACTIVITY_PHOTOS: SchoolActivityPhoto[] = [

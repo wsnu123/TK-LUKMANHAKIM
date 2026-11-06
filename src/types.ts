@@ -198,6 +198,7 @@ export interface SchoolIdentity {
   facebookUrl?: string;
   youtubeUrl?: string;
   googleMapsUrl?: string;
+  websiteUrl?: string;
 }
 
 export interface TestimonialItem {

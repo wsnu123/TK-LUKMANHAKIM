@@ -39,7 +39,8 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
 
   if (!isOpen) return null;
 
-  const currentOrigin = originUrl || 'https://tklukmanhakim.sch.id';
+  // Domain resmi TK Lukman Hakim Purwokerto
+  const officialDomain = schoolIdentity.websiteUrl || 'https://tklukmanhakim.sch.id';
   const cleanPhone = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
 
   const TARGET_OPTIONS: {
@@ -53,17 +54,17 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
     {
       id: 'website',
       label: 'Website Resmi',
-      sublabel: 'Akses Beranda & Profil',
+      sublabel: 'tklukmanhakim.sch.id',
       icon: Globe,
-      url: currentOrigin,
-      description: 'Scan untuk membuka website resmi TK Lukman Hakim Purwokerto di ponsel.',
+      url: officialDomain,
+      description: 'Scan untuk membuka website resmi TK Lukman Hakim Purwokerto (tklukmanhakim.sch.id).',
     },
     {
       id: 'spmb',
       label: 'PPDB Online',
       sublabel: 'Formulir Pendaftaran',
       icon: FileText,
-      url: `${currentOrigin}/#spmb`,
+      url: `${officialDomain}/#spmb`,
       description: 'Scan langsung menuju formulir pendaftaran murid baru online T.A. 2026/2027.',
     },
     {
