@@ -19,6 +19,7 @@ import {
   Compass,
   Award,
   ChevronRight,
+  MessageCircle,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -114,13 +115,13 @@ const ALL_FACILITIES: FacilityItem[] = [
   },
   {
     id: 'musholla-tahfidz',
-    title: 'Musholla Santri & Halaqah Tilawati Al-Qur’an',
+    title: 'Musholla Santri & Halaqah Tilawati Al-Qurâ€™an',
     subtitle: 'Sentra pembiasaan sholat berjamaah & tahfidz Juz 30',
     category: 'Ibadah & Karakter',
     badge: 'Sentra Ibadah',
     rating: 5.0,
     reviewsCount: 164,
-    areaSize: 'Kapasitas ±80 Santri',
+    areaSize: 'Kapasitas Â±80 Santri',
     locationZone: 'Sayap Timur Lantai 1',
     image: '/assets/images/tahfidz_tilawati_ceria_1790826065441.jpg',
     galleryImages: [
@@ -129,17 +130,17 @@ const ALL_FACILITIES: FacilityItem[] = [
       '/assets/images/sholat_berjamaah_1789701704780.jpg',
     ],
     description:
-      'Foto kegiatan ibadah dan belajar Al-Qur’an. Jadwal kegiatan dan metode yang digunakan dapat ditanyakan langsung kepada sekolah.',
+      'Foto kegiatan ibadah dan belajar Al-Qurâ€™an. Jadwal kegiatan dan metode yang digunakan dapat ditanyakan langsung kepada sekolah.',
     highlights: [
       'Karpet empuk bersih dengan jadwal vacuum cleaner harian',
-      'Tempat wudhu khusus anak dengan tinggi keran 45–55 cm',
+      'Tempat wudhu khusus anak dengan tinggi keran 45â€“55 cm',
       'Peraga Tilawati besar & kartu hijaiyah warna-warni',
       'Mukena & sarung cilik bersih tersimpan di loker terawat',
     ],
     safetyStandard: 'Jalur wudhu berlapis keset karet anti-slip & pemisahan area kering.',
     coordinator: {
       name: 'Ustadz Ahmad Fauzi Al-Hafidz',
-      role: 'Koordinator Tahfidz Al-Qur’an',
+      role: 'Koordinator Tahfidz Al-Qurâ€™an',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
     },
   },
@@ -241,7 +242,7 @@ const CATEGORIES_DATA = [
   {
     id: 'outdoor',
     name: 'Playground Alam',
-    metric: '±450 m² Area Terbuka',
+    metric: 'Â±450 mÂ² Area Terbuka',
     icon: Trees,
     filterKey: 'Outdoor & Alam',
     tag: 'Taman & Lalu Lintas',
@@ -306,7 +307,7 @@ const CATEGORIES_DATA = [
 
 const FAQ_ITEMS = [
   {
-    q: 'Apakah fasilitas di TK Lukman Hakim aman bagi balita usia 3–5 tahun?',
+    q: 'Apakah fasilitas di TK Lukman Hakim aman bagi balita usia 3â€“5 tahun?',
     a: 'Ayah dan Bunda dapat melihat area belajar dan bermain saat kunjungan, serta menanyakan langsung pendampingan yang diterapkan sesuai usia ananda.',
   },
   {
@@ -420,7 +421,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
               />
             </div>
             <span className="text-xs sm:text-sm font-bold text-sky-100 tracking-wide">
-              ± 1.200 m² Sarana Prasarana Ramah Anak • Akreditasi A
+              Â± 1.200 mÂ² Sarana Prasarana Ramah Anak â€¢ Akreditasi A
             </span>
           </div>
 
@@ -444,7 +445,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
               className="px-6 py-3 rounded-full bg-[#fbbf24] hover:bg-[#f59e0b] text-[#0F2937] font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 transition transform hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Compass className="w-4 h-4 text-[#006699]" />
-              <span>🧭 Buka Virtual Tour Interaktif (6 Zona)</span>
+              <span>Buka Virtual Tour Interaktif (6 Zona)</span>
             </button>
             <a
               href={`https://wa.me/6287713551412?text=${encodeURIComponent('Assalamu’alaikum Admin TK Lukman Hakim. Saya ingin mendaftar sesi School Tour Langsung / Free Trial Class untuk ananda. Mohon informasi jadwal temu yang tersedia.')}`}
@@ -452,7 +453,8 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
               rel="noreferrer"
               className="px-6 py-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs sm:text-sm border border-white/30 shadow-md flex items-center gap-2 transition cursor-pointer"
             >
-              <span>💬 Jadwalkan Kunjungan Offline (Gratis)</span>
+              <MessageCircle className="w-4 h-4 text-emerald-300" />
+              <span>Jadwalkan Kunjungan Offline (Gratis)</span>
             </a>
           </div>
 
@@ -620,7 +622,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                 Infrastruktur Ramah Balita
               </span>
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white leading-snug">
-                Kampus Asri, Nyaman & Aman Seluas ±1.200 m²
+                Kampus Asri, Nyaman & Aman Seluas Â±1.200 mÂ²
               </h3>
               <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                 Tersedia 7 ruang sentra ber-AC, kebun hidroponik, musholla cilik, serta taman lalu lintas mini.
@@ -908,7 +910,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                 Ingin Mengajak Ananda Mencoba Bermain di Kampus Kami?
               </h3>
               <p className="text-xs sm:text-sm text-sky-100/90 leading-relaxed">
-                Kunjungi langsung kampus kami di {schoolIdentity.alamat}, {schoolIdentity.kecamatan} pada hari Senin – Sabtu.
+                Kunjungi langsung kampus kami di {schoolIdentity.alamat}, {schoolIdentity.kecamatan} pada hari Senin â€“ Sabtu.
               </p>
             </div>
 

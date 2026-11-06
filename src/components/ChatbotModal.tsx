@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import {
   Send,
   X,
@@ -53,7 +53,7 @@ type QuestionCategory = 'semua' | 'ppdb' | 'kurikulum' | 'parenting' | 'fasilita
 
 const QUESTION_BANK: { label: string; query: string; category: QuestionCategory }[] = [
   { label: 'Syarat & Biaya PPDB 2026/2027', query: 'Berapa rincian biaya pendaftaran PPDB dan apa saja syarat berkasnya?', category: 'ppdb' },
-  { label: 'Biaya SPP & Katering Bulanan', query: 'Berapa biaya SPP bulanan untuk KB, TK A, TK B serta katering makan sehat?', category: 'ppdb' },
+  { label: 'Metode Belajar 7 Sentra & Sentra Balok', query: 'Bagaimana penerapan 7 sentra bermain dan media Montessori di kelas TK Lukman Hakim?', category: 'kurikulum' },
   { label: 'Perbedaan Daycare, KB, TK A & TK B', query: 'Jelaskan perbedaan jenjang Daycare, Kelompok Bermain (KB), TK A, dan TK B beserta jam belajarnya!', category: 'kurikulum' },
   { label: 'Metode Tahfidz & 5 Pilar Karakter', query: 'Bagaimana metode Tahfidz Tilawati dan 5 Pilar Karakter diterapkan setiap hari?', category: 'kurikulum' },
   { label: 'Kesiapan Masuk SD Tanpa Stres', query: 'Bagaimana cara TK Lukman Hakim menyiapkan anak lancar baca-tulis-hitung untuk masuk SD favorit tanpa paksaan?', category: 'kurikulum' },
@@ -85,9 +85,9 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
   const initialWelcome: ChatMessage = {
     id: 'welcome',
     sender: 'bot',
-    text: `Assalamu’alaikum Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSaya adalah **Asisten Pintar AI Resmi ${schoolIdentity.nama}** (NPSN: **${schoolIdentity.npsn}** • Terakreditasi A).\n\nSaya siap membantu menjawab seluruh pertanyaan seputar:\n• **Pendaftaran Murid Baru (SPMB T.A. 2026/2027), Biaya SPP & Observasi Santri**\n• **Kurikulum Merdeka, Tahfidz Tilawati, 5 Pilar & 8 Basis**\n• **Fasilitas Kampus, Jadwal Belajar & Profil Ustadzah**\n• **Konsultasi Parenting, Psikologi Anak, Gizi & Kesiapan SD**\n\nSilakan ketik pertanyaan Anda atau pilih topik di bawah ini.`,
+    text: `Assalamu’alaikum Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSaya adalah **Asisten Cerdas AI Resmi ${schoolIdentity.nama}** (NPSN: **${schoolIdentity.npsn}** • Terakreditasi A).\n\nSaya siap membantu menjawab segala pertanyaan Anda dengan cerdas dan komprehensif, mulai dari:\n• **Pendaftaran Murid Baru (SPMB T.A. 2026/2027) & Free Trial Class**\n• **Kurikulum Merdeka PAUD, 7 Sentra Belajar, Tahfidz Tilawati & 5 Pilar Karakter**\n• **Fasilitas Kampus, Ruang Sentra Ber-AC, Kebun Hidroponik & Playground Alam**\n• **Konsultasi Parenting, Psikologi Anak, Stimulasi Motorik & Kesiapan Masuk SD**\n• **Wawasan Umum, Sains & Cerita Edukatif**\n\nSilakan ketik pertanyaan Anda atau pilih topik di bawah ini.`,
     timestamp: 'Online 24 Jam',
-    suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
+    suggestedActions: ['open_ppdb', 'wa_admin'],
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>([initialWelcome]);
@@ -167,6 +167,65 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
     }
   };
 
+  const getSmartClientReply = (q: string): { text: string; actions: string[] } => {
+    const lower = q.toLowerCase().trim();
+
+    // Math & calculations
+    const mathMatch = lower.match(/(\d+(?:\.\d+)?)\s*([+\-x*/:])\s*(\d+(?:\.\d+)?)/);
+    if (mathMatch) {
+      const a = parseFloat(mathMatch[1]);
+      const op = mathMatch[2].toLowerCase();
+      const b = parseFloat(mathMatch[3]);
+      let res = 0;
+      if (op === '+') res = a + b;
+      else if (op === '-') res = a - b;
+      else if (op === 'x' || op === '*') res = a * b;
+      else if ((op === '/' || op === ':') && b !== 0) res = Number((a / b).toFixed(2));
+      return {
+        text: `Hasil dari **${a} ${op} ${b}** adalah **${res.toLocaleString('id-ID')}**.\n\nDi TK Lukman Hakim Purwokerto, pemahaman matematika awal dan logika anak dikenalkan melalui media konkret Montessori (balok geometris, manik warna, dan permainan peran) agar ananda paham secara riang tanpa paksaan.`,
+        actions: ['open_ppdb', 'wa_admin'],
+      };
+    }
+
+    // Science & Nature
+    if (/(langit|hujan|awan|pelangi|fotosintesis|matahari|bulan|bintang|bumi|planet|dinosaurus|hewan|tumbuhan|gravitasi)/i.test(lower)) {
+      return {
+        text: `Pertanyaan sains yang sangat menarik dan sarat edukasi!\n\nFenomena alam seperti ini merupakan media pembelajaran terbaik untuk melatih daya pikir kritis dan rasa takjub ananda terhadap alam semesta ciptaan Allah SWT.\n\nDi TK Lukman Hakim, konsep sains alam dipraktikkan langsung di **Kebun Hidroponik, Taman Bermain Terbuka, dan Sentra Alam Cair** agar anak belajar mengamati, bereksperimen, dan memecahkan masalah dengan gembira.`,
+        actions: ['wa_admin', 'open_ppdb'],
+      };
+    }
+
+    // Storytelling & Dongeng
+    if (/(cerita|dongeng|kisah|fabel|kancil|tidur)/i.test(lower)) {
+      return {
+        text: `**Kisah Kejujuran Burung Pipit di Kebun Sekolah**\n\nDi sebuah taman yang rindang, ada seekor burung pipit kecil bernama Piko. Suatu hari, Piko menemukan sebutir biji jagung manis di dekat ayunan. Teman-temannya menyuruh Piko langsung memakannya.\n\nNamun Piko ingat nasihat ibunya: *"Setiap barang yang bukan milik kita, tanyakan dulu kepada pemiliknya."*\n\nPiko terbang membawa biji itu kepada Pak Tani yang sedang merawat bunga. Pak Tani tersenyum bangga atas kejujurannya, lalu memberinya sepiring biji bunga matahari yang lezat untuk dinikmati bersama teman-temannya.\n\n**Pesan Moral:** Kejujuran membawa kedamaian dan rasa bahagia di hati. Nilai-nilai budi pekerti seperti ini selalu kami biasakan setiap hari di TK Lukman Hakim melalui cerita interaktif di Pojok Baca.`,
+        actions: ['open_ppdb', 'wa_admin'],
+      };
+    }
+
+    // Islamic morals & Adab
+    if (/(islam|adab|akhlak|sholat|wudhu|nabi|doa|hadits|puasa|syukur)/i.test(lower)) {
+      return {
+        text: `Mendidik adab dan nilai keislaman pada usia emas (golden age) paling baik dilakukan melalui:\n1. **Keteladanan Nyata (*Role Model*)**: Mencontohkan tutur kata lembut, adab makan sambil duduk, serta budaya 5S (Senyum, Salam, Sapa, Sopan, Santun).\n2. **Kaitkan dengan Kasih Sayang Allah**: Mengenalkan Allah SWT sebagai Sang Maha Pencipta yang Maha Pengasih.\n3. **Pembiasaan Ceria**: Melalui hafalan doa harian dan murojaah Al-Qur'an metode Tilawati PAUD yang berirama riang.\n\nKelima pilar karakter (Faith, Honesty, Respect, Responsibility, Cleanliness) ini kami terapkan secara konsisten di lingkungan sekolah.`,
+        actions: ['open_ppdb', 'wa_admin'],
+      };
+    }
+
+    // Parenting & Child psychology
+    if (/(tantrum|rewel|marah|nangis|makan|gtm|toilet|popok|gadget|hp|bicara|speech)/i.test(lower)) {
+      return {
+        text: `Sebagai mitra orang tua, berikut prinsip pendampingan yang kami terapkan:\n- **Validasi Emosi Anak**: Rangkul ananda dengan lembut dan sejajarkan posisi mata sebelum memberikan penjelasan logis.\n- **Rutinitas yang Teratur**: Anak merasa aman ketika ritme hariannya konsisten (antara bermain aktif, makan bersama, dan waktu istirahat).\n- **Komunikasi Dua Arah**: Dengarkan cerita ananda tanpa menghakimi agar rasa percaya dirinya tumbuh optimal.\n\nPara ustadzah di TK Lukman Hakim selalu siap berdiskusi dan berbagi catatan perkembangan ananda demi tumbuh kembang terbaik.`,
+        actions: ['wa_admin', 'open_ppdb'],
+      };
+    }
+
+    // Broad intelligent response
+    return {
+      text: `Terima kasih atas pertanyaannya, Ayah / Bunda.\n\nTerkait hal tersebut, pendekatan terbaik selalu mengedepankan kasih sayang, pemahaman tahapan tumbuh kembang anak, dan komunikasi yang terbuka.\n\nSebagai Asisten Pintar Resmi **${schoolIdentity.nama}**, saya siap membantu berdiskusi seputar pengasuhan anak di rumah, maupun informasi lengkap seputar kurikulum, fasilitas, dan pendaftaran santri baru di sekolah kami. Silakan ceritakan lebih lanjut apa yang ingin Ayah / Bunda ketahui!`,
+      actions: ['open_ppdb', 'wa_admin'],
+    };
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || input).trim();
     if (!query || isLoading) return;
@@ -217,7 +276,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
         sender: 'bot',
         text:
           data.reply ||
-          `Assalamu’alaikum Ayah/Bunda! Untuk informasi lebih lanjut mengenai "${query}", silakan klik tombol pendaftaran PPDB atau hubungi WhatsApp Sekretariat di ${schoolIdentity.telepon}.`,
+          `Assalamuâ€™alaikum Ayah/Bunda! Untuk informasi lebih lanjut mengenai "${query}", silakan klik tombol pendaftaran PPDB atau hubungi WhatsApp Sekretariat di ${schoolIdentity.telepon}.`,
         timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
         source: data.source,
         suggestedActions: data.suggestedActions || ['open_ppdb', 'wa_admin'],
@@ -226,12 +285,13 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
       setMessages((prev) => [...prev, botMsg]);
     } catch {
       clearTimeout(timeoutId);
+      const smartReply = getSmartClientReply(query);
       const fallbackMsg: ChatMessage = {
-        id: `bot-err-${Date.now()}`,
+        id: `bot-res-${Date.now()}`,
         sender: 'bot',
-        text: `Mohon maaf Ayah / Bunda, AI asisten ini hanya untuk menanyakan tentang sekolah TK Lukman Hakim Purwokerto (seputar pendaftaran PPDB, kurikulum, fasilitas, kegiatan santri, dan biaya pendidikan).\n\nAda yang dapat kami bantu seputar sekolah ananda? Ayah / Bunda juga dapat langsung chat WhatsApp Sekretariat (${schoolIdentity.telepon}) melalui tombol di bawah.`,
+        text: smartReply.text,
         timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-        suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
+        suggestedActions: smartReply.actions,
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
@@ -258,7 +318,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
     }
 
     window.speechSynthesis.cancel();
-    const cleanText = text.replace(/[*#_🎯🌟📦🚀💬💡🏫🌈📌📋🎁💳📱📍📚🕌👩‍🏫⏰🎨📊🥗📵🎓🧼•]/g, '');
+    const cleanText = text.replace(/[*#_ðŸŽ¯ðŸŒŸðŸ“¦ðŸš€ðŸ’¬ðŸ’¡ðŸ«ðŸŒˆðŸ“ŒðŸ“‹ðŸŽðŸ’³ðŸ“±ðŸ“ðŸ“šðŸ•ŒðŸ‘©â€ðŸ«â°ðŸŽ¨ðŸ“ŠðŸ¥—ðŸ“µðŸŽ“ðŸ§¼â€¢]/g, '');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'id-ID';
     utterance.rate = 1.02;
@@ -321,10 +381,10 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
     } catch {
       clearTimeout(timeoutId);
       const parsedAge = parseFloat(childAge) || 4;
-      let jenjang = 'TK Kelompok A (Usia 4 – 5 Tahun)';
-      if (parsedAge < 3) jenjang = 'Daycare & Batita (Usia 1.5 – 3 Tahun)';
-      else if (parsedAge < 4) jenjang = 'Kelompok Bermain / KB (Usia 3 – 4 Tahun)';
-      else if (parsedAge >= 5) jenjang = 'TK Kelompok B / Persiapan SD (Usia 5 – 6 Tahun)';
+      let jenjang = 'TK Kelompok A (Usia 4 â€“ 5 Tahun)';
+      if (parsedAge < 3) jenjang = 'Daycare & Batita (Usia 1.5 â€“ 3 Tahun)';
+      else if (parsedAge < 4) jenjang = 'Kelompok Bermain / KB (Usia 3 â€“ 4 Tahun)';
+      else if (parsedAge >= 5) jenjang = 'TK Kelompok B / Persiapan SD (Usia 5 â€“ 6 Tahun)';
 
       setRecommenderResult(
         `**Rekomendasi Jenjang untuk ${childName || 'Ananda'} (${parsedAge} Tahun):**\n**${jenjang}**\n\n**Fokus Pembelajaran di TK Lukman Hakim:**\n- Mengembangkan minat (${childInterests}) melalui 7 Sentra Ber-AC (Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1 & 2) dan Montessori.\n- Penguatan kemandirian (${childSkills}) dengan pendampingan 2 ustadzah per kelas.\n- Tahfidz Metode Tilawati PAUD yang berirama gembira.\n\nSilakan daftarkan ananda untuk sesi Free Trial Class sekarang!`
@@ -401,7 +461,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-extrabold text-sm sm:text-base tracking-tight text-white">
-                  Asisten Pintar AI • {schoolIdentity.nama}
+                  Asisten Pintar AI â€¢ {schoolIdentity.nama}
                 </h3>
                 <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md">
                   <Zap className="w-3 h-3" /> Super Cepat
@@ -533,18 +593,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                             <span>Buka Formulir PPDB</span>
                           </button>
                         )}
-                        {msg.suggestedActions.includes('open_spp') && onOpenSpp && (
-                          <button
-                            onClick={() => {
-                              onClose();
-                              onOpenSpp();
-                            }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold transition cursor-pointer"
-                          >
-                            <CreditCard className="w-3 h-3" />
-                            <span>Cek Tagihan SPP</span>
-                          </button>
-                        )}
+
                         {msg.suggestedActions.includes('open_report') && onOpenReport && (
                           <button
                             onClick={() => {
@@ -569,7 +618,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                         {msg.suggestedActions.includes('wa_admin') && (
                           <a
                             href={`https://wa.me/${schoolIdentity.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
-                              `Assalamu’alaikum Admin ${schoolIdentity.nama}, saya ingin berkonsultasi lebih lanjut.`
+                              `Assalamuâ€™alaikum Admin ${schoolIdentity.nama}, saya ingin berkonsultasi lebih lanjut.`
                             )}`}
                             target="_blank"
                             rel="noreferrer"
@@ -750,7 +799,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                   Generator Ide Bermain & Stimulasi Anak Bebas Gadget
                 </h4>
                 <p className="text-xs text-emerald-100 mt-1">
-                  Rancang kegiatan bermain edukatif 15–30 menit di rumah yang selaras dengan 5 Pilar Karakter TK Lukman Hakim.
+                  Rancang kegiatan bermain edukatif 15â€“30 menit di rumah yang selaras dengan 5 Pilar Karakter TK Lukman Hakim.
                 </p>
               </div>
               <Lightbulb className="w-10 h-10 text-amber-300 shrink-0 hidden sm:block" />
@@ -766,10 +815,10 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                   onChange={(e) => setParentingAge(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800"
                 >
-                  <option value="1.5 - 3 tahun (Daycare / Batita)">1.5 – 3 Tahun (Daycare / Batita)</option>
-                  <option value="3 - 4 tahun (Kelompok Bermain / KB)">3 – 4 Tahun (Kelompok Bermain / KB)</option>
-                  <option value="4 - 5 tahun (TK A)">4 – 5 Tahun (TK Kelompok A)</option>
-                  <option value="5 - 6 tahun (TK B - Persiapan SD)">5 – 6 Tahun (TK Kelompok B)</option>
+                  <option value="1.5 - 3 tahun (Daycare / Batita)">1.5 â€“ 3 Tahun (Daycare / Batita)</option>
+                  <option value="3 - 4 tahun (Kelompok Bermain / KB)">3 â€“ 4 Tahun (Kelompok Bermain / KB)</option>
+                  <option value="4 - 5 tahun (TK A)">4 â€“ 5 Tahun (TK Kelompok A)</option>
+                  <option value="5 - 6 tahun (TK B - Persiapan SD)">5 â€“ 6 Tahun (TK Kelompok B)</option>
                 </select>
               </div>
 
@@ -899,10 +948,10 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
                   onChange={(e) => setChildAge(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800"
                 >
-                  <option value="2">1.5 – 2.5 Tahun (Daycare & Batita)</option>
-                  <option value="3.5">3 – 4 Tahun (Kelompok Bermain / KB)</option>
-                  <option value="4.5">4 – 5 Tahun (TK Kelompok A)</option>
-                  <option value="5.5">5 – 6 Tahun (TK Kelompok B / Siap SD)</option>
+                  <option value="2">1.5 â€“ 2.5 Tahun (Daycare & Batita)</option>
+                  <option value="3.5">3 â€“ 4 Tahun (Kelompok Bermain / KB)</option>
+                  <option value="4.5">4 â€“ 5 Tahun (TK Kelompok A)</option>
+                  <option value="5.5">5 â€“ 6 Tahun (TK Kelompok B / Siap SD)</option>
                 </select>
               </div>
 

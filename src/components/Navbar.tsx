@@ -13,6 +13,7 @@ import {
   Bot,
   Sparkles,
   Mail,
+  Compass,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -64,10 +65,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const schoolItems = [
-    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1.5 – 3 Tahun • Pengasuhan & Stimulasi Sensorik' },
-    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 – 4 Tahun • Sosialisasi & Eksplorasi Aktif' },
-    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 – 5 Tahun • Pra-Literasi Fonik & Sains Alam' },
-    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 – 6 Tahun • Kesiapan Matang Masuk SD' },
+    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1.5 â€“ 3 Tahun â€¢ Pengasuhan & Stimulasi Sensorik' },
+    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 â€“ 4 Tahun â€¢ Sosialisasi & Eksplorasi Aktif' },
+    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 â€“ 5 Tahun â€¢ Pra-Literasi Fonik & Sains Alam' },
+    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 â€“ 6 Tahun â€¢ Kesiapan Matang Masuk SD' },
   ];
 
   const facilityItems = [
@@ -75,7 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'fasilitas-kebun', label: 'Kebun Hidroponik & Rumah Satwa', desc: 'Eksplorasi botanika & rumah burung merpati jinak' },
     { id: 'fasilitas-indoor', label: '7 Ruang Kelas Sentra & Montessori AC', desc: 'Sentra Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1 & 2' },
     { id: 'fasilitas-seni', label: 'Studio Seni Lukis & Musik Angklung', desc: 'Sentra kreativitas seni lukis, kriya & angklung bambu' },
-    { id: 'fasilitas-daycare', label: 'Ruang Sensorik & Daycare Batita', desc: 'Matras bermain lembut & ruang istirahat usia 2–4 thn' },
+    { id: 'fasilitas-daycare', label: 'Ruang Sensorik & Daycare Batita', desc: 'Matras bermain lembut & ruang istirahat usia 2â€“4 thn' },
     { id: 'fasilitas-ibadah', label: 'Musholla Santri & Sentra Tilawati', desc: 'Sentra praktik wudhu, sholat dhuha & mengaji' },
   ];
 
@@ -119,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {schoolIdentity.nama}
               </span>
               <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1">
-                PURWOKERTO • NPSN {schoolIdentity.npsn}
+                PURWOKERTO â€¢ NPSN {schoolIdentity.npsn}
               </span>
             </div>
           </div>
@@ -175,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
                         4 Jenjang Pendidikan
                       </span>
-                      <span className="text-[10px] font-semibold text-[#006699]">Usia 1.5 – 6 Th</span>
+                      <span className="text-[10px] font-semibold text-[#006699]">Usia 1.5 â€“ 6 Th</span>
                     </div>
                     <div className="py-1">
                       {schoolItems.map((item, idx) => (
@@ -240,8 +241,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => handleNavClick('facilities', 'virtual-tour')}
                         className="w-full text-left px-3 py-2 rounded-lg transition bg-amber-50/80 hover:bg-amber-100 flex items-center justify-between text-xs font-bold text-amber-900 cursor-pointer mt-1"
                       >
-                        <span className="flex items-center gap-1.5">
-                          <span>🧭</span>
+                        <span className="flex items-center gap-2">
+                          <Compass className="w-3.5 h-3.5 text-amber-700" />
                           <span>Virtual Tour Interaktif 360°</span>
                         </span>
                         <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-800 text-[9px] font-bold">Baru</span>
@@ -378,7 +379,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => handleNavClick('schools')}
                     className="w-full text-left py-1 text-xs text-[#006699] font-bold block"
                   >
-                    → Buka Halaman Program Lengkap
+                    â†’ Buka Halaman Program Lengkap
                   </button>
                   {schoolItems.map((item) => (
                     <button
@@ -408,8 +409,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="text-left py-2 px-3 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
-                  <span>🧭</span>
-                  <span>Virtual Tour Interaktif 360°</span>
+                  <span>ðŸ§­</span>
+                  <span>Virtual Tour Interaktif 360Â°</span>
                 </span>
                 <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[9px] font-extrabold">BARU</span>
               </button>

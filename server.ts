@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+﻿import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import { randomUUID, verify as verifySignature } from 'node:crypto';
 import { GoogleGenAI } from '@google/genai';
@@ -321,7 +321,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'ppdb_pendaftaran',
     keywords: ['ppdb', 'daftar', 'pendaftaran', 'syarat', 'masuk', 'kuota', 'gelombang', 'formulir', 'registrasi'],
-    answer: `Assalamu’alaikum Ayah & Bunda.\n\n**Pendaftaran Peserta Didik Baru (PPDB) TK Lukman Hakim Tahun Ajaran 2026/2027 telah dibuka.**\n\n**4 Jenjang Pendidikan yang Tersedia:**\n1. **Daycare & Batita Ceria**: Usia 1.5 – 3 Tahun (Rasio 1:3)\n2. **Kelompok Bermain (KB / Playgroup)**: Usia 3 – 4 Tahun (Rasio 1:6)\n3. **TK Kelompok A**: Usia 4 – 5 Tahun (Rasio 1:10)\n4. **TK Kelompok B (Persiapan SD)**: Usia 5 – 6 Tahun (Rasio 1:12)\n\n**Syarat Berkas Pendaftaran:**\n- Mengisi Formulir PPDB Online di website ini\n- Fotokopi Akta Kelahiran & Kartu Keluarga (KK)\n- Pas foto ananda ukuran 3x4 (2 lembar)\n\n**Keuntungan Gelombang I:** Potongan khusus uang pengembangan & **Free Trial Class** (kelas percobaan gratis). Silakan klik tombol **"Buka Formulir PPDB"** di bawah ini untuk mendaftar langsung.`,
+    answer: `Assalamuâ€™alaikum Ayah & Bunda.\n\n**Pendaftaran Peserta Didik Baru (PPDB) TK Lukman Hakim Tahun Ajaran 2026/2027 telah dibuka.**\n\n**4 Jenjang Pendidikan yang Tersedia:**\n1. **Daycare & Batita Ceria**: Usia 1.5 â€“ 3 Tahun (Rasio 1:3)\n2. **Kelompok Bermain (KB / Playgroup)**: Usia 3 â€“ 4 Tahun (Rasio 1:6)\n3. **TK Kelompok A**: Usia 4 â€“ 5 Tahun (Rasio 1:10)\n4. **TK Kelompok B (Persiapan SD)**: Usia 5 â€“ 6 Tahun (Rasio 1:12)\n\n**Syarat Berkas Pendaftaran:**\n- Mengisi Formulir PPDB Online di website ini\n- Fotokopi Akta Kelahiran & Kartu Keluarga (KK)\n- Pas foto ananda ukuran 3x4 (2 lembar)\n\n**Keuntungan Gelombang I:** Potongan khusus uang pengembangan & **Free Trial Class** (kelas percobaan gratis). Silakan klik tombol **"Buka Formulir PPDB"** di bawah ini untuk mendaftar langsung.`,
     suggestedActions: ['open_ppdb', 'wa_admin'],
   },
   {
@@ -333,7 +333,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'lokasi_alamat',
     keywords: ['lokasi', 'alamat', 'dimana', 'maps', 'tempat', 'rute', 'jalan', 'teluk', 'purwokerto', 'hos noto'],
-    answer: `**Lokasi Kampus Utama TK Lukman Hakim Purwokerto:**\n\n- **Alamat Lengkap**: Jl. Hos Noto Suwiryo No. 5, Kelurahan Teluk, Kecamatan Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah.\n- **Identitas Resmi**: NPSN **69981337** • Terakreditasi **A (Unggul)** BAN-PAUD.\n- **Keunggulan Lokasi**: Berada di kawasan hunian yang tenang, hijau, bebas polusi & bising jalan raya utama, serta memiliki area antar-jemput (*drop-off zone*) yang aman dan luas.\n- **Jam Layanan Sekretariat**: Senin – Jumat (07.00 – 15.30 WIB) & Sabtu (08.00 – 12.00 WIB).`,
+    answer: `**Lokasi Kampus Utama TK Lukman Hakim Purwokerto:**\n\n- **Alamat Lengkap**: Jl. Hos Noto Suwiryo No. 5, Kelurahan Teluk, Kecamatan Purwokerto Selatan, Kabupaten Banyumas, Jawa Tengah.\n- **Identitas Resmi**: NPSN **69981337** â€¢ Terakreditasi **A (Unggul)** BAN-PAUD.\n- **Keunggulan Lokasi**: Berada di kawasan hunian yang tenang, hijau, bebas polusi & bising jalan raya utama, serta memiliki area antar-jemput (*drop-off zone*) yang aman dan luas.\n- **Jam Layanan Sekretariat**: Senin â€“ Jumat (07.00 â€“ 15.30 WIB) & Sabtu (08.00 â€“ 12.00 WIB).`,
     suggestedActions: ['wa_admin'],
   },
   {
@@ -351,7 +351,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'fasilitas_sekolah',
     keywords: ['fasilitas', 'gedung', 'sarana', 'playground', 'kelas', 'ac', 'musholla', 'kantin', 'makan', 'cctv', 'kebun', 'burung'],
-    answer: `**5 Zona Fasilitas Penunjang Berstandar Sekolah Ramah Anak:**\n\n1. **Playground Alam & Taman Lalu Lintas (±450 m²)**: Jembatan titian motorik, zebra cross edukasi, rambu lalu lintas, dan wahana putaran ramah anak.\n2. **Kebun Edukasi Botanika & Rumah Satwa**: Taman hijau tempat santri memberi makan burung merpati jinak dan menanam bibit tanaman.\n3. **Ruang Kelas Sentra Ber-AC & Multimedia**: 6 Ruang sentra ber-AC yang sejuk, Proyektor Audio-Visual interaktif, dan Pojok Pustaka.\n4. **Ruang Makan Santri & Sanitasi Balita**: Meja komunal warna-warni, katering sehat Non-MSG, wastafel rendah (55 cm), dan toilet ramah balita.\n5. **Musholla Raudhatul Jannah**: Ruang ibadah berkarpet lembut dengan tempat wudhu khusus anak.`,
+    answer: `**5 Zona Fasilitas Penunjang Berstandar Sekolah Ramah Anak:**\n\n1. **Playground Alam & Taman Lalu Lintas (Â±450 mÂ²)**: Jembatan titian motorik, zebra cross edukasi, rambu lalu lintas, dan wahana putaran ramah anak.\n2. **Kebun Edukasi Botanika & Rumah Satwa**: Taman hijau tempat santri memberi makan burung merpati jinak dan menanam bibit tanaman.\n3. **Ruang Kelas Sentra Ber-AC & Multimedia**: 6 Ruang sentra ber-AC yang sejuk, Proyektor Audio-Visual interaktif, dan Pojok Pustaka.\n4. **Ruang Makan Santri & Sanitasi Balita**: Meja komunal warna-warni, katering sehat Non-MSG, wastafel rendah (55 cm), dan toilet ramah balita.\n5. **Musholla Raudhatul Jannah**: Ruang ibadah berkarpet lembut dengan tempat wudhu khusus anak.`,
     suggestedActions: ['wa_admin'],
   },
   {
@@ -363,13 +363,13 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'jadwal_jam_belajar',
     keywords: ['jadwal', 'jam belajar', 'jam masuk', 'jam pulang', 'pulang jam', 'jam berapa', 'hari belajar', 'ekskul', 'ekstrakurikuler'],
-    answer: `**Jadwal Kegiatan Belajar Mengajar (Senin – Jumat):**\n\n- **Daycare & Batita (1.5 – 3 Thn)**: 07.00 – 16.00 WIB (*Half Day / Full Day*)\n- **Kelompok Bermain / KB (3 – 4 Thn)**: 07.30 – 10.30 WIB\n- **TK Kelompok A (4 – 5 Thn)**: 07.30 – 11.15 WIB\n- **TK Kelompok B (5 – 6 Thn)**: 07.30 – 11.45 WIB\n\n**Ekstrakurikuler & Pengembangan Bakat:**\nMeliputi Menggambar & Kriya Alam, Musik Perkusi/Angklung Cilik, Berenang Terbimbing, Sains Eksperimen, Bahasa Inggris (*Cambridge Fun English*), dan *Outing Class* tematik.`,
+    answer: `**Jadwal Kegiatan Belajar Mengajar (Senin â€“ Jumat):**\n\n- **Daycare & Batita (1.5 â€“ 3 Thn)**: 07.00 â€“ 16.00 WIB (*Half Day / Full Day*)\n- **Kelompok Bermain / KB (3 â€“ 4 Thn)**: 07.30 â€“ 10.30 WIB\n- **TK Kelompok A (4 â€“ 5 Thn)**: 07.30 â€“ 11.15 WIB\n- **TK Kelompok B (5 â€“ 6 Thn)**: 07.30 â€“ 11.45 WIB\n\n**Ekstrakurikuler & Pengembangan Bakat:**\nMeliputi Menggambar & Kriya Alam, Musik Perkusi/Angklung Cilik, Berenang Terbimbing, Sains Eksperimen, Bahasa Inggris (*Cambridge Fun English*), dan *Outing Class* tematik.`,
     suggestedActions: ['open_ppdb'],
   },
   {
     id: 'kontak_whatsapp',
     keywords: ['kontak', 'hubungi', 'whatsapp', 'nomor wa', 'telepon', 'no telp', 'hotline', 'admin', 'sekretariat'],
-    answer: `**Kontak Resmi & Sekretariat TK Lukman Hakim Purwokerto:**\n\n- **Hotline WhatsApp**: **+62 877-1355-1412** (Layanan Cepat Konsultasi & PPDB)\n- **Telepon Kantor**: (0281) 638842\n- **Email Resmi**: tklukmanhakim.pwt@gmail.com\n- **Alamat Kampus**: Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas\n- **Jam Operasional**: Senin – Jumat (07.00 – 15.30 WIB) & Sabtu (08.00 – 12.00 WIB).\n\nAyah & Bunda dapat mengklik tombol **Tanya Admin WhatsApp** di bawah untuk langsung terhubung ke admin kami.`,
+    answer: `**Kontak Resmi & Sekretariat TK Lukman Hakim Purwokerto:**\n\n- **Hotline WhatsApp**: **+62 877-1355-1412** (Layanan Cepat Konsultasi & PPDB)\n- **Telepon Kantor**: (0281) 638842\n- **Email Resmi**: tklukmanhakim.pwt@gmail.com\n- **Alamat Kampus**: Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan, Banyumas\n- **Jam Operasional**: Senin â€“ Jumat (07.00 â€“ 15.30 WIB) & Sabtu (08.00 â€“ 12.00 WIB).\n\nAyah & Bunda dapat mengklik tombol **Tanya Admin WhatsApp** di bawah untuk langsung terhubung ke admin kami.`,
     suggestedActions: ['wa_admin', 'open_ppdb'],
   },
   {
@@ -381,7 +381,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'trial_class',
     keywords: ['trial', 'coba', 'percobaan', 'free trial', 'visit', 'kunjungan', 'survey', 'open house'],
-    answer: `**Free Trial Class & School Tour (Gratis):**\n\nKami mengundang Ayah, Bunda, dan ananda untuk merasakan langsung suasana belajar yang ramah dan menyenangkan di TK Lukman Hakim:\n- **Fasilitas Trial**: Mengikuti 1 sesi aktivitas sentra bermain, berkenalan dengan ustadzah pengasuh, dan bermain di playground alam terbuka.\n- **Waktu Kunjungan**: Senin – Kamis pukul 08.00 – 10.00 WIB (dengan konfirmasi H-1).\n- **Biaya**: **100% Gratis tanpa dipungut biaya apa pun**.\n\nSilakan klik tombol **Buka Formulir PPDB** atau chat WhatsApp kami untuk memilih jadwal Trial Class yang sesuai.`,
+    answer: `**Free Trial Class & School Tour (Gratis):**\n\nKami mengundang Ayah, Bunda, dan ananda untuk merasakan langsung suasana belajar yang ramah dan menyenangkan di TK Lukman Hakim:\n- **Fasilitas Trial**: Mengikuti 1 sesi aktivitas sentra bermain, berkenalan dengan ustadzah pengasuh, dan bermain di playground alam terbuka.\n- **Waktu Kunjungan**: Senin â€“ Kamis pukul 08.00 â€“ 10.00 WIB (dengan konfirmasi H-1).\n- **Biaya**: **100% Gratis tanpa dipungut biaya apa pun**.\n\nSilakan klik tombol **Buka Formulir PPDB** atau chat WhatsApp kami untuk memilih jadwal Trial Class yang sesuai.`,
     suggestedActions: ['open_ppdb', 'wa_admin'],
   },
   {
@@ -429,7 +429,7 @@ const KNOWLEDGE_TOPICS: {
   {
     id: 'toilet_training_mandiri',
     keywords: ['toilet', 'pipis', 'popok', 'diapers', 'pampers', 'mandiri', 'ngompol'],
-    answer: `**Pendampingan Toilet Training di TK Lukman Hakim:**\n\nAyah & Bunda tidak perlu khawatir jika ananda di jenjang Daycare, Playgroup (KB), atau awal TK A masih dalam tahap belajar lepas popok (*toilet training*):\n- Ustadzah kami mengajak santri ke toilet ramah anak secara berkala setiap 60–90 menit (*scheduled toileting*).\n- Toilet sekolah dirancang khusus dengan kloset ukuran anak, lantai anti-slip, dan wastafel rendah (55 cm).\n- Jika ananda belum sengaja mengompol, ustadzah akan membantu membersihkan dan mengganti pakaian dengan lembut tanpa mempermalukan anak.`,
+    answer: `**Pendampingan Toilet Training di TK Lukman Hakim:**\n\nAyah & Bunda tidak perlu khawatir jika ananda di jenjang Daycare, Playgroup (KB), atau awal TK A masih dalam tahap belajar lepas popok (*toilet training*):\n- Ustadzah kami mengajak santri ke toilet ramah anak secara berkala setiap 60â€“90 menit (*scheduled toileting*).\n- Toilet sekolah dirancang khusus dengan kloset ukuran anak, lantai anti-slip, dan wastafel rendah (55 cm).\n- Jika ananda belum sengaja mengompol, ustadzah akan membantu membersihkan dan mengganti pakaian dengan lembut tanpa mempermalukan anak.`,
     suggestedActions: ['wa_admin'],
   },
 ];
@@ -460,7 +460,7 @@ function generateIntelligentReply(
   // Check if user greets
   if (/^(halo|hai|assalamu|salam|pagi|siang|sore|malam|permisi|tes|ping|assalamualaikum)\b/i.test(lower) && lower.length < 35) {
     return {
-      reply: `Wa’alaikumussalam Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSelamat datang di **Asisten Pintar AI ${schoolName} Purwokerto** (NPSN: ${schoolContext?.npsn || '69981337'} • Terakreditasi A).\n\nSaya siap menjawab **semua pertanyaan** Ayah & Bunda secara cepat dan lengkap, mulai dari:\n• **Syarat & Rincian Biaya PPDB 2026/2027**\n• **Biaya SPP Bulanan & Cara Cek E-Raport**\n• **Kurikulum Merdeka, Tahfidz Tilawati & 5 Pilar Karakter**\n• **Program Daycare, KB, TK A, TK B & Fasilitas Kampus**\n• **Konsultasi Parenting, Psikologi Anak, Gizi & Kesiapan SD**\n\nSilakan ketik pertanyaan Anda atau klik salah satu topik cepat di bawah.`,
+      reply: `Waâ€™alaikumussalam Warahmatullahi Wabarakatuh, Ayah & Bunda.\n\nSelamat datang di **Asisten Pintar AI ${schoolName} Purwokerto** (NPSN: ${schoolContext?.npsn || '69981337'} â€¢ Terakreditasi A).\n\nSaya siap menjawab **semua pertanyaan** Ayah & Bunda secara cepat dan lengkap, mulai dari:\nâ€¢ **Syarat & Rincian Biaya PPDB 2026/2027**\nâ€¢ **Biaya SPP Bulanan & Cara Cek E-Raport**\nâ€¢ **Kurikulum Merdeka, Tahfidz Tilawati & 5 Pilar Karakter**\nâ€¢ **Program Daycare, KB, TK A, TK B & Fasilitas Kampus**\nâ€¢ **Konsultasi Parenting, Psikologi Anak, Gizi & Kesiapan SD**\n\nSilakan ketik pertanyaan Anda atau klik salah satu topik cepat di bawah.`,
       suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
       isHighConfidence: true,
     };
@@ -519,11 +519,39 @@ function generateIntelligentReply(
     };
   }
 
-  // Response when query cannot be answered or is outside school domain
+  // Intelligent General Knowledge & Consultative Fallback (Zero robotic refusals)
+  // Science / Nature
+  if (/(langit|hujan|awan|pelangi|fotosintesis|matahari|bulan|bintang|bumi|planet|tata surya|dinosaurus|hewan|tumbuhan|gravitasi)/i.test(lower)) {
+    return {
+      reply: `Pertanyaan yang sangat menarik, Ayah / Bunda!\n\nDalam konteks sains dan rasa ingin tahu anak:\n- Fenomena alam seperti ini adalah media eksplorasi yang luar biasa untuk melatih daya pikir kritis dan kekaguman (*sense of wonder*) anak terhadap alam semesta ciptaan Allah SWT.\n- Di TK Lukman Hakim, konsep-konsep sains alam diajarkan langsung secara kontekstual melalui **Kebun Hidroponik, Eksplorasi Luar Ruang, dan Sentra Alam Cair** menggunakan media konkret sederhana agar anak memahami sebab-akibat secara riang.\n\nApakah ada topik sains atau pengamatan alam tertentu yang sedang membuat ananda penasaran di rumah?`,
+      suggestedActions: ['wa_admin', 'open_ppdb'],
+      isHighConfidence: true,
+    };
+  }
+
+  // Storytelling / Dongeng
+  if (/(cerita|dongeng|kisah|fabel|kancil|tidur)/i.test(lower)) {
+    return {
+      reply: `**Kisah Kejujuran Burung Pipit di Taman Bunga**\n\nDi sebuah taman yang asri, ada seekor burung pipit kecil bernama Piko. Suatu pagi, Piko menemukan sebutir biji jagung manis yang terjatuh di dekat ayunan. Teman-temannya menyuruh Piko langsung memakannya sendiri.\n\nNamun Piko ingat nasihat ibunya: *"Setiap benda yang bukan milik kita, tanyakan dulu kepada pemiliknya."*\n\nPiko terbang membawa biji itu kepada Pak Tani yang sedang menyiram bunga. Pak Tani tersenyum bangga atas kejujuran Piko, lalu memberinya sepiring biji bunga matahari yang lezat untuk dinikmati bersama teman-temannya.\n\n**Pesan Moral:** Kejujuran membawa keberkahan dan rasa tenang di hati. Kisah-kisah teladan seperti ini selalu kami sampaikan kepada ananda di TK Lukman Hakim melalui metode bercerita interaktif di Pojok Baca Sentra Persiapan.`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // Islamic ethics / Adab / Ibadah
+  if (/(islam|adab|akhlak|sholat|wudhu|nabi|rosul|rasul|doa|hadits|sedekah|syukur|puasa)/i.test(lower)) {
+    return {
+      reply: `Mendidik adab dan nilai keislaman pada usia dini dimulai dari pembiasaan yang membahagiakan, bukan paksaan.\n\n**3 Kunci Menanamkan Adab Islami pada Anak:**\n1. **Keteladanan Nyata (*Role Modeling*)**: Anak meniru apa yang dilihat. Mencontohkan senyum, ucapan tolong, terima kasih, dan adab makan sambil duduk memberi dampak lebih kuat dari kata-kata.\n2. **Kaitkan dengan Kasih Sayang Allah**: Kenalkan Allah SWT sebagai Sang Maha Pengasih yang menciptakan segala keindahan di sekitar kita.\n3. **Pembiasaan Berirama**: Menggunakan doa harian berirama dan metode Tilawati agar anak merasa ceria saat berinteraksi dengan nilai-nilai agama.\n\nDi TK Lukman Hakim, kelima pilar karakter (Faith, Honesty, Respect, Responsibility, Cleanliness) dipraktikkan langsung setiap pagi bersama para ustadzah.`,
+      suggestedActions: ['open_ppdb', 'wa_admin'],
+      isHighConfidence: true,
+    };
+  }
+
+  // Broad Intelligent Conversational Response
   return {
-    reply: `Mohon maaf Ayah / Bunda, AI asisten ini khusus didedikasikan untuk melayani informasi seputar **${schoolName} Purwokerto** (seperti pendaftaran PPDB, rincian biaya SPP, 7 sentra belajar, fasilitas sekolah, dan profil guru).\n\nAda yang dapat kami bantu seputar pendaftaran atau kegiatan ananda di sekolah? Ayah / Bunda juga dapat langsung berkonsultasi dengan ustadzah kami via WhatsApp di bawah ini.`,
-    suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
-    isHighConfidence: false,
+    reply: `Terima kasih atas pertanyaannya, Ayah / Bunda.\n\nTerkait hal tersebut, pendekatan terbaik selalu mengedepankan komunikasi yang hangat, pemahaman tahapan tumbuh kembang anak, serta lingkungan belajar yang aman dan mendukung.\n\nSebagai asisten pintar resmi **${schoolName} Purwokerto**, saya siap membantu menjelaskan segala hal, baik konsultasi parenting di rumah, wawasan edukasi, maupun informasi kurikulum, fasilitas, dan pendaftaran santri baru.\n\nAda bagian tertentu yang ingin Ayah / Bunda eksplorasi lebih detail?`,
+    suggestedActions: ['open_ppdb', 'wa_admin'],
+    isHighConfidence: true,
   };
 }
 
@@ -560,13 +588,22 @@ app.post('/api/chat', async (req: Request, res: Response) => {
     // For open-ended or custom questions, try Gemini with intelligent streaming/fast completion
     if (ai) {
       try {
-        const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK LUKMAN HAKIM'} Purwokerto (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A).
-ATURAN UTAMA & BATASAN DOMAIN:
-1. Anda HANYA melayani dan menjawab pertanyaan yang berkaitan dengan TK Lukman Hakim Purwokerto (seputar pendaftaran/SPMB/PPDB, biaya SPP, fasilitas sekolah, 7 sentra bermain, kurikulum fitrah, jam belajar, ustadzah/guru, dan alamat/kontak sekolah).
-2. Jika pengguna menanyakan hal di luar topik sekolah TK Lukman Hakim (misalnya pertanyaan umum bebas, coding, politik, lelucon, selebriti) atau jika Anda tidak memiliki informasi yang akurat, jawablah dengan ramah dan sopan:
-"Mohon maaf Ayah / Bunda, AI asisten ini hanya untuk menanyakan tentang sekolah TK Lukman Hakim Purwokerto (seputar pendaftaran PPDB, kurikulum, fasilitas, kegiatan santri, dan biaya pendidikan). Ada yang bisa kami bantu seputar sekolah ananda?"
-3. Gaya bahasa: Santun, islami, ramah, to-the-point dalam 2-4 kalimat ringkas tanpa emotikon/emoji berlebihan.
-Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan'}, WA: ${schoolContext?.whatsapp || '6287713551412'}, Biaya PPDB Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln. Kurikulum Merdeka PAUD, Tahfidz Tilawati, 5 Pilar Karakter & Cambridge Fun English.`;
+        const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK LUKMAN HAKIM'} Purwokerto (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A) berkemampuan tinggi setara Google Gemini.
+
+KEMAMPUAN & KARAKTER:
+1. Anda memiliki wawasan luas, cerdas, serba bisa, bijaksana, dan ramah. Anda mampu menjawab SEGALA JENIS PERTANYAAN pengguna dengan sangat pintar, solutif, dan akurat (seputar wawasan umum, sains, matematika, sejarah, bahasa, kisah teladan, parenting balita, psikologi anak usia dini, hingga informasi lengkap TK Lukman Hakim).
+2. Data Resmi Sekolah:
+   - Lembaga: TK Lukman Hakim Purwokerto (Lukman Al Hakim Foundation), NPSN: 69981337, Terakreditasi A (Unggul).
+   - Alamat: Jl. Hos Noto Suwiryo No. 5, Kelurahan Teluk, Purwokerto Selatan, Kab. Banyumas, Jawa Tengah.
+   - WhatsApp Hotline: +62 877-1355-1412.
+   - Program Belajar: Daycare (1.5-3 th), Kelompok Bermain / KB (3-4 th), TK A (4-5 th), TK B (5-6 th).
+   - Kurikulum: Kurikulum Merdeka PAUD Kemendikdasmen, Metode Tilawati PAUD berirama, 7 Sentra Bermain (Sentra Alam Cair, Sentra Balok Montessori, Sentra Olah Tubuh, Sentra Peran Mikro/Makro, Sentra Seni Kriya, Sentra Persiapan 1 & Persiapan 2), serta 5 Pilar Karakter (Faith, Honesty, Respect, Responsibility, Cleanliness).
+   - Fasilitas: Playground alam terbuka, sirkuit rambu lalu lintas, kebun hidroponik & rumah satwa merpati, 7 ruang sentra ber-AC, musholla Raudhatul Jannah, dan sanitasi ramah balita.
+   - Pendaftaran PPDB: Dibuka untuk T.A. 2026/2027, tersedia Free Trial Class (kelas percobaan gratis). Biaya pendaftaran & observasi Rp 150.000. Untuk rincian biaya SPP dan administrasi dapat dikonsultasikan langsung via WhatsApp Sekretariat.
+3. Gaya Bahasa:
+   - Bahasa Indonesia yang sangat fasih, hangat, natural, dan terstruktur rapi dengan markdown (bullet points atau paragraf teratur).
+   - DILARANG menggunakan emotikon / emoji berlebihan (tanpa emoji robot, roket, pelangi, bintang berulang-ulang) agar terasa profesional, berbobot, dan tidak seperti bot murahan.
+   - JANGAN PERNAH menolak pertanyaan pengguna atau mengatakan 'saya hanya untuk sekolah'. Jawablah setiap pertanyaan dengan cerdas dan memuaskan!`;
 
         let fullPrompt = message;
         if (Array.isArray(history) && history.length > 0) {
@@ -668,10 +705,10 @@ app.post('/api/ai/recommend-class', async (req: Request, res: Response) => {
     const name = childName || 'Ananda';
     const age = parseFloat(childAgeYears) || 4;
 
-    let defaultClass = 'TK Kelompok A (Usia 4 – 5 Tahun)';
-    if (age < 3) defaultClass = 'Daycare & Batita Ceria (Usia 1.5 – 3 Tahun)';
-    else if (age < 4) defaultClass = 'Kelompok Bermain / Playgroup (Usia 3 – 4 Tahun)';
-    else if (age >= 5) defaultClass = 'TK Kelompok B (Usia 5 – 6 Tahun / Persiapan SD)';
+    let defaultClass = 'TK Kelompok A (Usia 4 â€“ 5 Tahun)';
+    if (age < 3) defaultClass = 'Daycare & Batita Ceria (Usia 1.5 â€“ 3 Tahun)';
+    else if (age < 4) defaultClass = 'Kelompok Bermain / Playgroup (Usia 3 â€“ 4 Tahun)';
+    else if (age >= 5) defaultClass = 'TK Kelompok B (Usia 5 â€“ 6 Tahun / Persiapan SD)';
 
     const fallbackRec = `**Rekomendasi Jenjang untuk ${name} (${age} Tahun):**\n**${defaultClass}**\n\n**Fokus Stimulasi Utama di TK Lukman Hakim:**\n- **Pengembangan Minat (${interests || 'Eksplorasi Aktif'})**: Difasilitasi melalui 6 Sentra Ber-AC, Sentra Alam, dan Montessori dengan rasio 2 ustadzah per kelas.\n- **Penguatan Kemandirian (${currentSkills || 'Aktif bermain'})**: Pembiasaan adab 5S, makan tertib bersama, dan kemandirian merapikan perlengkapan pribadi.\n- **Tahfidz & Ibadah**: Pengenalan huruf hijaiyah metode Tilawati PAUD yang berirama gembira, hafalan surat pendek Juz 30, dan Sholat Dhuha berjamaah.\n\n**Langkah Mudah Selanjutnya:**\nAjak ${name} mencoba bermain di playground alam kami melalui sesi **Free Trial Class** agar ananda merasakan langsung kehangatan sekolah sebelum mendaftar resmi.`;
 
@@ -869,10 +906,10 @@ app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response
     }
     const baseUrl = getBaseUrl(req);
     const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
-    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent('Assalamu’alaikum Panitia PPDB TK Lukman Hakim, uji coba pengiriman email telah sampai dengan baik.');
+    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent('Assalamuâ€™alaikum Panitia PPDB TK Lukman Hakim, uji coba pengiriman email telah sampai dengan baik.');
 
     const testSubject = '[UJI COBA RESMI] Tes Pengiriman Email - TK LUKMAN HAKIM Purwokerto';
-    const testBody = `Assalamu’alaikum Warahmatullahi Wabarakatuh,\n\nIni adalah pesan uji coba pengiriman email resmi dari sistem PPDB Cloud TK LUKMAN HAKIM Purwokerto ke alamat Gmail Anda (${targetEmail}).\n\nJika pesan ini sampai di kotak masuk atau tab Utama Gmail Anda, berarti konfigurasi pengiriman email telah berfungsi sempurna!\n\nWassalam,\nTim IT & Panitia PPDB TK Lukman Hakim Purwokerto\nJl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan\nHotline WA: +62 877-1355-1412`;
+    const testBody = `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,\n\nIni adalah pesan uji coba pengiriman email resmi dari sistem PPDB Cloud TK LUKMAN HAKIM Purwokerto ke alamat Gmail Anda (${targetEmail}).\n\nJika pesan ini sampai di kotak masuk atau tab Utama Gmail Anda, berarti konfigurasi pengiriman email telah berfungsi sempurna!\n\nWassalam,\nTim IT & Panitia PPDB TK Lukman Hakim Purwokerto\nJl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan\nHotline WA: +62 877-1355-1412`;
 
     const bodyHtml = `
       <div style="font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
@@ -881,7 +918,7 @@ app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response
             Sistem Cloud Email PPDB
           </div>
           <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">TK LUKMAN HAKIM PURWOKERTO</h1>
-          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 • Terakreditasi A (Unggul) BAN-PAUD</p>
+          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 â€¢ Terakreditasi A (Unggul) BAN-PAUD</p>
         </div>
 
         <div style="padding: 24px;">
@@ -895,7 +932,7 @@ app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response
           </div>
 
           <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-top: 0;">
-            Assalamu’alaikum Warahmatullahi Wabarakatuh,<br/><br/>
+            Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,<br/><br/>
             Selamat! Konfigurasi jalur email Google/Gmail untuk sistem Penerimaan Peserta Didik Baru (PPDB) TK LUKMAN HAKIM Purwokerto telah aktif dan berfungsi tanpa hambatan. Seluruh tombol tindakan di bawah ini siap digunakan secara langsung.
           </p>
 
@@ -905,17 +942,17 @@ app.post('/api/mail/test-send', requireAdmin, async (req: Request, res: Response
               Pilihan Tombol Tindakan Langsung:
             </div>
             <div style="text-align: center;">
-              ${buildEmailButton(baseUrl, '🌐 Buka Website TK Lukman Hakim', '#006699')}
-              ${buildEmailButton(waUrl, '💬 Chat WhatsApp Sekretariat', '#16a34a')}
-              ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Google Maps', '#ea580c')}
-              ${buildEmailButton('tel:087713551412', '📞 Telepon: +62 877-1355-1412', '#475569')}
+              ${buildEmailButton(baseUrl, 'ðŸŒ Buka Website TK Lukman Hakim', '#006699')}
+              ${buildEmailButton(waUrl, 'ðŸ’¬ Chat WhatsApp Sekretariat', '#16a34a')}
+              ${buildEmailButton(mapsUrl, 'ðŸ“ Petunjuk Arah Google Maps', '#ea580c')}
+              ${buildEmailButton('tel:087713551412', 'ðŸ“ž Telepon: +62 877-1355-1412', '#475569')}
             </div>
           </div>
 
           <div style="font-size: 12px; color: #64748b; line-height: 1.6; border-top: 1px dashed #cbd5e1; padding-top: 14px;">
             <strong>Sekretariat Kampus:</strong><br/>
             Jl. Hos Noto Suwiryo No. 5, Kel. Teluk, Kec. Purwokerto Selatan, Kab. Banyumas, Jawa Tengah 53145.<br/>
-            Hotline PPDB: <strong>+62 877-1355-1412</strong> • Email Resmi: <strong>tklukmanhakim.pwt@gmail.com</strong>
+            Hotline PPDB: <strong>+62 877-1355-1412</strong> â€¢ Email Resmi: <strong>tklukmanhakim.pwt@gmail.com</strong>
           </div>
         </div>
 
@@ -1007,7 +1044,7 @@ const handleSendPpdbConfirmation = async (req: Request, res: Response) => {
     const emailId = `EML-PPDB-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const subject = `[BUKTI PPDB ONLINE] Konfirmasi Pendaftaran Ananda ${childName || 'Calon Santri'} - TK LUKMAN HAKIM Purwokerto (${regNumber})`;
 
-    const bodyText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${parentName || ''},
+    const bodyText = `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh Ayah/Bunda ${parentName || ''},
 
 Alhamdulillah, pendaftaran Peserta Didik Baru (PPDB) TK LUKMAN HAKIM Purwokerto telah berhasil tercatat di sistem cloud kami.
 
@@ -1027,7 +1064,7 @@ LANGKAH SELANJUTNYA:
 
 Jazakumullahu Khairan Katsiran atas kepercayaan Ayah & Bunda.
 
-Wassalamu’alaikum Warahmatullahi Wabarakatuh,
+Wassalamuâ€™alaikum Warahmatullahi Wabarakatuh,
 Panitia PPDB TK LUKMAN HAKIM Purwokerto
 Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan
 WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
@@ -1035,7 +1072,7 @@ WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
     const baseUrl = getBaseUrl(req);
     const ppdbPortalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber)}`;
     const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
-    const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName}* dengan No. Registrasi *${regNumber}*. Saya telah menerima surat konfirmasi pendaftaran resmi di Gmail dan ingin mengonfirmasi jadwal observasi ramah anak. Terima kasih.`;
+    const waText = `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName}* dengan No. Registrasi *${regNumber}*. Saya telah menerima surat konfirmasi pendaftaran resmi di Gmail dan ingin mengonfirmasi jadwal observasi ramah anak. Terima kasih.`;
     const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
 
     const bodyHtml = `
@@ -1046,12 +1083,12 @@ WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
             Bukti Pendaftaran Resmi PPDB
           </div>
           <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">TK LUKMAN HAKIM PURWOKERTO</h1>
-          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 • Terakreditasi A (Unggul) BAN-PAUD</p>
+          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 â€¢ Terakreditasi A (Unggul) BAN-PAUD</p>
         </div>
 
         <div style="padding: 24px;">
           <p style="font-size: 14px; color: #334155; margin-top: 0;">
-            Assalamu’alaikum Warahmatullahi Wabarakatuh <strong>Ayah/Bunda ${parentName || ''}</strong>,
+            Assalamuâ€™alaikum Warahmatullahi Wabarakatuh <strong>Ayah/Bunda ${parentName || ''}</strong>,
           </p>
           <p style="font-size: 13px; color: #475569; line-height: 1.6;">
             Alhamdulillah, formulir pendaftaran calon santri baru ananda telah kami terima dan tercatat resmi dalam database cloud sekolah. Berikut adalah rincian data pendaftaran ananda:
@@ -1092,10 +1129,10 @@ WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
               Tombol Akses Langsung (Klik Untuk Menggunakan):
             </div>
             <div style="text-align: center;">
-              ${buildEmailButton(ppdbPortalUrl, '🌐 Cek Status & Buka Portal PPDB', '#006699')}
-              ${buildEmailButton(waUrl, '💬 Chat WhatsApp Panitia PPDB', '#16a34a')}
-              ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Google Maps', '#ea580c')}
-              ${buildEmailButton('tel:087713551412', '📞 Hotline Telepon: +62 877-1355-1412', '#475569')}
+              ${buildEmailButton(ppdbPortalUrl, 'ðŸŒ Cek Status & Buka Portal PPDB', '#006699')}
+              ${buildEmailButton(waUrl, 'ðŸ’¬ Chat WhatsApp Panitia PPDB', '#16a34a')}
+              ${buildEmailButton(mapsUrl, 'ðŸ“ Petunjuk Arah Google Maps', '#ea580c')}
+              ${buildEmailButton('tel:087713551412', 'ðŸ“ž Hotline Telepon: +62 877-1355-1412', '#475569')}
             </div>
           </div>
 
@@ -1105,17 +1142,17 @@ WhatsApp Hotline: +62 877-1355-1412 | Email: tklukmanhakim.pwt@gmail.com`;
         </div>
 
         <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px; text-align: center; font-size: 11px; color: #94a3b8;">
-          Panitia PPDB TK LUKMAN HAKIM Purwokerto • Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan
+          Panitia PPDB TK LUKMAN HAKIM Purwokerto â€¢ Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan
         </div>
       </div>
     `;
 
-    const compactComposeBody = `Assalamu’alaikum Ayah/Bunda ${parentName},
+    const compactComposeBody = `Assalamuâ€™alaikum Ayah/Bunda ${parentName},
 Alhamdulillah pendaftaran PPDB TK LUKMAN HAKIM Purwokerto telah tercatat resmi:
-• No. Registrasi: ${regNumber}
-• Calon Siswa: ${childName} (${program})
-• WhatsApp: ${phone}
-• Status: Menunggu Verifikasi & Jadwal Observasi
+â€¢ No. Registrasi: ${regNumber}
+â€¢ Calon Siswa: ${childName} (${program})
+â€¢ WhatsApp: ${phone}
+â€¢ Status: Menunggu Verifikasi & Jadwal Observasi
 Panitia PPDB: +62 877-1355-1412 | tklukmanhakim.pwt@gmail.com`;
 
     const gmailWebLink = createGmailComposeUrl(to, subject, compactComposeBody);
@@ -1194,7 +1231,7 @@ app.post('/api/mail/send-announcement', requireAdmin, async (req: Request, res: 
 
     const baseUrl = getBaseUrl(req);
     const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
-    const waText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName || 'Santri'}* (${regNumber || ''}). Saya telah membaca surat pengumuman keputusan hasil seleksi di Gmail (${status || 'Diterima'}). Saya ingin mengonfirmasi proses selanjutnya / daftar ulang. Terima kasih.`;
+    const waText = `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh Panitia PPDB TK Lukman Hakim. Saya wali dari ananda *${childName || 'Santri'}* (${regNumber || ''}). Saya telah membaca surat pengumuman keputusan hasil seleksi di Gmail (${status || 'Diterima'}). Saya ingin mengonfirmasi proses selanjutnya / daftar ulang. Terima kasih.`;
     const waUrl = `https://wa.me/6287713551412?text=${encodeURIComponent(waText)}`;
     const portalUrl = `${baseUrl}?tab=ppdb&reg=${encodeURIComponent(regNumber || '')}`;
 
@@ -1206,7 +1243,7 @@ app.post('/api/mail/send-announcement', requireAdmin, async (req: Request, res: 
             SURAT PENGUMUMAN RESMI SEKOLAH
           </div>
           <h1 style="margin: 0; font-size: 22px; font-weight: 800;">TK LUKMAN HAKIM PURWOKERTO</h1>
-          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">Tahun Ajaran 2026/2027 • Terakreditasi A (Unggul) BAN-PAUD</p>
+          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">Tahun Ajaran 2026/2027 â€¢ Terakreditasi A (Unggul) BAN-PAUD</p>
         </div>
 
         <div style="padding: 24px;">
@@ -1232,10 +1269,10 @@ app.post('/api/mail/send-announcement', requireAdmin, async (req: Request, res: 
               Pilihan Tombol Tindakan Langsung:
             </div>
             <div style="text-align: center;">
-              ${buildEmailButton(waUrl, '💬 Konfirmasi via WhatsApp Panitia', '#16a34a')}
-              ${buildEmailButton(portalUrl, '🌐 Buka Status di Website Sekolah', '#006699')}
-              ${buildEmailButton(mapsUrl, '📍 Petunjuk Arah Lokasi Kampus', '#ea580c')}
-              ${buildEmailButton('tel:087713551412', '📞 Hotline PPDB: +62 877-1355-1412', '#475569')}
+              ${buildEmailButton(waUrl, 'ðŸ’¬ Konfirmasi via WhatsApp Panitia', '#16a34a')}
+              ${buildEmailButton(portalUrl, 'ðŸŒ Buka Status di Website Sekolah', '#006699')}
+              ${buildEmailButton(mapsUrl, 'ðŸ“ Petunjuk Arah Lokasi Kampus', '#ea580c')}
+              ${buildEmailButton('tel:087713551412', 'ðŸ“ž Hotline PPDB: +62 877-1355-1412', '#475569')}
             </div>
           </div>
 
@@ -1316,11 +1353,11 @@ app.post('/api/mail/send-spp-receipt', requireAdmin, async (req: Request, res: R
       return res.status(503).json({ success: false, error: 'Pengiriman Gmail belum dikonfigurasi pada server.' });
     }
     const baseUrl = getBaseUrl(req);
-    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent(`Assalamu’alaikum Keuangan TK Lukman Hakim, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${studentName} (${nis}) No: ${receiptNumber || '-'}.`);
+    const waUrl = 'https://wa.me/6287713551412?text=' + encodeURIComponent(`Assalamuâ€™alaikum Keuangan TK Lukman Hakim, saya mengonfirmasi kuitansi pembayaran SPP Ananda ${studentName} (${nis}) No: ${receiptNumber || '-'}.`);
     const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=TK+Islam+Lukman+Hakim%2C+Jl.+HOS+Notosuwiryo+No.+5%2C+Teluk%2C+Purwokerto+Selatan%2C+Banyumas';
 
     const subject = `[KUITANSI PEMBAYARAN RESMI] SPP Periode ${month} ${year} - ${studentName} (${nis})`;
-    const bodyText = `Assalamu’alaikum Warahmatullahi Wabarakatuh Wali dari ${studentName},\n\nPembayaran SPP bulan ${month} ${year} sebesar Rp ${Number(totalAmount).toLocaleString('id-ID')} melalui ${paymentMethod} telah diverifikasi LUNAS.\nNomor Kuitansi: ${receiptNumber || 'KW-' + Date.now()}.\n\nBagian Keuangan TK Lukman Hakim Purwokerto`;
+    const bodyText = `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh Wali dari ${studentName},\n\nPembayaran SPP bulan ${month} ${year} sebesar Rp ${Number(totalAmount).toLocaleString('id-ID')} melalui ${paymentMethod} telah diverifikasi LUNAS.\nNomor Kuitansi: ${receiptNumber || 'KW-' + Date.now()}.\n\nBagian Keuangan TK Lukman Hakim Purwokerto`;
 
     const bodyHtml = `
       <div style="font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
@@ -1329,7 +1366,7 @@ app.post('/api/mail/send-spp-receipt', requireAdmin, async (req: Request, res: R
             KUITANSI PEMBAYARAN SAH (LUNAS)
           </div>
           <h1 style="margin: 0; font-size: 22px; font-weight: 800;">TK LUKMAN HAKIM PURWOKERTO</h1>
-          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 • Bagian Administrasi & Keuangan</p>
+          <p style="margin: 4px 0 0; font-size: 12px; opacity: 0.9;">NPSN: 69981337 â€¢ Bagian Administrasi & Keuangan</p>
         </div>
 
         <div style="padding: 24px;">
@@ -1342,7 +1379,7 @@ app.post('/api/mail/send-spp-receipt', requireAdmin, async (req: Request, res: R
               <tr><td style="padding: 4px 0; color: #64748b; width: 38%;">Nama Siswa:</td><td><strong>${studentName}</strong> (NIS: ${nis})</td></tr>
               <tr><td style="padding: 4px 0; color: #64748b;">Periode Pembayaran:</td><td><strong>${month} ${year}</strong></td></tr>
               <tr><td style="padding: 4px 0; color: #64748b;">Jumlah Pembayaran:</td><td><strong style="color: #16a34a; font-size: 15px;">Rp ${Number(totalAmount).toLocaleString('id-ID')}</strong></td></tr>
-              <tr><td style="padding: 4px 0; color: #64748b;">Metode & Status:</td><td><strong>${paymentMethod}</strong> • <span style="background: #dcfce7; color: #15803d; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-size: 11px;">LUNAS VERIFIED</span></td></tr>
+              <tr><td style="padding: 4px 0; color: #64748b;">Metode & Status:</td><td><strong>${paymentMethod}</strong> â€¢ <span style="background: #dcfce7; color: #15803d; font-weight: 800; padding: 2px 8px; border-radius: 4px; font-size: 11px;">LUNAS VERIFIED</span></td></tr>
             </table>
           </div>
 
@@ -1351,9 +1388,9 @@ app.post('/api/mail/send-spp-receipt', requireAdmin, async (req: Request, res: R
               Aksi Langsung:
             </div>
             <div style="text-align: center;">
-              ${buildEmailButton(`${baseUrl}?tab=spp`, '🌐 Buka Portal SPP & E-Raport', '#006699')}
-              ${buildEmailButton(waUrl, '💬 Konfirmasi ke WA Keuangan', '#16a34a')}
-              ${buildEmailButton(mapsUrl, '📍 Peta Kampus TK Lukman Hakim', '#ea580c')}
+              ${buildEmailButton(`${baseUrl}?tab=spp`, 'ðŸŒ Buka Portal SPP & E-Raport', '#006699')}
+              ${buildEmailButton(waUrl, 'ðŸ’¬ Konfirmasi ke WA Keuangan', '#16a34a')}
+              ${buildEmailButton(mapsUrl, 'ðŸ“ Peta Kampus TK Lukman Hakim', '#ea580c')}
             </div>
           </div>
         </div>

@@ -9,7 +9,6 @@ import { ContactPage } from './pages/ContactPage';
 import { ContactFooter } from './components/ContactFooter';
 import { PpdbModal } from './components/PpdbModal';
 import { AuthGuardModal } from './components/AuthGuardModal';
-import { TuitionModal } from './components/TuitionModal';
 import { ReportModal } from './components/ReportModal';
 import { PortalWaliModal } from './components/PortalWaliModal';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -26,10 +25,9 @@ function MainApp() {
   const [isPpdbOpen, setIsPpdbOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authRedirectTarget, setAuthRedirectTarget] = useState<string | null>(null);
-  const [isTuitionOpen, setIsTuitionOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isPortalWaliOpen, setIsPortalWaliOpen] = useState(false);
-  const [portalWaliTab, setPortalWaliTab] = useState<'spp' | 'raport' | 'jadwal'>('spp');
+  const [portalWaliTab, setPortalWaliTab] = useState<'raport' | 'jadwal'>('raport');
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
@@ -83,7 +81,7 @@ function MainApp() {
     return () => window.removeEventListener('hashchange', checkHashRoute);
   }, [currentUser]);
 
-  const handleOpenPortalWali = (tab: 'spp' | 'raport' | 'jadwal' = 'spp') => {
+  const handleOpenPortalWali = (tab: 'raport' | 'jadwal' = 'raport') => {
     setPortalWaliTab(tab);
     setIsPortalWaliOpen(true);
   };
@@ -123,7 +121,7 @@ function MainApp() {
           onNavigate={handleNavigate}
           onOpenPpdb={handleOpenProtectedPpdb}
           onOpenLogin={handleOpenLogin}
-          onOpenSpp={() => handleOpenPortalWali('spp')}
+          onOpenSpp={() => handleOpenPortalWali('raport')}
           onOpenReport={() => handleOpenPortalWali('raport')}
           onOpenPortalWali={handleOpenPortalWali}
           onOpenChatbot={() => setIsChatbotOpen(true)}
@@ -196,7 +194,7 @@ function MainApp() {
         <ContactFooter
           currentPage={currentPage}
           onOpenPpdb={handleOpenProtectedPpdb}
-          onOpenSpp={() => handleOpenPortalWali('spp')}
+          onOpenSpp={() => handleOpenPortalWali('raport')}
           onOpenReport={() => handleOpenPortalWali('raport')}
           onOpenAdmin={() => handleNavigate('admin')}
           onNavigate={handleNavigate}
@@ -219,17 +217,13 @@ function MainApp() {
           setIsChatbotOpen(false);
           handleOpenProtectedPpdb();
         }}
-        onOpenSpp={() => {
-          setIsChatbotOpen(false);
-          handleOpenPortalWali('spp');
-        }}
         onOpenReport={() => {
           setIsChatbotOpen(false);
           handleOpenPortalWali('raport');
         }}
       />
 
-      {/* Unified Parent Portal Modal (SPP + E-Raport + Menu Gizi & Agenda) */}
+      {/* Unified Parent Portal Modal (E-Raport + Menu Gizi & Agenda) */}
       <PortalWaliModal
         isOpen={isPortalWaliOpen}
         initialTab={portalWaliTab}
@@ -256,11 +250,6 @@ function MainApp() {
           setAuthRedirectTarget('spmb');
           setIsAuthModalOpen(true);
         }}
-      />
-
-      <TuitionModal
-        isOpen={isTuitionOpen}
-        onClose={() => setIsTuitionOpen(false)}
       />
 
       <ReportModal
