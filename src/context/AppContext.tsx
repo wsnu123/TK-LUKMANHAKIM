@@ -1956,12 +1956,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }, () => {})
     );
 
-    // 3. Hero Slides listener
+    // 3. Hero Slides listener (real-time publik + auto bootstrap)
     unsubscribes.push(
       onSnapshot(doc(db, 'site_settings', 'hero'), (snap) => {
-        if (!snap.exists()) return;
-        const data = snap.data();
-        if (Array.isArray(data.heroSlides)) setHeroSlides(data.heroSlides);
+        if (snap.exists()) {
+          const data = snap.data();
+          if (Array.isArray(data.heroSlides) && data.heroSlides.length > 0) {
+            setHeroSlides(data.heroSlides);
+            try {
+              localStorage.setItem(STORAGE_KEYS.HERO_SLIDES, JSON.stringify(data.heroSlides));
+            } catch {}
+            return;
+          }
+        }
+        // Jika di remote belum ada, dorong data lokal dari admin ke cloud
+        const local = safeGetJson<HeroSlide[] | null>(STORAGE_KEYS.HERO_SLIDES, null);
+        if (Array.isArray(local) && local.length > 0) {
+          setDoc(doc(db, 'site_settings', 'hero'), {
+            heroSlides: local,
+            updatedAt: serverTimestamp(),
+            updatedBy: 'auto_bootstrap',
+          }).catch(() => {});
+        }
       }, () => {})
     );
 
@@ -2357,17 +2373,55 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSentraPhotos((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
-    const newSlide: HeroSlide = { ...slide, id: `hero_${Date.now()}` };
-    setHeroSlides((prev) => [...prev, newSlide]);
+  const addHeroSlide = async (slide: Omit<HeroSlide, 'id'>) => {
+    let safeImage = slide.image;
+    if (safeImage && safeImage.startsWith('data:image/')) {
+      try {
+        safeImage = await compressDataUrl(safeImage, { maxDimension: 1400, quality: 0.78 });
+      } catch {}
+    }
+    const newSlide: HeroSlide = { ...slide, image: safeImage, id: `hero_${Date.now()}` };
+    setHeroSlides((prev) => {
+      const updated = [...prev, newSlide];
+      setDoc(doc(db, 'site_settings', 'hero'), {
+        heroSlides: updated,
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser?.uid || 'admin_authorized',
+      }).catch((err) => console.warn('Hero slide cloud save error:', err));
+      return updated;
+    });
   };
 
-  const updateHeroSlide = (id: string, updated: Partial<HeroSlide>) => {
-    setHeroSlides((prev) => prev.map((s) => (s.id === id ? { ...s, ...updated } : s)));
+  const updateHeroSlide = async (id: string, updated: Partial<HeroSlide>) => {
+    let safeImage = updated.image;
+    if (safeImage && safeImage.startsWith('data:image/')) {
+      try {
+        safeImage = await compressDataUrl(safeImage, { maxDimension: 1400, quality: 0.78 });
+      } catch {}
+    }
+    const safeUpdated = safeImage !== undefined ? { ...updated, image: safeImage } : updated;
+    setHeroSlides((prev) => {
+      const newSlides = prev.map((s) => (s.id === id ? { ...s, ...safeUpdated } : s));
+      setDoc(doc(db, 'site_settings', 'hero'), {
+        heroSlides: newSlides,
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser?.uid || 'admin_authorized',
+      }).catch((err) => console.warn('Hero slide cloud save error:', err));
+      return newSlides;
+    });
   };
 
   const deleteHeroSlide = (id: string) => {
-    setHeroSlides((prev) => (prev.length > 1 ? prev.filter((s) => s.id !== id) : prev));
+    setHeroSlides((prev) => {
+      if (prev.length <= 1) return prev;
+      const newSlides = prev.filter((s) => s.id !== id);
+      setDoc(doc(db, 'site_settings', 'hero'), {
+        heroSlides: newSlides,
+        updatedAt: serverTimestamp(),
+        updatedBy: auth.currentUser?.uid || 'admin_authorized',
+      }).catch((err) => console.warn('Hero slide cloud save error:', err));
+      return newSlides;
+    });
   };
 
   const addActivityPhoto = (photo: Omit<SchoolActivityPhoto, 'id' | 'order'>) => {

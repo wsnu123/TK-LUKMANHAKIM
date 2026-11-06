@@ -229,7 +229,7 @@ export const ChatbotModal: React.FC<ChatbotModalProps> = ({
       const fallbackMsg: ChatMessage = {
         id: `bot-err-${Date.now()}`,
         sender: 'bot',
-        text: `Assalamu’alaikum Ayah & Bunda! Berikut informasi resmi dari **${schoolIdentity.nama}**:\n\n• **Biaya PPDB 2026/2027**: Pendaftaran Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & TK B Rp 350.000/bln.\n• **Alamat Kampus**: ${schoolIdentity.alamat}, Teluk, Purwokerto Selatan (NPSN ${schoolIdentity.npsn} • Akreditasi A Unggul).\n• **Layanan Cepat**: Silakan gunakan tombol di bawah untuk Formulir PPDB Online, Cek SPP Portal Wali, atau chat WhatsApp Sekretariat (${schoolIdentity.telepon}).`,
+        text: `Mohon maaf Ayah / Bunda, AI asisten ini hanya untuk menanyakan tentang sekolah TK Lukman Hakim Purwokerto (seputar pendaftaran PPDB, kurikulum, fasilitas, kegiatan santri, dan biaya pendidikan).\n\nAda yang dapat kami bantu seputar sekolah ananda? Ayah / Bunda juga dapat langsung chat WhatsApp Sekretariat (${schoolIdentity.telepon}) melalui tombol di bawah.`,
         timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
         suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
       };

@@ -519,9 +519,9 @@ function generateIntelligentReply(
     };
   }
 
-  // Comprehensive contextual response for open-ended question
+  // Response when query cannot be answered or is outside school domain
   return {
-    reply: `Assalamu’alaikum Ayah & Bunda. Terima kasih atas pertanyaannya mengenai **"${query}"**.\n\nBerikut informasi penting dari **${schoolName} Purwokerto** (NPSN: ${schoolContext?.npsn || '69981337'} • Terakreditasi A Unggul):\n\n1. **Program Pendidikan Sesuai Usia**: Kami menyelenggarakan jenjang **Daycare & Batita (1.5–3 thn)**, **Kelompok Bermain/KB (3–4 thn)**, **TK A (4–5 thn)**, dan **TK B (5–6 thn / Persiapan SD)** dengan rasio pendampingan 2 ustadzah per kelas.\n2. **Kurikulum Terpadu**: Memadukan Kurikulum Merdeka PAUD, Tahfidz Metode Tilawati berirama rost, Cambridge Fun English, 5 Pilar Karakter, dan 8 Basis Pembelajaran Ramah Fitrah.\n3. **Biaya & Lokasi**: Pendaftaran Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A/B Rp 350.000/bln. Kampus beralamat di **${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5, Teluk, Purwokerto Selatan'}** (tersedia Free Trial Class & School Tour).\n\nUntuk konsultasi lebih lanjut, Ayah & Bunda dapat langsung mengklik tombol **Buka Formulir PPDB** atau chat WhatsApp Sekretariat kami di bawah ini.`,
+    reply: `Mohon maaf Ayah / Bunda, AI asisten ini khusus didedikasikan untuk melayani informasi seputar **${schoolName} Purwokerto** (seperti pendaftaran PPDB, rincian biaya SPP, 7 sentra belajar, fasilitas sekolah, dan profil guru).\n\nAda yang dapat kami bantu seputar pendaftaran atau kegiatan ananda di sekolah? Ayah / Bunda juga dapat langsung berkonsultasi dengan ustadzah kami via WhatsApp di bawah ini.`,
     suggestedActions: ['open_ppdb', 'open_spp', 'wa_admin'],
     isHighConfidence: false,
   };
@@ -561,7 +561,11 @@ app.post('/api/chat', async (req: Request, res: Response) => {
     if (ai) {
       try {
         const systemPrompt = `Anda adalah Asisten Pintar AI Resmi dari ${schoolContext?.nama || 'TK LUKMAN HAKIM'} Purwokerto (NPSN ${schoolContext?.npsn || '69981337'}, Terakreditasi A).
-Jawablah pertanyaan secara sangat cepat, cerdas, ramah, to-the-point, dan informatif dalam 2-4 kalimat atau poin ringkas tanpa emotikon/emoji.
+ATURAN UTAMA & BATASAN DOMAIN:
+1. Anda HANYA melayani dan menjawab pertanyaan yang berkaitan dengan TK Lukman Hakim Purwokerto (seputar pendaftaran/SPMB/PPDB, biaya SPP, fasilitas sekolah, 7 sentra bermain, kurikulum fitrah, jam belajar, ustadzah/guru, dan alamat/kontak sekolah).
+2. Jika pengguna menanyakan hal di luar topik sekolah TK Lukman Hakim (misalnya pertanyaan umum bebas, coding, politik, lelucon, selebriti) atau jika Anda tidak memiliki informasi yang akurat, jawablah dengan ramah dan sopan:
+"Mohon maaf Ayah / Bunda, AI asisten ini hanya untuk menanyakan tentang sekolah TK Lukman Hakim Purwokerto (seputar pendaftaran PPDB, kurikulum, fasilitas, kegiatan santri, dan biaya pendidikan). Ada yang bisa kami bantu seputar sekolah ananda?"
+3. Gaya bahasa: Santun, islami, ramah, to-the-point dalam 2-4 kalimat ringkas tanpa emotikon/emoji berlebihan.
 Data Sekolah: Alamat: ${schoolContext?.alamat || 'Jl. Hos Noto Suwiryo No. 5 Teluk, Purwokerto Selatan'}, WA: ${schoolContext?.whatsapp || '6287713551412'}, Biaya PPDB Rp 150.000, SPP KB Rp 300.000/bln, SPP TK A & B Rp 350.000/bln. Kurikulum Merdeka PAUD, Tahfidz Tilawati, 5 Pilar Karakter & Cambridge Fun English.`;
 
         let fullPrompt = message;

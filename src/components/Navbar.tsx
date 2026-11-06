@@ -150,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               About
             </button>
 
-            {/* Sekolah - Sekolah Dropdown */}
+            {/* Program Sekolah Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setOpenDropdown('schools')}
@@ -164,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     : 'text-slate-700 hover:text-[#006699]'
                 }`}
               >
-                <span>Sekolah - Sekolah</span>
+                <span>Program Sekolah</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'schools' ? 'rotate-180' : ''}`} />
               </button>
 
@@ -360,31 +360,31 @@ export const Navbar: React.FC<NavbarProps> = ({
               About (Profil Sekolah)
             </button>
 
-            {/* Mobile Schools Accordion */}
-            <div className="py-2">
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={() => handleNavClick('schools')}
-                  className={`text-left py-1 font-bold text-sm ${
-                    currentPage === 'schools' ? 'text-[#006699]' : 'text-slate-900'
-                  }`}
-                >
-                  Sekolah - Sekolah
-                </button>
-                <button
-                  onClick={() => setMobileExpanded(mobileExpanded === 'schools' ? null : 'schools')}
-                  className="p-1.5 text-slate-500"
-                >
-                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileExpanded === 'schools' ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
+            {/* Mobile Program Sekolah Accordion */}
+            <div className="py-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setMobileExpanded(mobileExpanded === 'schools' ? null : 'schools')}
+                className="w-full flex items-center justify-between py-1.5 text-left font-bold text-sm text-slate-900 cursor-pointer"
+              >
+                <span className={currentPage === 'schools' ? 'text-[#006699]' : 'text-slate-900'}>
+                  Program & Jenjang Sekolah
+                </span>
+                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${mobileExpanded === 'schools' ? 'rotate-180 text-[#006699]' : ''}`} />
+              </button>
               {mobileExpanded === 'schools' && (
-                <div className="pl-3 mt-1 space-y-1 border-l-2 border-slate-200">
+                <div className="pl-3 mt-1.5 space-y-1.5 border-l-2 border-[#006699]/30">
+                  <button
+                    onClick={() => handleNavClick('schools')}
+                    className="w-full text-left py-1 text-xs text-[#006699] font-bold block"
+                  >
+                    → Buka Halaman Program Lengkap
+                  </button>
                   {schoolItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => handleNavClick('schools', item.id)}
-                      className="w-full text-left py-1.5 text-xs text-slate-600 hover:text-[#006699] font-medium block"
+                      className="w-full text-left py-1 text-xs text-slate-600 hover:text-[#006699] font-medium block"
                     >
                       {item.label}
                     </button>

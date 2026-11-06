@@ -175,7 +175,7 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
     SCHOOL_PROGRAMS.find((u) => u.id === selectedId) || SCHOOL_PROGRAMS[2];
 
   return (
-    <div className="pt-16 sm:pt-20 bg-white min-h-screen overflow-hidden">
+    <div className="bg-white min-h-screen overflow-hidden">
       {/* ==================================================================== */}
       {/* 1. HERO BANNER (KIDDYLAND REFERENCE LAYOUT IN CONSISTENT WEB COLORS) */}
       {/* ==================================================================== */}
