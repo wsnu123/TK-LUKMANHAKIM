@@ -101,7 +101,7 @@ export async function compressDataUrl(
         let compressed = canvas.toDataURL(targetMime, quality);
 
         // Jika browser tidak mendukung webp (mengembalikan png), fallback ke JPEG
-        if (compressed.startsWith('data:image/png') && targetMime !== 'image/png') {
+        if (compressed.startsWith('data:image/png')) {
           // Bersihkan & beri background putih untuk JPEG
           ctx.clearRect(0, 0, width, height);
           ctx.fillStyle = '#ffffff';

@@ -13,7 +13,6 @@ import {
   Bot,
   Sparkles,
   Mail,
-  Compass,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -65,10 +64,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const schoolItems = [
-    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1.5 â€“ 3 Tahun â€¢ Pengasuhan & Stimulasi Sensorik' },
-    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 â€“ 4 Tahun â€¢ Sosialisasi & Eksplorasi Aktif' },
-    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 â€“ 5 Tahun â€¢ Pra-Literasi Fonik & Sains Alam' },
-    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 â€“ 6 Tahun â€¢ Kesiapan Matang Masuk SD' },
+    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1.5 – 3 Tahun • Pengasuhan & Stimulasi Sensorik' },
+    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 – 4 Tahun • Sosialisasi & Eksplorasi Aktif' },
+    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 – 5 Tahun • Pra-Literasi Fonik & Sains Alam' },
+    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 – 6 Tahun • Kesiapan Matang Masuk SD' },
   ];
 
   const facilityItems = [
@@ -76,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'fasilitas-kebun', label: 'Kebun Hidroponik & Rumah Satwa', desc: 'Eksplorasi botanika & rumah burung merpati jinak' },
     { id: 'fasilitas-indoor', label: '7 Ruang Kelas Sentra & Montessori AC', desc: 'Sentra Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1 & 2' },
     { id: 'fasilitas-seni', label: 'Studio Seni Lukis & Musik Angklung', desc: 'Sentra kreativitas seni lukis, kriya & angklung bambu' },
-    { id: 'fasilitas-daycare', label: 'Ruang Sensorik & Daycare Batita', desc: 'Matras bermain lembut & ruang istirahat usia 2â€“4 thn' },
+    { id: 'fasilitas-daycare', label: 'Ruang Sensorik & Daycare Batita', desc: 'Matras bermain lembut & ruang istirahat usia 2–4 thn' },
     { id: 'fasilitas-ibadah', label: 'Musholla Santri & Sentra Tilawati', desc: 'Sentra praktik wudhu, sholat dhuha & mengaji' },
   ];
 
@@ -120,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {schoolIdentity.nama}
               </span>
               <span className="text-[10px] font-bold tracking-[0.14em] text-[#006699] uppercase mt-1">
-                PURWOKERTO â€¢ NPSN {schoolIdentity.npsn}
+                PURWOKERTO • NPSN {schoolIdentity.npsn}
               </span>
             </div>
           </div>
@@ -151,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               About
             </button>
 
-            {/* Program Sekolah Dropdown */}
+            {/* Sekolah - Sekolah Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setOpenDropdown('schools')}
@@ -165,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     : 'text-slate-700 hover:text-[#006699]'
                 }`}
               >
-                <span>Program Sekolah</span>
+                <span>Sekolah - Sekolah</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'schools' ? 'rotate-180' : ''}`} />
               </button>
 
@@ -176,7 +175,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
                         4 Jenjang Pendidikan
                       </span>
-                      <span className="text-[10px] font-semibold text-[#006699]">Usia 1.5 â€“ 6 Th</span>
+                      <span className="text-[10px] font-semibold text-[#006699]">Usia 1.5 – 6 Th</span>
                     </div>
                     <div className="py-1">
                       {schoolItems.map((item, idx) => (
@@ -241,8 +240,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => handleNavClick('facilities', 'virtual-tour')}
                         className="w-full text-left px-3 py-2 rounded-lg transition bg-amber-50/80 hover:bg-amber-100 flex items-center justify-between text-xs font-bold text-amber-900 cursor-pointer mt-1"
                       >
-                        <span className="flex items-center gap-2">
-                          <Compass className="w-3.5 h-3.5 text-amber-700" />
+                        <span className="flex items-center gap-1.5">
+                          <span>🧭</span>
                           <span>Virtual Tour Interaktif 360°</span>
                         </span>
                         <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-800 text-[9px] font-bold">Baru</span>
@@ -361,31 +360,31 @@ export const Navbar: React.FC<NavbarProps> = ({
               About (Profil Sekolah)
             </button>
 
-            {/* Mobile Program Sekolah Accordion */}
-            <div className="py-2 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setMobileExpanded(mobileExpanded === 'schools' ? null : 'schools')}
-                className="w-full flex items-center justify-between py-1.5 text-left font-bold text-sm text-slate-900 cursor-pointer"
-              >
-                <span className={currentPage === 'schools' ? 'text-[#006699]' : 'text-slate-900'}>
-                  Program & Jenjang Sekolah
-                </span>
-                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${mobileExpanded === 'schools' ? 'rotate-180 text-[#006699]' : ''}`} />
-              </button>
+            {/* Mobile Schools Accordion */}
+            <div className="py-2">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => handleNavClick('schools')}
+                  className={`text-left py-1 font-bold text-sm ${
+                    currentPage === 'schools' ? 'text-[#006699]' : 'text-slate-900'
+                  }`}
+                >
+                  Sekolah - Sekolah
+                </button>
+                <button
+                  onClick={() => setMobileExpanded(mobileExpanded === 'schools' ? null : 'schools')}
+                  className="p-1.5 text-slate-500"
+                >
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileExpanded === 'schools' ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
               {mobileExpanded === 'schools' && (
-                <div className="pl-3 mt-1.5 space-y-1.5 border-l-2 border-[#006699]/30">
-                  <button
-                    onClick={() => handleNavClick('schools')}
-                    className="w-full text-left py-1 text-xs text-[#006699] font-bold block"
-                  >
-                    â†’ Buka Halaman Program Lengkap
-                  </button>
+                <div className="pl-3 mt-1 space-y-1 border-l-2 border-slate-200">
                   {schoolItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => handleNavClick('schools', item.id)}
-                      className="w-full text-left py-1 text-xs text-slate-600 hover:text-[#006699] font-medium block"
+                      className="w-full text-left py-1.5 text-xs text-slate-600 hover:text-[#006699] font-medium block"
                     >
                       {item.label}
                     </button>
@@ -409,8 +408,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="text-left py-2 px-3 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
-                  <span>ðŸ§­</span>
-                  <span>Virtual Tour Interaktif 360Â°</span>
+                  <span>🧭</span>
+                  <span>Virtual Tour Interaktif 360°</span>
                 </span>
                 <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[9px] font-extrabold">BARU</span>
               </button>

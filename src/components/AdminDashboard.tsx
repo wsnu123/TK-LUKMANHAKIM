@@ -82,6 +82,7 @@ type AdminTabId =
   | 'testimonials'
   | 'wacontacts'
   | 'ppdb'
+  | 'tuition'
   | 'reports'
   | 'inquiries'
   | 'security'
@@ -121,7 +122,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     toggleCustomFeature,
     adminCredentials,
     updateAdminCredentials,
-    loginAdminWithCredentials,
     logoutAdminSession,
     testimonials,
     addTestimonial,
@@ -174,8 +174,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isSyncingCloud, setIsSyncingCloud] = useState(false);
 
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [inputUsername, setInputUsername] = useState('admin');
-  const [inputPassword, setInputPassword] = useState('');
 
   // Notification gateway manual sender
   const [targetPhone, setTargetPhone] = useState('081234567890');
@@ -330,12 +328,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   if (!isOpen) return null;
 
-  const handleAdminCredentialsLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAdminGoogleLogin = async () => {
     setLoginError(null);
-    const success = loginAdminWithCredentials(inputUsername, inputPassword);
-    if (!success) {
-      setLoginError('Username atau Password admin salah. Pastikan Username: admin & Password: lukmanhakim.');
+    const user = await signInWithGoogleAccount();
+    if (!user || user.email?.toLowerCase() !== 'ml0752960@gmail.com' || !user.emailVerified) {
+      setLoginError('Gunakan akun Google admin sekolah yang sudah terverifikasi.');
+      if (user) await signOutAccount();
     }
   };
 
@@ -364,10 +362,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               SISTEM KEAMANAN TERPROTEKSI
             </span>
             <h3 className="text-lg sm:text-xl font-extrabold mt-1">
-              Login Panel Pengelola
+              Otentikasi Panel Admin
             </h3>
             <p className="text-xs text-sky-100 mt-1">
-              Silakan masukkan username dan password admin sekolah
+              Hanya dapat diakses oleh Pengelola Resmi {schoolIdentity.nama}
             </p>
           </div>
 
@@ -378,61 +376,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <span>{loginError}</span>
               </div>
             )}
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Masuk menggunakan akun Google admin sekolah. Perubahan panel hanya dapat disimpan oleh akun yang sudah diverifikasi.
+            </p>
+            <button
+              type="button"
+              onClick={handleAdminGoogleLogin}
+              className="w-full py-3.5 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>Masuk dengan Google Admin</span>
+            </button>
 
-            <form onSubmit={handleAdminCredentialsLogin} className="space-y-3.5">
-              <div>
-                <label className="text-[11px] font-extrabold text-slate-700 block mb-1">
-                  Username
-                </label>
-                <div className="relative">
-                  <UserCheck className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={inputUsername}
-                    onChange={(e) => setInputUsername(e.target.value)}
-                    placeholder="admin"
-                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:bg-white focus:border-[#006699] focus:outline-none transition"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] font-extrabold text-slate-700 block mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="password"
-                    required
-                    value={inputPassword}
-                    onChange={(e) => setInputPassword(e.target.value)}
-                    placeholder="lukmanhakim"
-                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:bg-white focus:border-[#006699] focus:outline-none transition"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-1">
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-[#006699] hover:bg-[#0F2937] text-white rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Masuk Panel Admin</span>
-                </button>
-              </div>
-
-              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[11px] text-slate-600 leading-snug text-center">
-                Username: <strong className="font-mono text-slate-900">admin</strong> &bull; Password: <strong className="font-mono text-slate-900">lukmanhakim</strong>
-              </div>
-            </form>
-
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
               <span className="text-slate-400 flex items-center gap-1 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Sesi Terenkripsi Aman</span>
+                <span>Akses Terenkripsi & Terbatas</span>
               </span>
               <button
                 type="button"
@@ -464,6 +423,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     { id: 'identity', label: 'Identitas Sekolah', icon: Building2, group: 'cms' },
     { id: 'hero', label: 'Slide Banner', icon: Sliders, group: 'cms' },
     { id: 'ppdb', label: 'Siswa & SPMB', icon: UserCheck, badge: registrations.length, group: 'academic' },
+    { id: 'tuition', label: 'Tagihan SPP', icon: CreditCard, badge: tuitionBills.length, group: 'academic' },
     { id: 'reports', label: 'E-Raport Siswa', icon: GraduationCap, group: 'academic' },
     { id: 'teachers', label: 'Guru & Ustadzah', icon: Users, group: 'cms' },
     { id: 'gallery', label: 'Fasilitas & Galeri', icon: ImageIcon, group: 'cms' },
@@ -544,12 +504,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     <div
       className={
         isFullPage
-          ? 'w-full min-h-screen bg-[#EEF2F6] p-3 sm:p-5 lg:p-6 flex flex-col items-center justify-start'
-          : 'fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto'
+          ? 'w-full min-h-screen bg-[#EEF2F6] p-2 sm:p-3 lg:p-4 flex flex-col'
+          : 'fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 backdrop-blur-xs p-2 sm:p-4'
       }
     >
-      {/* BALANCED CENTERED WORKSPACE IN CONSISTENT WEBSITE COLORS */}
-      <div className="w-full max-w-[1440px] mx-auto bg-[#F8FAFC] rounded-[28px] shadow-[0_16px_50px_rgba(15,41,55,0.08)] border border-slate-200/90 p-4 sm:p-5 lg:p-6 flex flex-col lg:flex-row gap-6 flex-1 min-h-[calc(100vh-3rem)]">
+      {/* FULL-WIDTH ROUNDED WORKSPACE IN CONSISTENT WEBSITE COLORS */}
+      <div className="w-full bg-[#F8FAFC] rounded-[28px] shadow-[0_16px_50px_rgba(15,41,55,0.1)] border border-slate-200/90 p-3 sm:p-4 lg:p-5 flex flex-col lg:flex-row gap-5 flex-1">
         {/* ==================== LEFT ROUNDED NAVY SIDEBAR (#0F2937) ==================== */}
         <aside className="hidden lg:flex lg:w-[250px] xl:w-[265px] bg-[#0F2937] text-white rounded-[24px] p-4 flex-col justify-between shrink-0 shadow-md">
           <div className="space-y-4">
@@ -1345,6 +1305,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     />
                   )}
 
+                  {activeTab === 'tuition' && (
+                    <TuitionCrudTab
+                      tuitionBills={tuitionBills}
+                      addTuitionBill={addTuitionBill}
+                      updateTuitionBill={updateTuitionBill}
+                      deleteTuitionBill={deleteTuitionBill}
+                      payTuitionBill={payTuitionBill}
+                      onNotify={setStatusMessage}
+                    />
+                  )}
 
                   {activeTab === 'reports' && (
                     <ReportsCrudTab

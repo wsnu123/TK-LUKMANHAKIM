@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { AspectRating } from '../types';
+import { TuitionBill, AspectRating } from '../types';
 import {
   X,
   Search,
@@ -25,18 +25,22 @@ import { playCelebrationChime } from '../utils/audioChime';
 
 interface PortalWaliModalProps {
   isOpen: boolean;
-  initialTab?: 'raport' | 'jadwal';
+  initialTab?: 'spp' | 'raport' | 'jadwal';
   onClose: () => void;
 }
 
 export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
   isOpen,
-  initialTab = 'raport',
+  initialTab = 'spp',
   onClose,
 }) => {
-  const { reports, schoolIdentity } = useApp();
-  const [activeTab, setActiveTab] = useState<'raport' | 'jadwal'>(initialTab);
+  const { tuitionBills, payTuitionBill, reports, schoolIdentity } = useApp();
+  const [activeTab, setActiveTab] = useState<'spp' | 'raport' | 'jadwal'>(initialTab);
   const [searchNis, setSearchNis] = useState('2024001');
+  const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<TuitionBill['paymentMethod']>('QRIS');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   React.useEffect(() => {
     if (isOpen && initialTab) {
@@ -47,35 +51,55 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
   if (!isOpen) return null;
 
   // Match student bills & report
+  const currentStudentBills = tuitionBills.filter(
+    (b) => b.nis === searchNis || b.studentName.toLowerCase().includes(searchNis.toLowerCase())
+  );
+  const activeBill =
+    currentStudentBills.find((b) => b.id === selectedBillId) ||
+    currentStudentBills[0] ||
+    tuitionBills[0];
+
   const currentReport =
     reports.find(
       (r) => r.nis === searchNis || r.studentName.toLowerCase().includes(searchNis.toLowerCase())
     ) || reports[0];
+
+  const handlePayNow = () => {
+    if (!activeBill) return;
+    setIsProcessing(true);
+    setTimeout(() => {
+      payTuitionBill(activeBill.id, selectedMethod);
+      setIsProcessing(false);
+      setShowReceipt(true);
+      triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, 80);
+      playCelebrationChime();
+    }, 700);
+  };
 
   const renderRatingBadge = (rating: AspectRating) => {
     switch (rating) {
       case 'BSB':
         return (
           <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-extrabold px-2.5 py-1 rounded-md">
-            BSB â€¢ Berkembang Sangat Baik
+            BSB • Berkembang Sangat Baik
           </span>
         );
       case 'BSH':
         return (
           <span className="inline-flex items-center gap-1 bg-sky-50 text-sky-800 border border-sky-200 text-[11px] font-extrabold px-2.5 py-1 rounded-md">
-            BSH â€¢ Berkembang Sesuai Harapan
+            BSH • Berkembang Sesuai Harapan
           </span>
         );
       case 'MB':
         return (
           <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-extrabold px-2.5 py-1 rounded-md">
-            MB â€¢ Mulai Berkembang
+            MB • Mulai Berkembang
           </span>
         );
       case 'BB':
         return (
           <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-extrabold px-2.5 py-1 rounded-md">
-            BB â€¢ Belum Berkembang
+            BB • Belum Berkembang
           </span>
         );
     }
@@ -96,11 +120,11 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
                   PORTAL DIGITAL WALI MURID TERPADU
                 </span>
                 <span className="hidden sm:inline-block text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md font-bold">
-                  Terverifikasi Dapodik â€¢ {schoolIdentity.npsn}
+                  Terverifikasi Dapodik • {schoolIdentity.npsn}
                 </span>
               </div>
               <h2 className="text-lg sm:text-xl font-extrabold tracking-tight mt-0.5">
-                Layanan E-Raport & Agenda Santri
+                Layanan Administrasi SPP, E-Raport & Buku Penghubung Santri
               </h2>
             </div>
           </div>
@@ -153,30 +177,42 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
             </div>
           </div>
 
-          {/* 2 Portal Feature Tabs */}
+          {/* 3 Portal Feature Tabs */}
           <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
+              onClick={() => setActiveTab('spp')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer whitespace-nowrap ${
+                activeTab === 'spp'
+                  ? 'bg-[#006699] text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+              <span>1. Cek & Bayar SPP</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('raport')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer whitespace-nowrap ${
                 activeTab === 'raport'
                   ? 'bg-[#006699] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5" />
-              <span>1. E-Raport Semester</span>
+              <span>2. E-Raport Semester</span>
             </button>
 
             <button
               onClick={() => setActiveTab('jadwal')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer whitespace-nowrap ${
                 activeTab === 'jadwal'
                   ? 'bg-[#006699] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>2. Menu Gizi & Agenda</span>
+              <span>3. Menu Gizi & Agenda</span>
             </button>
           </div>
         </div>
@@ -193,8 +229,8 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
                   {currentReport.studentName}
                 </h3>
                 <p className="text-[11px] text-slate-600">
-                  NIS: <strong className="font-mono">{currentReport.nis}</strong> Â· Kelompok:{' '}
-                  <strong>{currentReport.classGroup}</strong> Â· Wali Kelas:{' '}
+                  NIS: <strong className="font-mono">{currentReport.nis}</strong> · Kelompok:{' '}
+                  <strong>{currentReport.classGroup}</strong> · Wali Kelas:{' '}
                   <strong>{currentReport.teacherName}</strong>
                 </p>
               </div>
@@ -207,7 +243,7 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
               </div>
               <a
                 href={`https://wa.me/${schoolIdentity.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
-                  `Assalamuâ€™alaikum Ustadzah, saya wali murid dari ${currentReport.studentName} (NIS: ${currentReport.nis}) ingin berkonsultasi.`
+                  `Assalamu’alaikum Ustadzah, saya wali murid dari ${currentReport.studentName} (NIS: ${currentReport.nis}) ingin berkonsultasi.`
                 )}`}
                 target="_blank"
                 rel="noreferrer"
@@ -222,16 +258,215 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
 
         {/* MAIN CONTENT AREA */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6">
-          {/* TAB 1: E-RAPORT CAPAIAN PERKEMBANGAN ANAK */}
+          {/* TAB 1: CEK & BAYAR SPP DIGITAL */}
+          {activeTab === 'spp' && activeBill && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Left Column: Student Bills List */}
+              <div className="lg:col-span-5 space-y-3">
+                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold">
+                  DAFTAR TAGIHAN SPP & KEGIATAN ({currentStudentBills.length} BULAN)
+                </h4>
+
+                <div className="space-y-2.5">
+                  {currentStudentBills.map((bill) => {
+                    const isSelected = bill.id === activeBill.id;
+                    return (
+                      <button
+                        key={bill.id}
+                        onClick={() => {
+                          setSelectedBillId(bill.id);
+                          setShowReceipt(false);
+                        }}
+                        className={`w-full text-left p-4 rounded-2xl border transition cursor-pointer ${
+                          isSelected
+                            ? 'bg-white border-2 border-[#006699] shadow-md'
+                            : 'bg-white border-slate-200 hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-extrabold text-slate-900">
+                            SPP {bill.month} {bill.year}
+                          </span>
+                          <span
+                            className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-md ${
+                              bill.status === 'Lunas'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-amber-100 text-amber-900'
+                            }`}
+                          >
+                            {bill.status}
+                          </span>
+                        </div>
+                        <div className="mt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>Jatuh Tempo: {bill.dueDate}</span>
+                          <span className="font-mono font-extrabold text-slate-900 text-sm">
+                            Rp {bill.amount.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Right Column: Payment Checkout or Official Digital Receipt */}
+              <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs">
+                {activeBill.status === 'Lunas' || showReceipt ? (
+                  <div className="space-y-5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                          <CheckCircle2 className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-700 font-bold block">
+                            KUITANSI PEMBAYARAN SPP RESMI
+                          </span>
+                          <h4 className="text-lg font-extrabold text-slate-900">
+                            Pembayaran Lunas Terverifikasi
+                          </h4>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => window.print()}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Cetak Kuitansi</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+                      <div>
+                        <span className="text-slate-500 block">Nama Santri / NIS</span>
+                        <strong className="text-slate-900 mt-0.5 block">
+                          {activeBill.studentName} ({activeBill.nis})
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Periode Tagihan</span>
+                        <strong className="text-slate-900 mt-0.5 block">
+                          {activeBill.month} {activeBill.year}
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Metode Pembayaran</span>
+                        <strong className="text-slate-900 mt-0.5 block">
+                          {activeBill.paymentMethod || selectedMethod}
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Tanggal Lunas</span>
+                        <strong className="text-emerald-700 mt-0.5 block">
+                          {activeBill.paidAt || new Date().toLocaleDateString('id-ID')}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 border-t border-slate-200 pt-4">
+                      {activeBill.breakdown.map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-xs text-slate-700">
+                          <span>{item.item}</span>
+                          <span className="font-mono font-bold">
+                            Rp {item.cost.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      ))}
+                      <div className="flex justify-between text-sm font-extrabold text-slate-900 border-t border-slate-200 pt-3">
+                        <span>Total Dibayarkan</span>
+                        <span className="text-emerald-700 font-mono">
+                          Rp {activeBill.amount.toLocaleString('id-ID')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                      <div>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#006699] font-bold block">
+                          RINCIAN TAGIHAN BULAN {activeBill.month.toUpperCase()} {activeBill.year}
+                        </span>
+                        <h4 className="text-lg font-extrabold text-slate-900 mt-0.5">
+                          {activeBill.studentName} • {activeBill.classGroup}
+                        </h4>
+                      </div>
+                      <span className="text-xl font-mono font-black text-[#006699]">
+                        Rp {activeBill.amount.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+
+                    {/* Cost Breakdown */}
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2">
+                      {activeBill.breakdown.map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-xs text-slate-700">
+                          <span>{item.item}</span>
+                          <span className="font-mono font-semibold">
+                            Rp {item.cost.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Payment Method Selector */}
+                    <div>
+                      <label className="block text-xs font-extrabold text-slate-700 mb-2">
+                        Pilih Metode Pembayaran Instan:
+                      </label>
+                      <div className="grid grid-cols-3 gap-2.5">
+                        {(['QRIS', 'BSI Virtual Account', 'Bank Mandiri'] as const).map((method) => (
+                          <button
+                            key={method}
+                            type="button"
+                            onClick={() => setSelectedMethod(method)}
+                            className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                              selectedMethod === method
+                                ? 'bg-sky-50/90 border-2 border-[#006699] text-[#006699]'
+                                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <QrCode className="w-4 h-4 mb-1" />
+                            <span className="text-xs font-extrabold block">
+                              {method === 'QRIS'
+                                ? 'QRIS Yayasan'
+                                : method === 'BSI Virtual Account'
+                                ? 'Bank BSI Syariah'
+                                : 'Mandiri VA'}
+                            </span>
+                            <span className="text-[10px] text-slate-500 block">Verifikasi Otomatis</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={handlePayNow}
+                      disabled={isProcessing}
+                      className="w-full py-3.5 rounded-xl bg-[#006699] hover:bg-[#00527a] text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-md"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>
+                        {isProcessing
+                          ? 'Memverifikasi Pembayaran...'
+                          : `Konfirmasi & Bayar SPP Sekarang (Rp ${activeBill.amount.toLocaleString('id-ID')})`}
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: E-RAPORT CAPAIAN PERKEMBANGAN ANAK */}
           {activeTab === 'raport' && currentReport && (
             <div className="space-y-6 bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#006699] font-bold block">
-                    LAPORAN CAPAIAN PERKEMBANGAN SANTRI â€¢ KURIKULUM MERDEKA PAUD
+                    LAPORAN CAPAIAN PERKEMBANGAN SANTRI • KURIKULUM MERDEKA PAUD
                   </span>
                   <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-                    {currentReport.studentName} â€” {currentReport.semester} ({currentReport.academicYear})
+                    {currentReport.studentName} — {currentReport.semester} ({currentReport.academicYear})
                   </h3>
                 </div>
                 <button
@@ -322,7 +557,7 @@ export const PortalWaliModal: React.FC<PortalWaliModalProps> = ({
                   Catatan & Apresiasi Wali Kelas ({currentReport.teacherName})
                 </span>
                 <p className="text-xs sm:text-sm text-slate-800 italic mt-1 leading-relaxed">
-                  â€œ{currentReport.teacherNote || currentReport.teacherNotes}â€
+                  “{currentReport.teacherNote || currentReport.teacherNotes}”
                 </p>
               </div>
             </div>

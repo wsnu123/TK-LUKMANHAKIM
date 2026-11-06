@@ -9,3 +9,5 @@ coverage/
 *service-account*.json
 firebase-service-account*.json
 .firebase/
+.aistudio/
+

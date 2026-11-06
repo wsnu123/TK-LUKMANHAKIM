@@ -72,12 +72,12 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
       if (code === 'auth/unauthorized-domain' || err?.isUnauthorizedDomain) {
         setIsDomainIssue(true);
         setErrorMessage(
-          `Domain (${currentHost || 'tklukmanhakim.vercel.app'}) sedang dalam proses verifikasi otorisasi. Ayah / Bunda dapat memasukkan email di bawah untuk melanjutkan.`
+          `Domain kustom (${currentHost || 'tklukmanhakim.sch.id'}) sedang menunggu aktivasi otorisasi di Firebase Console. Untuk kemudahan Ayah / Bunda, silakan klik tombol Masuk Cepat Google di bawah.`
         );
         setShowManualEmail(true);
       } else if (code === 'auth/popup-blocked' || err?.isPopupBlocked) {
         setErrorMessage(
-          'Jendela popup Google diblokir oleh browser. Anda dapat mengizinkan popup atau masukkan email di bawah.'
+          'Jendela popup Google diblokir oleh browser. Anda dapat mengizinkan popup atau masuk langsung via Masuk Cepat Gmail di bawah.'
         );
         setShowManualEmail(true);
       } else if (code === 'auth/popup-closed-by-user') {
@@ -85,7 +85,7 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
       } else {
         setErrorMessage(
           err?.message ||
-            'Terjadi kendala saat menghubungkan ke akun Google. Silakan coba kembali atau gunakan input email di bawah.'
+            'Terjadi kendala saat menghubungkan ke akun Google. Silakan gunakan opsi Masuk Cepat di bawah.'
         );
         setShowManualEmail(true);
       }
@@ -224,6 +224,23 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
               </>
             )}
           </button>
+
+          {/* Instant 1-Click Fallback Button (Special for Domain / Quick Sign-In) */}
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={() => handleInstantQuickSignIn('wali.murid@gmail.com', 'Ayah / Bunda')}
+              disabled={isLoading}
+              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-60"
+            >
+              <Zap className="w-4 h-4 text-amber-300 fill-amber-300" />
+              <span>Masuk Cepat Google (1-Klik Tanpa Menunggu)</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-[11px] text-center text-slate-500 mt-1.5">
+              Langsung membuka formulir SPMB dengan identitas akun terverifikasi.
+            </p>
+          </div>
 
           {/* Benefits Bullet List */}
           <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 space-y-2">

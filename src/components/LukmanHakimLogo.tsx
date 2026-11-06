@@ -32,22 +32,52 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
     // If rendered outside AppProvider, fallback gracefully
   }
 
-  const rawLogoUrl = !imageError ? (propCustomLogoUrl || contextLogoUrl || '/assets/logo.png') : '/assets/logo.png';
-  const activeLogoUrl = rawLogoUrl ? getCacheBustedUrl(rawLogoUrl) : '/assets/logo.png';
+  const rawLogoUrl = !imageError ? (propCustomLogoUrl || contextLogoUrl) : null;
+  const activeLogoUrl = rawLogoUrl ? getCacheBustedUrl(rawLogoUrl) : null;
   const sizeValue = typeof size === 'number' ? `${size}px` : size;
 
+  // Base Official Vector 5-Petal Pinwheel (Fallback & Default Emblem)
+  const renderOfficialVector = (vectorSize: string | number = '100%') => (
+    <svg
+      viewBox="0 0 100 100"
+      style={{ width: vectorSize, height: vectorSize }}
+      className="shrink-0 select-none drop-shadow-xs"
+      aria-label="Logo Resmi TK Lukman Hakim"
+    >
+      {/* 5-Petal Pinwheel Emblem */}
+      <path d="M50,50 C38,32 30,12 48,6 C66,0 68,26 50,50 Z" fill="#00a2e8" />
+      <path d="M50,50 C68,38 88,30 94,48 C100,66 74,68 50,50 Z" fill="#a349a4" />
+      <path d="M50,50 C62,68 70,88 52,94 C34,100 32,74 50,50 Z" fill="#ff7f27" />
+      <path d="M50,50 C32,68 12,70 6,52 C0,34 26,32 50,50 Z" fill="#fff200" />
+      <path d="M50,50 C28,42 12,24 26,12 C40,0 48,26 50,50 Z" fill="#22b14c" />
+      <circle cx="50" cy="50" r="16" fill="#ffffff" />
+      <circle cx="50" cy="50" r="9" fill="#006699" />
+    </svg>
+  );
+
   if (variant === 'emblem') {
+    if (activeLogoUrl) {
+      return (
+        <div
+          style={{ width: sizeValue, height: sizeValue }}
+          className={`shrink-0 flex items-center justify-center overflow-hidden rounded-full ${className}`}
+        >
+          <img
+            src={activeLogoUrl}
+            alt={schoolName}
+            onError={() => setImageError(true)}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      );
+    }
+
     return (
       <div
         style={{ width: sizeValue, height: sizeValue }}
-        className={`shrink-0 flex items-center justify-center overflow-hidden rounded-xl ${className}`}
+        className={`shrink-0 flex items-center justify-center ${className}`}
       >
-        <img
-          src={activeLogoUrl}
-          alt={schoolName}
-          onError={() => setImageError(true)}
-          className="w-full h-full object-contain"
-        />
+        {renderOfficialVector(sizeValue)}
       </div>
     );
   }
@@ -80,14 +110,20 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
 
           {/* Inner Content Disc */}
           <div className="w-[82%] h-[82%] rounded-full bg-white border-2 border-[#006699]/20 shadow-inner flex flex-col items-center justify-center p-4 text-center">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden flex items-center justify-center bg-white p-1">
-              <img
-                src={activeLogoUrl}
-                alt={schoolName}
-                onError={() => setImageError(true)}
-                className="w-full h-full object-contain"
-              />
-            </div>
+            {activeLogoUrl ? (
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center bg-white p-1">
+                <img
+                  src={activeLogoUrl}
+                  alt={schoolName}
+                  onError={() => setImageError(true)}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
+                {renderOfficialVector('100%')}
+              </div>
+            )}
 
             <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#0F2937] mt-1 leading-tight line-clamp-1">
               {schoolName}
@@ -148,16 +184,28 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
         </text>
 
         {/* Center Logo Placement */}
-        <foreignObject x="50" y="50" width="100" height="100">
-          <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-full p-2 bg-white">
-            <img
-              src={activeLogoUrl}
-              alt={schoolName}
-              onError={() => setImageError(true)}
-              className="w-full h-full object-contain"
-            />
-          </div>
-        </foreignObject>
+        {activeLogoUrl ? (
+          <foreignObject x="54" y="54" width="92" height="92">
+            <div className="w-full h-full flex items-center justify-center overflow-hidden rounded-full p-2 bg-white">
+              <img
+                src={activeLogoUrl}
+                alt={schoolName}
+                onError={() => setImageError(true)}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </foreignObject>
+        ) : (
+          <g transform="translate(68, 68) scale(0.64)">
+            <path d="M50,50 C38,32 30,12 48,6 C66,0 68,26 50,50 Z" fill="#00a2e8" />
+            <path d="M50,50 C68,38 88,30 94,48 C100,66 74,68 50,50 Z" fill="#a349a4" />
+            <path d="M50,50 C62,68 70,88 52,94 C34,100 32,74 50,50 Z" fill="#ff7f27" />
+            <path d="M50,50 C32,68 12,70 6,52 C0,34 26,32 50,50 Z" fill="#fff200" />
+            <path d="M50,50 C28,42 12,24 26,12 C40,0 48,26 50,50 Z" fill="#22b14c" />
+            <circle cx="50" cy="50" r="16" fill="#ffffff" />
+            <circle cx="50" cy="50" r="9" fill="#006699" />
+          </g>
+        )}
       </svg>
     </div>
   );

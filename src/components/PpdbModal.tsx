@@ -25,9 +25,10 @@ import {
 interface PpdbModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onRequestLogin?: () => void;
 }
 
-export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
+export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequestLogin }) => {
   const { submitPublicRegistration, registrations, schoolIdentity } = useApp();
 
   const [activeTab, setActiveTab] = useState<'form' | 'status'>('form');

@@ -809,7 +809,7 @@ export const HeroSlidesCrudTab: React.FC<HeroSlidesCrudProps> = ({
     e.preventDefault();
     addHeroSlide({ welcome, title, subtitle, description, primaryButton, image });
     setShowAdd(false);
-    onNotify('Slide Banner baru berhasil ditambahkan & langsung aktif di semua perangkat!');
+    onNotify('Slide Banner Utama baru berhasil ditambahkan ke Beranda!');
   };
 
   const handleUpdate = (e: React.FormEvent) => {
@@ -817,7 +817,7 @@ export const HeroSlidesCrudTab: React.FC<HeroSlidesCrudProps> = ({
     if (!editingSlide) return;
     updateHeroSlide(editingSlide.id, editingSlide);
     setEditingSlide(null);
-    onNotify('Slide Banner berhasil diperbarui & langsung aktif di semua perangkat!');
+    onNotify('Slide Banner Utama berhasil diperbarui!');
   };
 
   return (
