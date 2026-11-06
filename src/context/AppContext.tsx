@@ -45,6 +45,11 @@ import {
   CustomFeature,
 } from '../types';
 import {
+  getCacheBustedUrl,
+  setGlobalAssetVersion,
+  getGlobalAssetVersion,
+} from '../utils/cacheBuster';
+import {
   INITIAL_TEACHERS,
   INITIAL_GALLERY,
   INITIAL_REGISTRATIONS,
@@ -189,6 +194,10 @@ interface AppContextType {
   exportCloudBackup: () => Promise<string>;
   restoreCloudBackup: (jsonString: string) => boolean;
   resetToDefaultData: () => void;
+
+  assetVersion: number;
+  getCacheBustedUrl: (url?: string | null, customVersion?: string | number) => string;
+  bumpAssetVersion: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -389,6 +398,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isCloudSynced, setIsCloudSynced] = useState(false);
   const [lastCloudSyncAt, setLastCloudSyncAt] = useState<string | null>(null);
 
+  // Asset cache-buster version state for instant image reflection on other devices
+  const [assetVersion, setAssetVersion] = useState<number>(() => getGlobalAssetVersion());
+
+  const bumpAssetVersion = () => {
+    const v = Date.now();
+    setAssetVersion(v);
+    setGlobalAssetVersion(v);
+  };
+
   const isAdminUser = Boolean(
     currentUser &&
       currentUser.emailVerified &&
@@ -568,6 +586,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               } catch {}
               return merged;
             });
+            bumpAssetVersion();
           }
         },
         (err) => console.warn('Identity cloud sync note:', err.message)
@@ -585,6 +604,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               } catch {}
               return merged;
             });
+            bumpAssetVersion();
           }
         },
         (err) => console.warn('Appearance cloud sync note:', err.message)
@@ -1972,6 +1992,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return merged;
     });
+    bumpAssetVersion();
   };
 
   useEffect(() => {
@@ -2065,19 +2086,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return merged;
     });
+    bumpAssetVersion();
   };
 
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
     const newSlide: HeroSlide = { ...slide, id: `hero_${Date.now()}` };
     setHeroSlides((prev) => [...prev, newSlide]);
+    bumpAssetVersion();
   };
 
   const updateHeroSlide = (id: string, updated: Partial<HeroSlide>) => {
     setHeroSlides((prev) => prev.map((s) => (s.id === id ? { ...s, ...updated } : s)));
+    bumpAssetVersion();
   };
 
   const deleteHeroSlide = (id: string) => {
     setHeroSlides((prev) => (prev.length > 1 ? prev.filter((s) => s.id !== id) : prev));
+    bumpAssetVersion();
   };
 
   const addActivityPhoto = (photo: Omit<SchoolActivityPhoto, 'id' | 'order'>) => {
@@ -2087,14 +2112,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       order: activityPhotos.length + 1,
     };
     setActivityPhotos((prev) => [newPhoto, ...prev]);
+    bumpAssetVersion();
   };
 
   const updateActivityPhoto = (id: string, updated: Partial<SchoolActivityPhoto>) => {
     setActivityPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, ...updated } : p)));
+    bumpAssetVersion();
   };
 
   const deleteActivityPhoto = (id: string) => {
     setActivityPhotos((prev) => prev.filter((p) => p.id !== id));
+    bumpAssetVersion();
   };
 
   const addTestimonial = (item: Omit<TestimonialItem, 'id'>) => {
@@ -2301,6 +2329,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         exportCloudBackup,
         restoreCloudBackup,
         resetToDefaultData,
+        assetVersion,
+        getCacheBustedUrl,
+        bumpAssetVersion,
       }}
     >
       {children}

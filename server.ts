@@ -1355,8 +1355,20 @@ async function startServer() {
       app.use(vite.middlewares);
     } else {
       const distPath = path.join(process.cwd(), 'dist');
-      app.use(express.static(distPath));
+      app.use(
+        express.static(distPath, {
+          setHeaders: (res: Response, filePath: string) => {
+            // Invalidate device caching for images and assets so updates in admin panel reflect immediately
+            if (/\.(jpg|jpeg|png|webp|svg|gif|avif|ico)$/i.test(filePath)) {
+              res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+            } else if (filePath.endsWith('.html')) {
+              res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            }
+          },
+        })
+      );
       app.get('*', (req: Request, res: Response) => {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.sendFile(path.join(distPath, 'index.html'));
       });
     }

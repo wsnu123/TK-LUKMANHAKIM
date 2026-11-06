@@ -13,6 +13,7 @@ import {
 import { useApp } from '../context/AppContext';
 import { LukmanHakimLogo } from './LukmanHakimLogo';
 import { PageTab } from '../types';
+import { getCacheBustedUrl } from '../utils/cacheBuster';
 
 interface SpmbPosterCarouselProps {
   onOpenPpdb: () => void;
@@ -375,7 +376,7 @@ const LandscapePosterCard: React.FC<LandscapePosterCardProps> = ({
       {/* 4. Right-Side Landscape Photography with Seamless Diagonal Gradient Mask */}
       <div className="absolute top-0 right-0 bottom-0 w-[42%] sm:w-[46%] overflow-hidden pointer-events-none">
         <img
-          src={poster.imageSrc}
+          src={getCacheBustedUrl(poster.imageSrc)}
           alt={poster.imageAlt}
           className="w-full h-full object-cover object-center opacity-90 scale-100 group-hover:scale-108 transition-transform duration-1000 ease-out"
         />

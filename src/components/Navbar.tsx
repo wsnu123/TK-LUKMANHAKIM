@@ -23,6 +23,7 @@ interface NavbarProps {
   activeSection?: string;
   onNavigate: (page: PageTab, section?: string) => void;
   onOpenPpdb: () => void;
+  onOpenLogin?: () => void;
   onOpenSpp: () => void;
   onOpenReport: () => void;
   onOpenPortalWali?: (tab?: 'spp' | 'raport' | 'jadwal') => void;
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeSection,
   onNavigate,
   onOpenPpdb,
+  onOpenLogin,
   onOpenSpp,
   onOpenReport,
   onOpenPortalWali,
@@ -80,13 +82,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isWhiteNav = isScrolled || currentPage !== 'home';
 
   const handleNavLogin = async () => {
+    if (onOpenLogin) {
+      onOpenLogin();
+      return;
+    }
     try {
-      const user = await signInWithGoogleAccount();
-      if (!user) {
-        onOpenPpdb();
-      }
-    } catch {
-      onOpenPpdb();
+      await signInWithGoogleAccount();
+    } catch (err) {
+      console.warn('Google sign in error:', err);
     }
   };
 

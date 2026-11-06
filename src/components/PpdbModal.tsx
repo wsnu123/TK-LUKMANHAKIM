@@ -20,15 +20,18 @@ import {
   Sparkles,
   HeartHandshake,
   Mail,
+  ShieldCheck,
+  Lock,
 } from 'lucide-react';
 
 interface PpdbModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onRequestLogin?: () => void;
 }
 
-export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
-  const { addRegistration, registrations, schoolIdentity, sendPpdbConfirmationEmail } = useApp();
+export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequestLogin }) => {
+  const { addRegistration, registrations, schoolIdentity, sendPpdbConfirmationEmail, currentUser, signInWithGoogleAccount } = useApp();
 
   const [activeTab, setActiveTab] = useState<'form' | 'status'>('form');
   const [step, setStep] = useState(1);
@@ -38,7 +41,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   const [formError, setFormError] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
-  // Form states
+  // Form states pre-filled with authenticated Google user
   const [childName, setChildName] = useState('');
   const [nickname, setNickname] = useState('');
   const [nik, setNik] = useState('');
@@ -46,13 +49,23 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   const [birthDate, setBirthDate] = useState('2021-04-10');
   const [gender, setGender] = useState<'Laki-laki' | 'Perempuan'>('Laki-laki');
   const [program, setProgram] = useState<Registration['program']>('TK A (Usia 4-5 Th)');
-  const [parentName, setParentName] = useState('');
+  const [parentName, setParentName] = useState(() => currentUser?.displayName || '');
   const [motherName, setMotherName] = useState('');
-  const [parentEmail, setParentEmail] = useState('');
+  const [parentEmail, setParentEmail] = useState(() => currentUser?.email || '');
   const [phone, setPhone] = useState('');
   const [occupation, setOccupation] = useState('');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
+
+  // Keep parent details synchronized if currentUser logs in while modal is mounted
+  React.useEffect(() => {
+    if (currentUser?.email && !parentEmail) {
+      setParentEmail(currentUser.email);
+    }
+    if (currentUser?.displayName && !parentName) {
+      setParentName(currentUser.displayName);
+    }
+  }, [currentUser]);
 
   // Status search states
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,6 +73,55 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
   const [hasSearched, setHasSearched] = useState(false);
 
   if (!isOpen) return null;
+
+  // Route Guard: SPMB form is protected and requires active Google authentication
+  if (!currentUser) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-xs animate-in fade-in">
+        <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center border border-slate-200">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+            aria-label="Tutup"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-[#006699] flex items-center justify-center mx-auto mb-4 border border-sky-100 shadow-inner">
+            <ShieldCheck className="w-8 h-8" />
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider mb-2">
+            <span>Akses SPMB Terproteksi</span>
+          </div>
+
+          <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">
+            Masuk dengan Akun Google
+          </h3>
+
+          <p className="text-xs text-slate-600 mb-6 leading-relaxed">
+            Untuk menjamin keamanan data pendaftar calon santri dan kemudahan pengiriman bukti resmi ke Gmail/WhatsApp, formulir SPMB Online 2026/2027 hanya dapat diisi oleh Ayah & Bunda yang telah terautentikasi dengan akun Google (Gmail).
+          </p>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (onRequestLogin) {
+                onRequestLogin();
+              } else {
+                signInWithGoogleAccount();
+              }
+            }}
+            className="w-full py-3.5 px-4 rounded-2xl bg-[#006699] hover:bg-[#00527a] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2.5 transition shadow-md cursor-pointer"
+          >
+            <Mail className="w-4 h-4 text-amber-300" />
+            <span>Masuk Akun Google (Gmail) Sekarang</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Clean WhatsApp phone number configured by admin
   const rawAdminWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
@@ -285,6 +347,21 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose }) => {
                 <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-medium flex items-center gap-2">
                   <span>⚠️</span>
                   <span>{formError}</span>
+                </div>
+              )}
+
+              {/* Authenticated Parent Identity Chip */}
+              {currentUser && (
+                <div className="bg-sky-50/80 border border-sky-200 rounded-xl px-3.5 py-2 flex items-center justify-between text-xs mb-4">
+                  <div className="flex items-center gap-2 truncate">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="text-slate-700 truncate">
+                      Terautentikasi Google: <strong className="text-slate-900">{currentUser.displayName || currentUser.email}</strong>
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-[#006699] font-bold bg-white px-2 py-0.5 rounded-md border border-sky-200 shrink-0">
+                    {currentUser.email}
+                  </span>
                 </div>
               )}
 
