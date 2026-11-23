@@ -51,11 +51,18 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
       if (user) {
         if (onSuccess) onSuccess();
         onClose();
-      } else {
-        setErrorMsg('Login Google dibatalkan. Silakan klik tombol di bawah untuk masuk dengan akun Google Anda.');
       }
-    } catch {
-      setErrorMsg('Gagal membuka jendela login Google. Pastikan popup browser diizinkan lalu coba lagi.');
+    } catch (err: any) {
+      const code = err?.code || '';
+      if (code === 'auth/unauthorized-domain') {
+        setErrorMsg(
+          `Domain "${window.location.hostname}" belum ditambahkan di Firebase Authorized Domains. Tambahkan domain ini di Firebase Console → Authentication → Settings → Authorized domains.`
+        );
+      } else if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        setErrorMsg('Jendela login Google ditutup sebelum selesai. Silakan klik kembali tombol di bawah.');
+      } else {
+        setErrorMsg('Login Google belum berhasil. Pastikan browser mengizinkan popup lalu coba lagi.');
+      }
     } finally {
       setIsLoading(false);
     }

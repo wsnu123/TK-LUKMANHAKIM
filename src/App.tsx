@@ -72,6 +72,15 @@ function MainApp() {
     }
   };
 
+  // Jika baru kembali dari Google Sign-In Redirect (HP/browser yang blokir popup), buka otomatis formulir SPMB
+  useEffect(() => {
+    if (currentUser && sessionStorage.getItem('tklh_pending_spmb_redirect') === '1') {
+      sessionStorage.removeItem('tklh_pending_spmb_redirect');
+      setIsAuthModalOpen(false);
+      setIsPpdbOpen(true);
+    }
+  }, [currentUser]);
+
   // URL Path/Hash Guard (#spmb / #ppdb / ?tab=spmb) & Hidden Admin Route (/admin, #admin, Ctrl+Shift+A)
   useEffect(() => {
     const checkRoute = () => {

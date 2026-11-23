@@ -1,5 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut,
+  User,
+} from 'firebase/auth';
 import {
   getFirestore,
   doc,
@@ -198,6 +206,16 @@ export async function tryGoogleIdentityServicesAuth(): Promise<any | null> {
   });
 }
 
+export async function checkGoogleRedirectResult(): Promise<User | null> {
+  try {
+    const result = await getRedirectResult(auth);
+    return result?.user || null;
+  } catch (error) {
+    console.warn('[Firebase Auth] Redirect result check:', error);
+    return null;
+  }
+}
+
 export async function loginWithGoogle(): Promise<User | any> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -207,8 +225,19 @@ export async function loginWithGoogle(): Promise<User | any> {
     const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
     console.warn(`[Firebase Auth] Sign-In popup notice: code=${code}, host=${currentHost}`, error);
 
-    // If Firebase reports unauthorized domain or popup issue, attempt GIS fallback immediately
-    if (code === 'auth/unauthorized-domain' || code === 'auth/popup-blocked') {
+    // Jika popup diblokir browser (HP / in-app browser), lanjutkan via redirect penuh agar tidak force close
+    if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+      try {
+        sessionStorage.setItem('tklh_pending_spmb_redirect', '1');
+        await signInWithRedirect(auth, googleProvider);
+        return null;
+      } catch (redirectErr) {
+        console.warn('Redirect fallback failed:', redirectErr);
+      }
+    }
+
+    // Jika domain belum diizinkan Firebase, coba GIS sekali lalu lempar error spesifik
+    if (code === 'auth/unauthorized-domain') {
       try {
         const gisUser = await tryGoogleIdentityServicesAuth();
         if (gisUser) {
@@ -219,7 +248,6 @@ export async function loginWithGoogle(): Promise<User | any> {
       }
     }
 
-    // Attach rich error diagnostics for the caller UI
     const enhancedErr: any = new Error(
       error?.message || 'Gagal menghubungkan ke autentikasi Google.'
     );

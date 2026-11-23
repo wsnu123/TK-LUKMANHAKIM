@@ -14,6 +14,7 @@ import {
   db,
   auth,
   loginWithGoogle,
+  checkGoogleRedirectResult,
   logoutFirebase,
   serverTimestamp,
   handleFirestoreError,
@@ -561,6 +562,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       } catch {}
     }
 
+    // Tangkap hasil login jika kembali dari Google Redirect
+    checkGoogleRedirectResult().then((redirectUser) => {
+      if (redirectUser) {
+        setCurrentUser(redirectUser);
+        localStorage.setItem(
+          STORAGE_KEYS.LOGGED_GMAIL_USER,
+          JSON.stringify({
+            uid: redirectUser.uid,
+            email: redirectUser.email,
+            displayName: redirectUser.displayName,
+            photoURL: redirectUser.photoURL,
+            emailVerified: redirectUser.emailVerified,
+          })
+        );
+      }
+    });
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
@@ -923,7 +941,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return null;
     } catch (err: any) {
       console.warn('Google Sign-In popup interrupted or blocked:', err);
-      return null;
+      throw err;
     }
   };
 
