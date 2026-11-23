@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   ChevronDown,
-  ChevronRight,
   Menu,
   X,
   ArrowUpRight,
-  Settings,
-  UserCheck,
-  CreditCard,
-  GraduationCap,
-  Calendar,
-  Bot,
-  Sparkles,
-  Mail,
-  QrCode,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -25,11 +15,10 @@ interface NavbarProps {
   onNavigate: (page: PageTab, section?: string) => void;
   onOpenPpdb: () => void;
   onOpenLogin?: () => void;
-  onOpenSpp: () => void;
-  onOpenReport: () => void;
+  onOpenSpp?: () => void;
+  onOpenReport?: () => void;
   onOpenPortalWali?: (tab?: 'spp' | 'raport' | 'jadwal') => void;
   onOpenChatbot?: () => void;
-  onOpenAdmin: () => void;
   onOpenQr?: () => void;
 }
 
@@ -38,15 +27,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeSection,
   onNavigate,
   onOpenPpdb,
-  onOpenLogin,
-  onOpenSpp,
-  onOpenReport,
-  onOpenPortalWali,
-  onOpenChatbot,
-  onOpenAdmin,
-  onOpenQr,
 }) => {
-  const { schoolIdentity, appearanceConfig, isAdminAuthenticated, currentUser, signInWithGoogleAccount, signOutAccount } = useApp();
+  const { schoolIdentity } = useApp();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<'schools' | 'facilities' | 'portal' | null>(null);
@@ -83,18 +65,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   const isWhiteNav = isScrolled || currentPage !== 'home';
-
-  const handleNavLogin = async () => {
-    if (onOpenLogin) {
-      onOpenLogin();
-      return;
-    }
-    try {
-      await signInWithGoogleAccount();
-    } catch (err) {
-      console.warn('Google sign in error:', err);
-    }
-  };
 
   return (
     <header
@@ -268,27 +238,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </nav>
 
-          {/* Desktop Action Buttons (Right Zone - PPDB + Admin) */}
+          {/* Desktop Action Button (Right Zone - Clean SPMB Only, Admin Panel Hidden) */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-shrink-0">
             <button
               onClick={onOpenPpdb}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 xl:px-4 xl:py-2 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-[11.5px] xl:text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 xl:px-4.5 xl:py-2.5 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-[11.5px] xl:text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
             >
               <span>SPMB 2026/2027</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={() => handleNavClick('admin')}
-              title="Buka Panel Admin Layar Penuh"
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 xl:px-3 xl:py-2 rounded-lg border text-[11.5px] xl:text-xs font-bold transition cursor-pointer whitespace-nowrap ${
-                currentPage === 'admin' || isAdminAuthenticated
-                  ? 'bg-[#0F2937] text-white border-[#0F2937]'
-                  : 'border-slate-200 bg-white/90 hover:bg-slate-100 text-slate-700 hover:text-[#0F2937]'
-              }`}
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Panel Admin</span>
             </button>
           </div>
 
@@ -393,7 +350,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-2 flex flex-col gap-2">
-
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
@@ -402,13 +358,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="w-full py-2.5 rounded-xl bg-[#006699] text-white font-extrabold text-xs text-center cursor-pointer shadow-xs"
             >
               Formulir SPMB Online 2026/2027
-            </button>
-
-            <button
-              onClick={() => handleNavClick('admin')}
-              className="w-full py-2.5 text-center text-xs font-bold text-white bg-[#0F2937] rounded-xl cursor-pointer"
-            >
-              Panel Admin
             </button>
           </div>
         </div>

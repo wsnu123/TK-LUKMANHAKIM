@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { FIVE_PILLARS } from '../data/initialData';
-import { Award, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Award, CheckCircle2 } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export const FivePillars: React.FC = () => {
+  const { pillarsData, schoolIdentity } = useApp();
   const [activePillarIndex, setActivePillarIndex] = useState(0);
-  const activePillar = FIVE_PILLARS[activePillarIndex];
+  const safeIndex = activePillarIndex >= pillarsData.length ? 0 : activePillarIndex;
+  const activePillar = pillarsData[safeIndex];
+
+  if (!activePillar) return null;
 
   return (
     <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
-      {/* Decorative background geometry matching screenshot 2 */}
+      {/* Decorative background geometry */}
       <div className="absolute top-10 right-0 w-72 h-72 rounded-full bg-sky-50 -mr-20 -mt-20 pointer-events-none" />
       <div className="absolute bottom-10 left-0 w-80 h-80 rounded-full bg-emerald-50 -ml-20 -mb-20 pointer-events-none" />
 
       <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10">
-        {/* Title matching screenshot 2 & 3 */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 mb-2">
             <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
@@ -24,7 +27,7 @@ export const FivePillars: React.FC = () => {
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#1a4a62] tracking-tight">
-            5 Pilar TK LUKMAN HAKIM
+            5 Pilar {schoolIdentity.nama}
           </h2>
           <div className="w-32 h-1 bg-[#1a4a62] mx-auto mt-3 rounded-full" />
           <p className="text-slate-600 text-sm sm:text-base mt-3">
@@ -32,13 +35,13 @@ export const FivePillars: React.FC = () => {
           </p>
         </div>
 
-        {/* 5 Circular Badges Selector matching screenshot 2 & 3 */}
+        {/* 5 Circular Badges Selector */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
-          {FIVE_PILLARS.map((pillar, idx) => {
-            const isSelected = activePillarIndex === idx;
+          {pillarsData.map((pillar, idx) => {
+            const isSelected = safeIndex === idx;
             return (
               <button
-                key={idx}
+                key={pillar.id || idx}
                 onClick={() => setActivePillarIndex(idx)}
                 className={`group flex flex-col items-center text-center p-3 rounded-2xl transition-all duration-300 focus:outline-hidden ${
                   isSelected
@@ -46,12 +49,13 @@ export const FivePillars: React.FC = () => {
                     : 'hover:bg-slate-50 border-2 border-transparent'
                 }`}
               >
-                {/* Circular image badge with colorful ring */}
                 <div
                   className={`relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden p-1 shadow-md transition duration-300 ${
                     isSelected ? 'ring-4 ring-sky-500 ring-offset-2' : 'group-hover:scale-105'
                   }`}
-                  style={{ backgroundColor: pillar.color }}
+                  style={{
+                    backgroundColor: ['#0284c7', '#0d9488', '#10b981', '#f59e0b', '#8b5cf6'][idx % 5],
+                  }}
                 >
                   <img
                     src={pillar.image}
@@ -60,7 +64,7 @@ export const FivePillars: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-black/20 rounded-full" />
                   <span className="absolute inset-0 flex items-center justify-center text-white text-[11px] font-black uppercase tracking-wider text-center px-2 drop-shadow-md">
-                    {pillar.title}
+                    {pillar.badgeText || pillar.title}
                   </span>
                 </div>
 

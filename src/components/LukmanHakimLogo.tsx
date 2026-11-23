@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { getCacheBustedUrl } from '../utils/cacheBuster';
 
@@ -18,7 +18,9 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
 }) => {
   const [fallbackStep, setFallbackStep] = useState(0);
   let contextLogoUrl: string | undefined = undefined;
-  let schoolName = 'TK LUKMAN HAKIM';
+  let schoolName = 'TK LUKMAN AL HAKIM PURWOKERTO';
+  let schoolNpsn = '69981337';
+  let schoolAkreditasi = 'Akreditasi A';
 
   try {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -27,18 +29,29 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
     if (app?.schoolIdentity?.nama) {
       schoolName = app.schoolIdentity.nama.toUpperCase();
     }
+    if (app?.schoolIdentity?.npsn) {
+      schoolNpsn = app.schoolIdentity.npsn;
+    }
+    if (app?.schoolIdentity?.akreditasi) {
+      schoolAkreditasi = app.schoolIdentity.akreditasi;
+    }
   } catch {
     // If rendered outside AppProvider, fallback gracefully
   }
 
-  // Consistent logo sources: Primary -> fallback 1 -> fallback 2
-  const candidateLogos = [
-    propCustomLogoUrl || contextLogoUrl || '/logo.png',
-    '/assets/logo.png',
-    '/assets/logo.jpg',
-  ].filter(Boolean) as string[];
+  // Reset fallback whenever logo URL changes from Admin Panel
+  useEffect(() => {
+    setFallbackStep(0);
+  }, [propCustomLogoUrl, contextLogoUrl]);
 
-  const currentLogoSrc = candidateLogos[Math.min(fallbackStep, candidateLogos.length - 1)] || '/logo.png';
+  // Consistent official logo sources across the entire website
+  const primaryLogo = (propCustomLogoUrl || contextLogoUrl || '/logo.png').trim() || '/logo.png';
+  const candidateLogos = Array.from(
+    new Set([primaryLogo, '/logo.png', '/assets/logo.png', '/assets/logo.jpg'])
+  );
+
+  const currentLogoSrc =
+    candidateLogos[Math.min(fallbackStep, candidateLogos.length - 1)] || '/logo.png';
   const activeLogoUrl = getCacheBustedUrl(currentLogoSrc);
   const sizeValue = typeof size === 'number' ? `${size}px` : size;
 
@@ -48,7 +61,7 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
     }
   };
 
-  // 1. EMBLEM (Clean, compact rounded logo for Navbar, Footer, Buttons)
+  // 1. EMBLEM (Consistent crisp circular logo for Navbar, Footer, Posters, QR, Admin Sidebar)
   if (variant === 'emblem') {
     return (
       <div
@@ -57,10 +70,9 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
       >
         <img
           src={activeLogoUrl}
-          alt={schoolName}
+          alt={`Logo ${schoolName}`}
           onError={handleImageError}
           className="w-full h-full object-contain p-0.5"
-          loading="lazy"
         />
       </div>
     );
@@ -73,44 +85,33 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
         style={{ width: sizeValue, height: sizeValue }}
         className={`relative flex items-center justify-center ${className}`}
       >
-        {/* Outer Orbit Ring with Decorative Nodes */}
         <div className="absolute inset-0 rounded-full border-4 border-[#0084d6] shadow-xl flex items-center justify-center bg-gradient-to-b from-sky-50 to-white">
-          {/* Top Node */}
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border-2 border-[#0084d6] flex items-center justify-center shadow-xs">
             <div className="w-3.5 h-3.5 rounded-full bg-[#f59e0b]" />
           </div>
-
-          {/* Top Right Node */}
           <div className="absolute top-1/4 -right-2.5 w-5 h-5 rounded-full bg-[#f59e0b] border-2 border-white shadow-xs" />
-
-          {/* Bottom Right Node */}
           <div className="absolute bottom-1/4 -right-2 w-5 h-5 rounded-full bg-white border-3 border-[#38bdf8] shadow-xs" />
-
-          {/* Bottom Left Node */}
           <div className="absolute bottom-1/4 -left-2.5 w-5 h-5 rounded-full bg-[#10b981] border-2 border-white shadow-xs" />
-
-          {/* Left Node */}
           <div className="absolute top-1/4 -left-2.5 w-5 h-5 rounded-full bg-white border-3 border-[#38bdf8] shadow-xs" />
 
-          {/* Inner Content Disc with Actual Logo */}
           <div className="w-[84%] h-[84%] rounded-full bg-white border-2 border-[#006699]/20 shadow-inner flex flex-col items-center justify-center p-3 sm:p-5 text-center">
-            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex items-center justify-center bg-white p-1">
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden flex items-center justify-center bg-white p-1">
               <img
                 src={activeLogoUrl}
-                alt={schoolName}
+                alt={`Logo ${schoolName}`}
                 onError={handleImageError}
                 className="w-full h-full object-contain"
               />
             </div>
 
-            <span className="text-[12px] sm:text-xs font-black uppercase tracking-wider text-[#0F2937] mt-1.5 leading-tight line-clamp-1">
+            <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#0F2937] mt-1.5 leading-tight line-clamp-1">
               {schoolName}
             </span>
             <span className="text-[9px] font-bold text-[#006699] uppercase tracking-widest mt-0.5">
               PURWOKERTO
             </span>
             <span className="text-[8px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 mt-1">
-              Akreditasi A • NPSN 69981337
+              {schoolAkreditasi} • NPSN {schoolNpsn}
             </span>
           </div>
         </div>
@@ -118,16 +119,16 @@ export const LukmanHakimLogo: React.FC<LukmanHakimLogoProps> = ({
     );
   }
 
-  // 3. SEAL (Official Circular Institution Seal with Actual Logo Center)
+  // 3. SEAL (Official Circular Institution Seal with Consistent Logo Center)
   return (
     <div
       style={{ width: sizeValue, height: sizeValue }}
       className={`relative shrink-0 flex items-center justify-center rounded-full bg-white shadow-md border-3 border-sky-200/80 p-2.5 overflow-hidden group ${className}`}
-      aria-label="Logo Resmi TK Lukman Hakim Purwokerto"
+      aria-label={`Logo Resmi ${schoolName}`}
     >
       <img
         src={activeLogoUrl}
-        alt={schoolName}
+        alt={`Logo ${schoolName}`}
         onError={handleImageError}
         className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
       />

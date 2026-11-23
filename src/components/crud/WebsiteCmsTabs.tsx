@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SchoolIdentity,
   HeroSlide,
@@ -354,6 +354,10 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
   const [form, setForm] = useState<SchoolIdentity>(schoolIdentity);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  useEffect(() => {
+    setForm(schoolIdentity);
+  }, [schoolIdentity]);
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -367,27 +371,27 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
     try {
       const compressed = await compressImageFile(file, { maxDimension: 600, quality: 0.85 });
       setForm((prev) => ({ ...prev, customLogoUrl: compressed }));
-      onNotify('Logo baru berhasil dimuat & dioptimasi. Klik "Simpan Perubahan" untuk publikasi.');
+      onNotify('Logo baru berhasil dimuat & dioptimasi. Klik "Simpan Permanen" untuk publikasi ke seluruh web.');
     } catch {
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
         setForm((prev) => ({ ...prev, customLogoUrl: result }));
-        onNotify('Logo baru berhasil dimuat. Klik "Simpan Perubahan" untuk publikasi.');
+        onNotify('Logo baru berhasil dimuat. Klik "Simpan Permanen" untuk publikasi ke seluruh web.');
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleResetToDefaultLogo = () => {
-    setForm((prev) => ({ ...prev, customLogoUrl: undefined }));
-    onNotify('Logo dikembalikan ke Logo Resmi Standar (Baling-baling 5 Warna).');
+    setForm((prev) => ({ ...prev, customLogoUrl: '/logo.png' }));
+    onNotify('Logo dikembalikan ke Logo Resmi Standar. Klik "Simpan Permanen" untuk menyimpan.');
   };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     updateSchoolIdentity(form);
-    onNotify('Identitas, Logo & Kontak Sekolah berhasil disimpan permanen ke sistem!');
+    onNotify('Identitas, Logo & Kontak Sekolah berhasil disimpan permanen ke seluruh website!');
   };
 
   return (
@@ -435,7 +439,7 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
             <span className="text-[10px] font-bold uppercase text-slate-400 mb-2">
               Preview Logo Saat Ini:
             </span>
-            <div className="w-28 h-28 rounded-2xl bg-white border border-slate-200 p-2 shadow-inner flex items-center justify-center overflow-hidden">
+            <div className="w-28 h-28 rounded-full bg-white border-2 border-slate-200 p-2 shadow-inner flex items-center justify-center overflow-hidden">
               <img
                 src={form.customLogoUrl || '/logo.png'}
                 alt="Logo Sekolah"
@@ -449,7 +453,9 @@ export const SchoolIdentityCrudTab: React.FC<SchoolIdentityCrudProps> = ({
               />
             </div>
             <span className="text-[11px] font-semibold text-slate-600 mt-2">
-              {form.customLogoUrl ? 'Logo Kustom Terpasang' : 'Logo Standar TK Lukman Hakim'}
+              {form.customLogoUrl && form.customLogoUrl !== '/logo.png'
+                ? 'Logo Kustom Terpasang'
+                : 'Logo Resmi TK Lukman Al Hakim'}
             </span>
           </div>
 

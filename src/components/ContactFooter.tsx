@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   MapPin,
   Phone,
@@ -9,7 +9,6 @@ import {
   Youtube,
   MessageCircle,
   Heart,
-  ShieldCheck,
   QrCode,
 } from 'lucide-react';
 import { PageTab } from '../types';
@@ -41,6 +40,23 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
   onNavigate,
 }) => {
   const { schoolIdentity: SCHOOL_IDENTITY } = useApp();
+  const tapCountRef = useRef(0);
+  const lastTapAtRef = useRef(0);
+
+  // Akses tersembunyi untuk Pengelola: klik teks hak cipta 5x berturut-turut
+  const handleSecretCopyrightTap = () => {
+    const now = Date.now();
+    if (now - lastTapAtRef.current > 2000) {
+      tapCountRef.current = 1;
+    } else {
+      tapCountRef.current += 1;
+    }
+    lastTapAtRef.current = now;
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      onOpenAdmin();
+    }
+  };
 
   const handleNav = (page: PageTab) => {
     if (onNavigate) {
@@ -218,31 +234,25 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
                     <div className="absolute inset-2 rounded-full border border-amber-300/60 pointer-events-none" />
                     <div className="absolute inset-3 rounded-full border border-sky-200/60 pointer-events-none" />
 
-                    {/* Official Logo Icon */}
-                    <div className="w-28 h-28 sm:w-32 sm:h-32 relative flex items-center justify-center drop-shadow-md p-1">
-                      <img
-                        src="/logo.png"
-                        alt="Logo Resmi TK Lukman Hakim"
-                        className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          if (!target.src.includes('assets/logo.png')) {
-                            target.src = '/assets/logo.png';
-                          }
-                        }}
+                    {/* Official Consistent Logo Emblem */}
+                    <div className="relative flex items-center justify-center drop-shadow-md p-1">
+                      <LukmanHakimLogo
+                        variant="emblem"
+                        size={118}
+                        className="border-0 shadow-none transform group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
-                      <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200">
-                        <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-800">
-                          NPSN {SCHOOL_IDENTITY.npsn} • TERAKREDITASI A
-                        </span>
-                      </div>
+                    <div className="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200">
+                      <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-800 uppercase">
+                        NPSN {SCHOOL_IDENTITY.npsn} • {SCHOOL_IDENTITY.akreditasi || 'TERAKREDITASI A'}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       )}
 
       {/* ==================== 2. SCALLOPED WAVE BORDER & CONSISTENT BLUE/NAVY FOOTER ==================== */}
@@ -264,8 +274,8 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             <div className="lg:col-span-4 space-y-4">
               <div className="flex items-center gap-3.5">
                 {/* Cheerful Emblem / Custom Logo */}
-                <div className="w-12 h-12 rounded-2xl bg-white p-1 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
-                  <LukmanHakimLogo variant="emblem" size={42} />
+                <div className="w-12 h-12 rounded-full bg-white p-1 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
+                  <LukmanHakimLogo variant="emblem" size={42} className="border-0 shadow-none" />
                 </div>
                 <div>
                   <h3 className="text-xl font-black tracking-tight text-white">
@@ -369,7 +379,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
               <h4 className="text-base font-extrabold text-white">Follow Us</h4>
               <div className="flex items-center gap-2.5">
                 <a
-                  href={SCHOOL_IDENTITY.instagramUrl}
+                  href={SCHOOL_IDENTITY.facebookUrl || SCHOOL_IDENTITY.instagramUrl}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"
@@ -396,7 +406,11 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
                   <MessageCircle className="w-4 h-4" />
                 </a>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${SCHOOL_IDENTITY.mapsQuery}`}
+                  href={
+                    SCHOOL_IDENTITY.youtubeUrl ||
+                    SCHOOL_IDENTITY.googleMapsUrl ||
+                    `https://www.google.com/maps/search/?api=1&query=${SCHOOL_IDENTITY.mapsQuery}`
+                  }
                   target="_blank"
                   rel="noreferrer"
                   aria-label="YouTube"
@@ -417,20 +431,17 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             </div>
           </div>
 
-          {/* Bottom Copyright Bar */}
+          {/* Bottom Copyright Bar (Admin Panel completely hidden from public; discreet 5x click trigger on copyright) */}
           <div className="pt-6 sm:pr-48 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sky-200/80">
-            <p>
+            <p
+              onClick={handleSecretCopyrightTap}
+              className="select-none cursor-default"
+            >
               © {new Date().getFullYear()} {SCHOOL_IDENTITY.nama} (NPSN {SCHOOL_IDENTITY.npsn}). All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={onOpenAdmin}
-                className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold flex items-center gap-1.5 transition cursor-pointer"
-              >
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>Panel Pengelola & Admin</span>
-              </button>
-            </div>
+            <p className="text-[11px] text-sky-200/60">
+              {SCHOOL_IDENTITY.yayasan || 'Yayasan Lukman Al Hakim Purwokerto'}
+            </p>
           </div>
         </div>
       </div>

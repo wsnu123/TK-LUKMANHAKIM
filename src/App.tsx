@@ -43,7 +43,6 @@ function MainApp() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isPortalWaliOpen, setIsPortalWaliOpen] = useState(false);
   const [portalWaliTab, setPortalWaliTab] = useState<'spp' | 'raport' | 'jadwal'>('spp');
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
@@ -73,11 +72,18 @@ function MainApp() {
     }
   };
 
-  // URL Hash/Route Guard Protection (#spmb / #ppdb / ?tab=spmb)
+  // URL Path/Hash Guard (#spmb / #ppdb / ?tab=spmb) & Hidden Admin Route (/admin, #admin, Ctrl+Shift+A)
   useEffect(() => {
-    const checkHashRoute = () => {
+    const checkRoute = () => {
+      const path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
       const hash = window.location.hash.toLowerCase();
       const search = window.location.search.toLowerCase();
+
+      if (path === '/admin' || hash === '#admin' || hash === '#/admin') {
+        setCurrentPage('admin');
+        return;
+      }
+
       const isSpmbUrl =
         hash === '#spmb' ||
         hash === '#ppdb' ||
@@ -94,9 +100,23 @@ function MainApp() {
       }
     };
 
-    checkHashRoute();
-    window.addEventListener('hashchange', checkHashRoute);
-    return () => window.removeEventListener('hashchange', checkHashRoute);
+    const handleSecretShortcut = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        setCurrentPage('admin');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    checkRoute();
+    window.addEventListener('hashchange', checkRoute);
+    window.addEventListener('popstate', checkRoute);
+    window.addEventListener('keydown', handleSecretShortcut);
+    return () => {
+      window.removeEventListener('hashchange', checkRoute);
+      window.removeEventListener('popstate', checkRoute);
+      window.removeEventListener('keydown', handleSecretShortcut);
+    };
   }, [currentUser]);
 
   const handleOpenPortalWali = (tab: 'spp' | 'raport' | 'jadwal' = 'spp') => {
@@ -142,7 +162,6 @@ function MainApp() {
           onOpenReport={() => handleOpenPortalWali('raport')}
           onOpenPortalWali={handleOpenPortalWali}
           onOpenChatbot={() => setIsChatbotOpen(true)}
-          onOpenAdmin={() => handleNavigate('admin')}
         />
       )}
 
@@ -201,7 +220,15 @@ function MainApp() {
           <AdminDashboard
             isOpen={true}
             isFullPage={true}
-            onClose={() => handleNavigate('home')}
+            onClose={() => {
+              if (
+                window.location.pathname.toLowerCase().startsWith('/admin') ||
+                window.location.hash.toLowerCase().includes('admin')
+              ) {
+                window.history.replaceState(null, '', '/');
+              }
+              handleNavigate('home');
+            }}
           />
         )}
       </main>
@@ -283,11 +310,6 @@ function MainApp() {
       <ReportModal
         isOpen={isReportOpen}
         onClose={() => setIsReportOpen(false)}
-      />
-
-      <AdminDashboard
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
       />
 
       {/* Official QR Code Modal with Download PNG & Copy Link */}

@@ -196,8 +196,8 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
                 <span className="block text-xs font-extrabold text-[#0F2937] tracking-tight">
                   {schoolIdentity.nama}
                 </span>
-                <span className="text-[9px] font-bold text-[#006699]">
-                  NPSN {schoolIdentity.npsn} • TERAKREDITASI A
+                <span className="text-[9px] font-bold text-[#006699] uppercase">
+                  NPSN {schoolIdentity.npsn} • {schoolIdentity.akreditasi || 'TERAKREDITASI A'}
                 </span>
               </div>
             </div>

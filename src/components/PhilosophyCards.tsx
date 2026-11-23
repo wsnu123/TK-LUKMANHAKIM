@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Play, Volume2, Settings, Maximize, X } from 'lucide-react';
 import { getCacheBustedUrl } from '../utils/cacheBuster';
+import { LukmanHakimLogo } from './LukmanHakimLogo';
 
 const CribMobileIcon = () => (
   <svg viewBox="0 0 48 48" className="w-14 h-14 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -264,16 +265,9 @@ export const PhilosophyCards: React.FC = () => {
             
             {/* Bright Sky Overlay & Tagline Graphic */}
             <div className="absolute inset-0 bg-gradient-to-tr from-sky-950/60 via-sky-900/20 to-transparent flex items-center justify-between p-4 sm:p-5">
-              {/* School Emblem Badge */}
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/95 backdrop-blur-sm rounded-xl p-1.5 shadow-md flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <path d="M50,50 C38,32 30,12 48,6 C66,0 68,26 50,50 Z" fill="#00a2e8" />
-                  <path d="M50,50 C68,38 88,30 94,48 C100,66 74,68 50,50 Z" fill="#00a896" />
-                  <path d="M50,50 C62,68 70,88 52,94 C34,100 32,74 50,50 Z" fill="#2ecc71" />
-                  <path d="M50,50 C32,62 12,70 6,52 C0,34 26,32 50,50 Z" fill="#3498db" />
-                  <path d="M50,50 C40,40 25,20 40,15 C55,10 60,35 50,50 Z" fill="#a2d240" />
-                  <circle cx="50" cy="50" r="7" fill="#ffffff" />
-                </svg>
+              {/* Consistent Official School Emblem Badge */}
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/95 backdrop-blur-sm rounded-full p-1 shadow-md flex items-center justify-center shrink-0">
+                <LukmanHakimLogo variant="emblem" size={44} className="border-0 shadow-none" />
               </div>
 
               {/* Stylized Quote */}

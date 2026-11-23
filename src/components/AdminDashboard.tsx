@@ -365,8 +365,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="w-13 h-13 rounded-2xl bg-white/15 border border-white/25 text-white flex items-center justify-center mx-auto mb-3 shadow-sm">
-              <Lock className="w-6 h-6" />
+            <div className="w-16 h-16 rounded-full bg-white p-1.5 shadow-md flex items-center justify-center mx-auto mb-3">
+              <LukmanHakimLogo variant="emblem" size={52} className="border-0 shadow-none" />
             </div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300 block">
               SISTEM KEAMANAN TERPROTEKSI
@@ -566,8 +566,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="space-y-4">
             {/* Brand Logo Header */}
             <div className="flex items-center gap-3 px-2 pt-1 pb-2 border-b border-white/10">
-              <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
-                <LukmanHakimLogo variant="emblem" size={32} />
+              <div className="w-9 h-9 rounded-full bg-white p-0.5 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                <LukmanHakimLogo variant="emblem" size={32} className="border-0 shadow-none" />
               </div>
               <div className="truncate">
                 <span className="font-extrabold text-sm tracking-tight text-white block truncate">

@@ -395,8 +395,8 @@ function normalizeSchoolIdentity(identity: SchoolIdentity): SchoolIdentity {
 
   return {
     ...identity,
-    instagram: 'pg.tk.lukmanhakimpwt',
-    instagramUrl: 'https://www.instagram.com/pg.tk.lukmanhakimpwt',
+    instagram: identity.instagram || 'pg.tk.lukmanhakimpwt',
+    instagramUrl: identity.instagramUrl || 'https://www.instagram.com/pg.tk.lukmanhakimpwt',
     whatsapp: digits === legacyPhone ? officialPhone : identity.whatsapp,
     telepon: landlineDigits === legacyPhone ? officialPhone : identity.telepon,
     googleMapsUrl: identity.googleMapsUrl?.includes('-7.4397,109.2492')
@@ -940,9 +940,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
     setCurrentUser(customUser as any);
     localStorage.setItem(STORAGE_KEYS.LOGGED_GMAIL_USER, JSON.stringify(customUser));
-    if (cleanEmail === BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase()) {
-      setIsAdminLoggedIn(true);
-    }
     return customUser;
   };
 
@@ -1489,7 +1486,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateRegistrationStatus = (id: string, status: Registration['status']) => {
     const existing = registrations.find((r) => r.id === id);
-    const targetEmail = (existing?.email || currentUser?.email || 'ml0752960@gmail.com').trim();
+    const targetEmail = (existing?.email || currentUser?.email || schoolIdentity.email || '').trim();
 
     if (existing) {
       sendGatewayNotification(
@@ -1904,18 +1901,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // ==================== 8. WEBSITE CMS CRUD (IDENTITY, HERO, PHOTOS, TESTIMONIALS, WA) ====================
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.SCHOOL_IDENTITY, JSON.stringify(schoolIdentity));
+    // Sinkronkan judul halaman & favicon browser secara otomatis saat admin mengubah identitas/logo
+    if (schoolIdentity.nama) {
+      document.title = `${schoolIdentity.nama} • NPSN ${schoolIdentity.npsn}`;
+    }
+    const logoHref = (schoolIdentity.customLogoUrl || '/logo.png').trim() || '/logo.png';
+    const iconLinks = document.querySelectorAll<HTMLLinkElement>('link[rel*="icon"]');
+    iconLinks.forEach((link) => {
+      link.href = logoHref;
+    });
   }, [schoolIdentity]);
 
   // Real-time multi-document listener untuk publik & admin
   useEffect(() => {
     const unsubscribes: (() => void)[] = [];
     siteSettingsLoaded.current = true;
+    let hasModularGeneral = false;
 
-    // 1. Legacy public bundle listener
+    // 1. Dedicated General Settings listener (prioritas utama)
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'general'), (snap) => {
+        if (!snap.exists()) return;
+        hasModularGeneral = true;
+        const data = snap.data();
+        if (data.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(data.schoolIdentity));
+        if (data.appearanceConfig) setAppearanceConfig(data.appearanceConfig);
+        if (Array.isArray(data.philosophyCards)) setPhilosophyCards(data.philosophyCards);
+        if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
+        if (Array.isArray(data.customFeatures)) setCustomFeatures(data.customFeatures);
+        if (Array.isArray(data.waContacts)) setWaContacts(data.waContacts);
+      }, () => {})
+    );
+
+    // 2. Legacy public bundle listener (hanya fallback jika dokumen modular general belum ada)
     const publicRef = doc(db, 'site_settings', 'public');
     unsubscribes.push(
       onSnapshot(publicRef, (snapshot) => {
-        if (!snapshot.exists()) return;
+        if (hasModularGeneral || !snapshot.exists()) return;
         const settings = snapshot.data().settings;
         if (!settings || typeof settings !== 'object') return;
         if (settings.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(settings.schoolIdentity));
@@ -1939,20 +1961,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (Array.isArray(settings.teachers)) setTeachers(settings.teachers);
         if (Array.isArray(settings.gallery)) setGallery(settings.gallery);
         if (Array.isArray(settings.sentraPhotos)) setSentraPhotos(settings.sentraPhotos);
-      }, () => {})
-    );
-
-    // 2. Dedicated General Settings listener
-    unsubscribes.push(
-      onSnapshot(doc(db, 'site_settings', 'general'), (snap) => {
-        if (!snap.exists()) return;
-        const data = snap.data();
-        if (data.schoolIdentity) setSchoolIdentity(normalizeSchoolIdentity(data.schoolIdentity));
-        if (data.appearanceConfig) setAppearanceConfig(data.appearanceConfig);
-        if (Array.isArray(data.philosophyCards)) setPhilosophyCards(data.philosophyCards);
-        if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
-        if (Array.isArray(data.customFeatures)) setCustomFeatures(data.customFeatures);
-        if (Array.isArray(data.waContacts)) setWaContacts(data.waContacts);
       }, () => {})
     );
 
@@ -2179,7 +2187,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [customFeatures]);
 
   const addCustomFeature = (feat: Omit<CustomFeature, 'id' | 'createdAt'>) => {
-    if (!isAdminUser) return;
+    if (!isAdminAuthenticated && !isAdminUser) return;
     const newFeat: CustomFeature = {
       ...feat,
       id: `feat_${Date.now()}`,
@@ -2189,17 +2197,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateCustomFeature = (id: string, updated: Partial<CustomFeature>) => {
-    if (!isAdminUser) return;
+    if (!isAdminAuthenticated && !isAdminUser) return;
     setCustomFeatures((prev) => prev.map((f) => (f.id === id ? { ...f, ...updated } : f)));
   };
 
   const deleteCustomFeature = (id: string) => {
-    if (!isAdminUser) return;
+    if (!isAdminAuthenticated && !isAdminUser) return;
     setCustomFeatures((prev) => prev.filter((f) => f.id !== id));
   };
 
   const toggleCustomFeature = (id: string) => {
-    if (!isAdminUser) return;
+    if (!isAdminAuthenticated && !isAdminUser) return;
     setCustomFeatures((prev) =>
       prev.map((f) => (f.id === id ? { ...f, isActive: !f.isActive } : f))
     );

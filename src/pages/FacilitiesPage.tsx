@@ -23,6 +23,7 @@ import {
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
 import { VirtualTourModal } from '../components/VirtualTourModal';
+import { FacilityGallery } from '../components/FacilityGallery';
 
 interface FacilitiesPageProps {
   activeSection?: string;
@@ -864,6 +865,11 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* ======================================================================== */}
+      {/* 5B. GALERI DOKUMENTASI FASILITAS (DINAMIS DARI PANEL ADMIN)              */}
+      {/* ======================================================================== */}
+      <FacilityGallery />
 
       {/* ======================================================================== */}
       {/* 6. CTA BANNER ("Find the right service for your needs")                  */}
