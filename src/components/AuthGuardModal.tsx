@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Lock,
   ShieldCheck,
   X,
   CheckCircle2,
   ArrowRight,
-  Mail,
   AlertCircle,
   Loader2,
-  Sparkles,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { LukmanHakimLogo } from './LukmanHakimLogo';
@@ -26,12 +23,9 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
   onSuccess,
   redirectTarget,
 }) => {
-  const { signInWithGoogleAccount, signInWithGmailAddress, currentUser, schoolIdentity } = useApp();
+  const { signInWithGoogleAccount, currentUser, schoolIdentity } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [showEmailForm, setShowEmailForm] = useState(false);
-  const [manualEmail, setManualEmail] = useState('');
-  const [manualName, setManualName] = useState('');
 
   useEffect(() => {
     if (isOpen && currentUser) {
@@ -58,37 +52,10 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
         if (onSuccess) onSuccess();
         onClose();
       } else {
-        setShowEmailForm(true);
-        setErrorMsg(
-          'Jendela masuk Google ditutup atau terblokir browser. Silakan coba lagi atau masukkan alamat Gmail aktif Anda di bawah ini.'
-        );
+        setErrorMsg('Login Google dibatalkan. Silakan klik tombol di bawah untuk masuk dengan akun Google Anda.');
       }
     } catch {
-      setShowEmailForm(true);
-      setErrorMsg(
-        'Popup Google tidak dapat dibuka di browser ini. Anda tetap dapat melanjutkan dengan alamat Gmail aktif di bawah ini.'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleManualGmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleaned = manualEmail.trim().toLowerCase();
-    if (!cleaned || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleaned)) {
-      setErrorMsg('Mohon masukkan alamat Gmail yang valid (contoh: bunda.siti@gmail.com).');
-      return;
-    }
-
-    setIsLoading(true);
-    setErrorMsg(null);
-    try {
-      await signInWithGmailAddress(cleaned, manualName.trim() || undefined);
-      if (onSuccess) onSuccess();
-      onClose();
-    } catch {
-      setErrorMsg('Gagal memproses akun Gmail. Silakan coba lagi.');
+      setErrorMsg('Gagal membuka jendela login Google. Pastikan popup browser diizinkan lalu coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -116,28 +83,27 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
 
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-full bg-white p-1 shadow-md flex items-center justify-center shrink-0">
-              <LukmanHakimLogo variant="emblem" size={42} />
+              <LukmanHakimLogo variant="emblem" size={42} className="border-0 shadow-none" />
             </div>
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/30 text-amber-200 text-[10px] font-extrabold tracking-wider uppercase mb-1">
                 <ShieldCheck className="w-3 h-3 text-amber-300" />
-                <span>Autentikasi SPMB</span>
+                <span>Autentikasi Google</span>
               </div>
               <h3 className="text-lg sm:text-xl font-black tracking-tight leading-tight">
-                {redirectTarget === 'spmb' ? 'Masuk untuk Akses SPMB' : 'Masuk Akun Wali Murid'}
+                {redirectTarget === 'spmb' ? 'Masuk untuk Akses SPMB' : 'Masuk dengan Google'}
               </h3>
             </div>
           </div>
         </div>
 
-        {/* Body Content */}
+        {/* Body Content: ONLY Google Sign-In */}
         <div className="p-6 space-y-5">
           <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-            Untuk keamanan data ananda dan kemudahan melacak status pendaftaran, silakan masuk menggunakan akun{' '}
-            <strong className="text-slate-900">Google (Gmail)</strong> Ayah / Bunda sebelum mengisi Formulir SPMB Online.
+            Silakan masuk menggunakan akun{' '}
+            <strong className="text-slate-900">Google (Gmail)</strong> Ayah / Bunda sebelum mengisi Formulir SPMB Online {schoolIdentity.nama}.
           </p>
 
-          {/* Error Feedback (Only when genuinely needed, clean & user-friendly) */}
           {errorMsg && (
             <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-2.5 text-amber-900 text-xs leading-relaxed">
               <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
@@ -145,7 +111,7 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
             </div>
           )}
 
-          {/* Primary Google Sign-In Button */}
+          {/* Single Official Google Login Button */}
           <button
             type="button"
             onClick={handleGoogleLogin}
@@ -178,7 +144,7 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
             {!isLoading && <ArrowRight className="w-4 h-4 text-slate-400" />}
           </button>
 
-          {/* Benefits List */}
+          {/* Concise Benefits */}
           <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2.5 text-xs text-slate-600">
             <div className="flex items-center gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -186,78 +152,13 @@ export const AuthGuardModal: React.FC<AuthGuardModalProps> = ({
             </div>
             <div className="flex items-center gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>Bukti pendaftaran langsung terhubung ke akun Gmail Anda</span>
+              <span>Bukti pendaftaran langsung terhubung ke akun Google Anda</span>
             </div>
             <div className="flex items-center gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
               <span>Mudah memantau status verifikasi berkas &amp; observasi</span>
             </div>
           </div>
-
-          {/* Discreet Toggle for Manual Gmail Entry (Parents only, fallback if popup blocked) */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setShowEmailForm(!showEmailForm)}
-              className="text-xs font-bold text-[#006699] hover:text-[#0F2937] underline cursor-pointer inline-flex items-center gap-1.5"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>
-                {showEmailForm
-                  ? 'Sembunyikan formulir Gmail manual'
-                  : 'Kendala popup? Masuk dengan alamat Gmail aktif'}
-              </span>
-            </button>
-          </div>
-
-          {showEmailForm && (
-            <form
-              onSubmit={handleManualGmailSubmit}
-              className="p-4 rounded-2xl bg-sky-50/70 border border-sky-200 space-y-3"
-            >
-              <div className="flex items-center gap-2 text-xs font-extrabold text-[#0F2937]">
-                <Sparkles className="w-4 h-4 text-[#006699]" />
-                <span>Masuk dengan Alamat Gmail Aktif</span>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                  Nama Ayah / Bunda
-                </label>
-                <input
-                  type="text"
-                  value={manualName}
-                  onChange={(e) => setManualName(e.target.value)}
-                  placeholder="Contoh: Bunda Siti Rahma"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs text-slate-900 focus:border-[#006699] focus:outline-hidden"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                  Alamat Gmail Aktif *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={manualEmail}
-                  onChange={(e) => setManualEmail(e.target.value)}
-                  placeholder="contoh: ayah.bunda@gmail.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs text-slate-900 focus:border-[#006699] focus:outline-hidden"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-2.5 rounded-xl bg-[#006699] hover:bg-[#00527a] text-white font-extrabold text-xs flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-60"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>Lanjutkan ke Formulir SPMB</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </form>
-          )}
         </div>
 
         {/* Footer Privacy Note */}

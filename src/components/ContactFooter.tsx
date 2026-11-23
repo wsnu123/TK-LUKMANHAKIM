@@ -9,6 +9,7 @@ import {
   Youtube,
   MessageCircle,
   Heart,
+  ShieldCheck,
   QrCode,
 } from 'lucide-react';
 import { PageTab } from '../types';
@@ -431,7 +432,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             </div>
           </div>
 
-          {/* Bottom Copyright Bar (Admin Panel completely hidden from public; discreet 5x click trigger on copyright) */}
+          {/* Bottom Copyright Bar */}
           <div className="pt-6 sm:pr-48 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sky-200/80">
             <p
               onClick={handleSecretCopyrightTap}
@@ -439,9 +440,15 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
             >
               © {new Date().getFullYear()} {SCHOOL_IDENTITY.nama} (NPSN {SCHOOL_IDENTITY.npsn}). All rights reserved.
             </p>
-            <p className="text-[11px] text-sky-200/60">
-              {SCHOOL_IDENTITY.yayasan || 'Yayasan Lukman Al Hakim Purwokerto'}
-            </p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onOpenAdmin}
+                className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Panel Admin</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
