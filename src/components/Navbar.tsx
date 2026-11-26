@@ -70,8 +70,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isWhiteNav
-          ? 'bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 py-2.5'
-          : 'bg-gradient-to-b from-white/95 via-white/85 to-transparent backdrop-blur-[2px] py-3'
+          ? 'bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 py-1.5 sm:py-2.5'
+          : 'bg-gradient-to-b from-white/95 via-white/85 to-transparent backdrop-blur-[2px] py-2 sm:py-3'
       }`}
     >
 
@@ -81,17 +81,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Official Emblem & Brand (Left Zone) */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2 sm:gap-2.5 xl:gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 xl:gap-3 cursor-pointer group select-none min-w-0 flex-1 lg:flex-initial lg:flex-shrink-0"
           >
-            <div className="relative w-9 h-9 sm:w-10 sm:h-10 xl:w-11 xl:h-11 flex-shrink-0 flex items-center justify-center">
-              <LukmanHakimLogo variant="emblem" size={38} />
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 xl:w-11 xl:h-11 flex-shrink-0 flex items-center justify-center">
+              <LukmanHakimLogo variant="emblem" size={34} className="w-8 h-8 sm:w-10 sm:h-10" />
             </div>
 
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="font-extrabold text-xs sm:text-sm xl:text-[16px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition">
+            <div className="flex flex-col min-w-0">
+              <span className="font-extrabold text-[11.5px] sm:text-sm xl:text-[16px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition truncate">
                 {schoolIdentity.nama}
               </span>
-              <span className="text-[8.5px] xl:text-[10px] font-bold tracking-[0.1em] text-[#006699] uppercase mt-1">
+              <span className="text-[8px] sm:text-[8.5px] xl:text-[10px] font-bold tracking-[0.08em] sm:tracking-[0.1em] text-[#006699] uppercase mt-0.5 sm:mt-1 truncate">
                 PURWOKERTO • NPSN {schoolIdentity.npsn}
               </span>
             </div>
@@ -250,21 +250,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Mobile Quick SPMB + Menu Toggle */}
-          <div className="lg:hidden flex items-center gap-2 ml-auto">
+          <div className="lg:hidden flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={onOpenPpdb}
-              className="px-3 py-2 min-h-[38px] rounded-xl bg-[#006699] hover:bg-[#0B3B5B] text-white text-[11px] font-extrabold tracking-tight whitespace-nowrap cursor-pointer shadow-xs"
+              className="px-2.5 py-1.5 min-h-[34px] rounded-lg bg-[#006699] hover:bg-[#0B3B5B] text-white text-[10.5px] font-extrabold tracking-tight whitespace-nowrap cursor-pointer shadow-xs"
             >
               SPMB
             </button>
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-800 hover:bg-slate-100 transition cursor-pointer"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-800 hover:bg-slate-100 transition cursor-pointer"
               aria-label="Menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>

@@ -245,15 +245,15 @@ export const CharacterAndEightBasesSection: React.FC = () => {
   const selectedSlice = SLICES.find((s) => s.num === selectedNum) || null;
 
   return (
-    <section id="karakter-dan-8-basis" className="relative w-full bg-white py-6 sm:py-10 overflow-hidden">
+    <section id="karakter-dan-8-basis" className="relative w-full bg-white py-4 sm:py-10 px-3 sm:px-0 overflow-hidden">
       {/* Subtle decorative blue circle ring peeking top-right like screenshot */}
       <div className="hidden sm:block absolute right-[10%] top-1 w-14 h-14 rounded-full border-[4px] border-[#9ab7db] pointer-events-none z-0" />
 
       {/* Rounded Slate-Blue Main Container matching Screenshot 1 */}
-      <div className="w-full bg-[#5a6b7c] rounded-[28px] sm:rounded-[38px] py-14 sm:py-20 px-4 sm:px-8 relative z-10 shadow-sm">
+      <div className="w-full bg-[#5a6b7c] rounded-2xl sm:rounded-[38px] py-7 sm:py-20 px-3 sm:px-8 relative z-10 shadow-sm">
         <div className="max-w-5xl mx-auto flex flex-col items-center">
           {/* 8 Basis Pembelajaran Circular Wheel */}
-          <div className="w-full max-w-[360px] sm:max-w-[460px] aspect-square flex items-center justify-center">
+          <div className="w-full max-w-[260px] sm:max-w-[460px] aspect-square flex items-center justify-center">
             <svg viewBox="0 0 560 560" className="w-full h-full select-none overflow-visible">
               <defs>
                 {SLICES.map((slice) => {
@@ -384,11 +384,11 @@ export const CharacterAndEightBasesSection: React.FC = () => {
           )}
 
           {/* Centered Title & Subtitle Matching Screenshot 1 */}
-          <div className="text-center max-w-4xl mx-auto mt-6 sm:mt-8 space-y-3">
-            <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-bold text-white tracking-tight">
+          <div className="text-center max-w-4xl mx-auto mt-4 sm:mt-8 space-y-2 sm:space-y-3">
+            <h2 className="text-lg sm:text-3xl lg:text-[34px] font-bold text-white tracking-tight leading-snug">
               Pendidikan Karakter di {schoolIdentity.nama}
             </h2>
-            <p className="text-white/95 text-xs sm:text-[14.5px] leading-relaxed font-normal max-w-3xl mx-auto">
+            <p className="text-white/95 text-[11.5px] sm:text-[14.5px] leading-relaxed font-normal max-w-3xl mx-auto">
               Bersekolah di {schoolIdentity.nama} akan membentuk siswa menjadi individu yang memiliki iman dan ketaqwaan kepada Allah SWT, integritas, harga diri, dan kepekaan terhadap lingkungan, baik lingkungan fisik maupun sosial.
             </p>
           </div>

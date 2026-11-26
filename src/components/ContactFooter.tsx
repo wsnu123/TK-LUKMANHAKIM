@@ -74,7 +74,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
     <footer id="contact" className="relative overflow-hidden bg-[#F9F8F6] select-none">
       {/* ==================== 1. SCENIC PRE-FOOTER BANNER (MATCHING REFERENCE SCREENSHOT IN WEBSITE COLORS) ==================== */}
       {shouldShowPreFooter && (
-        <div className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 bg-gradient-to-b from-[#F9F8F6] via-[#F0F7FF] to-[#E0F2FE] overflow-hidden">
+        <div className="relative pt-8 sm:pt-16 pb-10 sm:pb-24 bg-gradient-to-b from-[#F9F8F6] via-[#F0F7FF] to-[#E0F2FE] overflow-hidden">
           {/* Decorative Outlined Clouds */}
           <svg
             viewBox="0 0 120 60"
@@ -173,33 +173,33 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
 
           {/* Main Pre-Footer Container */}
           <div className="relative z-20 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center">
               {/* Left Text & Button ("Happy Children, Bright Futures!") */}
-              <div className="lg:col-span-5 text-center lg:text-left space-y-5">
+              <div className="lg:col-span-5 text-center lg:text-left space-y-3 sm:space-y-5">
                 <div>
-                  <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-[#0F2937] leading-[1.15]">
+                  <h2 className="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-[#0F2937] leading-[1.15]">
                     Happy Children,
-                    <span className="block text-[#006699] mt-1">
+                    <span className="block text-[#006699] mt-0.5 sm:mt-1">
                       Bright Futures!
                     </span>
                   </h2>
-                  <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-2.5 max-w-md mx-auto lg:mx-0">
+                  <p className="text-[11.5px] sm:text-sm font-semibold text-slate-600 mt-1.5 sm:mt-2.5 max-w-md mx-auto lg:mx-0">
                     Bersekolah dengan senang, dan senang di sekolah bersama keluarga besar {SCHOOL_IDENTITY.nama}.
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3">
                   <button
                     onClick={() => handleNav('facilities')}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#006699] hover:bg-[#0F2937] text-white font-extrabold text-xs sm:text-sm shadow-[0_10px_24px_rgba(0,102,153,0.3)] transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-[#006699] hover:bg-[#0F2937] text-white font-extrabold text-[11.5px] sm:text-sm shadow-[0_10px_24px_rgba(0,102,153,0.3)] transition cursor-pointer"
                   >
-                    <span>Lihat Galeri & Fasilitas</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <span>Galeri &amp; Fasilitas</span>
+                    <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
 
                   <button
                     onClick={onOpenPpdb}
-                    className="inline-flex items-center gap-1.5 px-5 py-3 rounded-full bg-white hover:bg-sky-50 text-[#0F2937] border border-sky-200 font-extrabold text-xs sm:text-sm shadow-2xs transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-3 rounded-full bg-white hover:bg-sky-50 text-[#0F2937] border border-sky-200 font-extrabold text-[11.5px] sm:text-sm shadow-2xs transition cursor-pointer"
                   >
                     <span>Daftar SPMB</span>
                   </button>
@@ -207,11 +207,11 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
                   {onOpenQr && (
                     <button
                       onClick={onOpenQr}
-                      className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs sm:text-sm shadow-2xs transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-3 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-[11.5px] sm:text-sm shadow-2xs transition cursor-pointer"
                       title="Lihat & Unduh QR Code Resmi"
                     >
-                      <QrCode className="w-4 h-4 text-amber-600" />
-                      <span>Scan QR Web</span>
+                      <QrCode className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
+                      <span>QR Web</span>
                     </button>
                   )}
                 </div>
@@ -219,33 +219,33 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
 
               {/* Center Circular Official Logo Emblem of TK Lukman Hakim Purwokerto */}
               <div className="lg:col-span-7 flex justify-center lg:justify-start lg:pl-8">
-                <div className="relative w-64 h-64 sm:w-76 sm:h-76 rounded-full p-3.5 bg-gradient-to-tr from-[#006699] via-[#0284c7] to-[#38bdf8] shadow-[0_20px_50px_rgba(0,102,153,0.32)]">
+                <div className="relative w-36 h-36 sm:w-64 sm:h-64 lg:w-76 lg:h-76 rounded-full p-2 sm:p-3.5 bg-gradient-to-tr from-[#006699] via-[#0284c7] to-[#38bdf8] shadow-[0_14px_34px_rgba(0,102,153,0.28)] sm:shadow-[0_20px_50px_rgba(0,102,153,0.32)]">
                   {/* Decorative Floral / Leaf Badges on the Ring */}
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-amber-300 border-4 border-white shadow-xs flex items-center justify-center">
+                  <span className="hidden sm:flex absolute -top-2 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-amber-300 border-4 border-white shadow-xs items-center justify-center">
                     <span className="w-2 h-2 rounded-full bg-[#006699]" />
                   </span>
-                  <span className="absolute top-10 -left-2 w-6 h-6 rounded-full bg-white border-4 border-sky-300 shadow-xs" />
-                  <span className="absolute top-12 -right-2 w-6 h-6 rounded-full bg-amber-300 border-4 border-white shadow-xs" />
-                  <span className="absolute bottom-10 -left-2 w-6 h-6 rounded-full bg-emerald-300 border-4 border-white shadow-xs" />
-                  <span className="absolute bottom-12 -right-2 w-6 h-6 rounded-full bg-white border-4 border-sky-300 shadow-xs" />
+                  <span className="hidden sm:block absolute top-10 -left-2 w-6 h-6 rounded-full bg-white border-4 border-sky-300 shadow-xs" />
+                  <span className="hidden sm:block absolute top-12 -right-2 w-6 h-6 rounded-full bg-amber-300 border-4 border-white shadow-xs" />
+                  <span className="hidden sm:block absolute bottom-10 -left-2 w-6 h-6 rounded-full bg-emerald-300 border-4 border-white shadow-xs" />
+                  <span className="hidden sm:block absolute bottom-12 -right-2 w-6 h-6 rounded-full bg-white border-4 border-sky-300 shadow-xs" />
 
                   {/* Official Logo Container */}
-                  <div className="w-full h-full rounded-full overflow-hidden border-4 border-white bg-white flex flex-col items-center justify-center p-4 sm:p-5 shadow-inner select-none relative group">
+                  <div className="w-full h-full rounded-full overflow-hidden border-[3px] sm:border-4 border-white bg-white flex flex-col items-center justify-center p-2.5 sm:p-5 shadow-inner select-none relative group">
                     {/* Concentric Golden Ring */}
-                    <div className="absolute inset-2 rounded-full border border-amber-300/60 pointer-events-none" />
-                    <div className="absolute inset-3 rounded-full border border-sky-200/60 pointer-events-none" />
+                    <div className="absolute inset-1.5 sm:inset-2 rounded-full border border-amber-300/60 pointer-events-none" />
+                    <div className="absolute inset-2.5 sm:inset-3 rounded-full border border-sky-200/60 pointer-events-none" />
 
                     {/* Official Consistent Logo Emblem */}
-                    <div className="relative flex items-center justify-center drop-shadow-md p-1">
+                    <div className="relative flex items-center justify-center drop-shadow-md p-0.5 sm:p-1">
                       <LukmanHakimLogo
                         variant="emblem"
                         size={118}
-                        className="border-0 shadow-none transform group-hover:scale-105 transition-transform duration-500"
+                        className="w-16 h-16 sm:w-[118px] sm:h-[118px] border-0 shadow-none transform group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
-                    <div className="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200">
-                      <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-800 uppercase">
-                        NPSN {SCHOOL_IDENTITY.npsn} • {SCHOOL_IDENTITY.akreditasi || 'TERAKREDITASI A'}
+                    <div className="inline-flex items-center gap-1 mt-0.5 sm:mt-1 px-2 sm:px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200">
+                      <span className="text-[7px] sm:text-[9px] font-extrabold text-amber-800 uppercase whitespace-nowrap">
+                        NPSN {SCHOOL_IDENTITY.npsn}
                       </span>
                     </div>
                   </div>
@@ -257,7 +257,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
       )}
 
       {/* ==================== 2. SCALLOPED WAVE BORDER & CONSISTENT BLUE/NAVY FOOTER ==================== */}
-      <div className="relative bg-gradient-to-b from-[#006699] to-[#0F2937] text-white pt-12 pb-12">
+      <div className="relative bg-gradient-to-b from-[#006699] to-[#0F2937] text-white pt-8 pb-24 lg:pt-12 lg:pb-12">
         {/* Scalloped Wave Top Edge (Matching Reference Image) */}
         <div className="absolute -top-5 left-0 right-0 h-6 overflow-hidden pointer-events-none">
           <svg
@@ -270,114 +270,113 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({
         </div>
 
         <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 pb-10 border-b border-white/15">
+          <div className="grid grid-cols-2 lg:grid-cols-12 gap-5 sm:gap-10 pb-6 sm:pb-10 border-b border-white/15">
             {/* Column 1 (4 Cols): Emblem Logo & Tagline */}
-            <div className="lg:col-span-4 space-y-4">
-              <div className="flex items-center gap-3.5">
+            <div className="col-span-2 lg:col-span-4 space-y-2.5 sm:space-y-4">
+              <div className="flex items-center gap-3">
                 {/* Cheerful Emblem / Custom Logo */}
-                <div className="w-12 h-12 rounded-full bg-white p-1 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
-                  <LukmanHakimLogo variant="emblem" size={42} className="border-0 shadow-none" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-1 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
+                  <LukmanHakimLogo variant="emblem" size={42} className="w-8 h-8 sm:w-10 sm:h-10 border-0 shadow-none" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black tracking-tight text-white">
+                  <h3 className="text-base sm:text-xl font-black tracking-tight text-white leading-tight">
                     {SCHOOL_IDENTITY.nama}
                   </h3>
-                  <p className="text-xs font-semibold text-sky-200 mt-0.5">
+                  <p className="text-[11px] sm:text-xs font-semibold text-sky-200 mt-0.5">
                     Where Little Minds Bloom • NPSN {SCHOOL_IDENTITY.npsn}
                   </p>
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-sky-100/90 leading-relaxed max-w-sm">
+              <p className="text-[11.5px] sm:text-sm text-sky-100/90 leading-relaxed max-w-sm">
                 {SCHOOL_IDENTITY.yayasan}. Mendampingi tumbuh kembang fitrah anak dengan kasih sayang, karakter Al-Qur’an, dan kegembiraan bereksplorasi.
               </p>
             </div>
 
             {/* Column 2 (3 Cols): Quick Links */}
-            <div className="lg:col-span-3 space-y-3">
-              <h4 className="text-base font-extrabold text-white">Quick Links</h4>
-              <ul className="space-y-2 text-xs sm:text-sm text-sky-100">
+            <div className="col-span-1 lg:col-span-3 space-y-2 sm:space-y-3">
+              <h4 className="text-sm sm:text-base font-extrabold text-white">Quick Links</h4>
+              <ul className="space-y-1.5 sm:space-y-2 text-[11px] sm:text-sm text-sky-100">
                 <li>
                   <button
                     onClick={() => handleNav('about')}
-                    className="hover:text-amber-300 transition flex items-center gap-2 cursor-pointer"
+                    className="hover:text-amber-300 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer text-left"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    <span>About Us (Profil Sekolah)</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shrink-0" />
+                    <span>About Us</span>
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() => handleNav('schools')}
-                    className="hover:text-amber-300 transition flex items-center gap-2 cursor-pointer"
+                    className="hover:text-amber-300 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer text-left"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    <span>Programs (4 Jenjang Kelas)</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shrink-0" />
+                    <span>4 Jenjang Kelas</span>
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() => handleNav('facilities')}
-                    className="hover:text-amber-300 transition flex items-center gap-2 cursor-pointer"
+                    className="hover:text-amber-300 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer text-left"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    <span>Gallery & Fasilitas</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shrink-0" />
+                    <span>Fasilitas &amp; Galeri</span>
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() => handleNav('contact')}
-                    className="hover:text-amber-300 transition flex items-center gap-2 cursor-pointer"
+                    className="hover:text-amber-300 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer text-left"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    <span>Contact Us & Lokasi</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shrink-0" />
+                    <span>Kontak &amp; Lokasi</span>
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={onOpenPpdb}
-                    className="hover:text-amber-300 transition flex items-center gap-2 cursor-pointer"
+                    className="hover:text-amber-300 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer text-left"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />
-                    <span>Pendaftaran SPMB Online</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shrink-0" />
+                    <span>SPMB Online</span>
                   </button>
                 </li>
               </ul>
             </div>
 
             {/* Column 3 (3 Cols): Contact Us */}
-            <div className="lg:col-span-3 space-y-3">
-              <h4 className="text-base font-extrabold text-white">Contact Us</h4>
-              <div className="space-y-2.5 text-xs sm:text-sm text-sky-100">
+            <div className="col-span-1 lg:col-span-3 space-y-2 sm:space-y-3">
+              <h4 className="text-sm sm:text-base font-extrabold text-white">Contact Us</h4>
+              <div className="space-y-2 sm:space-y-2.5 text-[11px] sm:text-sm text-sky-100">
                 <a
                   href={`https://wa.me/${SCHOOL_IDENTITY.whatsapp.replace(/\D/g, '').replace(/^0/, '62')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2.5 hover:text-amber-300 transition"
+                  className="flex items-center gap-2 hover:text-amber-300 transition"
                 >
-                  <Phone className="w-4 h-4 text-amber-300 shrink-0" />
-                  <span>{SCHOOL_IDENTITY.whatsapp}</span>
+                  <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" />
+                  <span className="truncate">{SCHOOL_IDENTITY.whatsapp}</span>
                 </a>
                 <a
                   href={`mailto:${SCHOOL_IDENTITY.email}`}
-                  className="flex items-center gap-2.5 hover:text-amber-300 transition"
+                  className="flex items-center gap-2 hover:text-amber-300 transition"
                 >
-                  <Mail className="w-4 h-4 text-amber-300 shrink-0" />
+                  <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" />
                   <span className="truncate">{SCHOOL_IDENTITY.email}</span>
                 </a>
-                <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-amber-300 shrink-0 mt-1" />
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0 mt-0.5" />
                   <span className="leading-snug">
-                    {SCHOOL_IDENTITY.alamat}, Kel. {SCHOOL_IDENTITY.desaKelurahan},{' '}
-                    {SCHOOL_IDENTITY.kecamatan}, {SCHOOL_IDENTITY.kabupaten}
+                    {SCHOOL_IDENTITY.alamat}, {SCHOOL_IDENTITY.kecamatan}, {SCHOOL_IDENTITY.kabupaten}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Column 4 (2 Cols): Follow Us */}
-            <div className="lg:col-span-2 space-y-3">
-              <h4 className="text-base font-extrabold text-white">Follow Us</h4>
+            <div className="col-span-2 lg:col-span-2 space-y-2.5 sm:space-y-3">
+              <h4 className="text-sm sm:text-base font-extrabold text-white">Follow Us</h4>
               <div className="flex items-center gap-2.5">
                 <a
                   href={SCHOOL_IDENTITY.facebookUrl || SCHOOL_IDENTITY.instagramUrl}

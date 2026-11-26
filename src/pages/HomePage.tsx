@@ -64,18 +64,18 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 1.5 Mobile-Only App Quick Access Grid (Bespoke Smartphone Experience) */}
       <section
         aria-label="Pintasan Cepat Mobile"
-        className="lg:hidden bg-[#F9F8F6] px-4 pt-5 pb-3"
+        className="lg:hidden bg-[#F9F8F6] px-3 pt-3 pb-2.5"
       >
-        <div className="grid grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-4 gap-2">
           <button
             type="button"
             onClick={onOpenPpdb}
-            className="bg-white border border-sky-100 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer min-h-[78px]"
+            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
           >
-            <span className="w-9 h-9 rounded-xl bg-[#006699] text-white flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-[#006699] text-white flex items-center justify-center">
               <GraduationCap className="w-4 h-4 text-amber-300" />
             </span>
-            <span className="text-[10.5px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
               SPMB
             </span>
           </button>
@@ -83,12 +83,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('schools')}
-            className="bg-white border border-sky-100 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer min-h-[78px]"
+            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
           >
-            <span className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
             </span>
-            <span className="text-[10.5px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
               Jenjang
             </span>
           </button>
@@ -96,12 +96,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('about', 'profil-kepala-sekolah')}
-            className="bg-white border border-sky-100 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer min-h-[78px]"
+            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
           >
-            <span className="w-9 h-9 rounded-xl bg-amber-400 text-[#0B253A] flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-amber-400 text-[#0B253A] flex items-center justify-center">
               <UserCheck className="w-4 h-4" />
             </span>
-            <span className="text-[10.5px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
               Kepsek
             </span>
           </button>
@@ -109,12 +109,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('contact')}
-            className="bg-white border border-sky-100 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer min-h-[78px]"
+            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
           >
-            <span className="w-9 h-9 rounded-xl bg-[#0B3B5B] text-white flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-[#0B3B5B] text-white flex items-center justify-center">
               <MapPin className="w-4 h-4 text-sky-300" />
             </span>
-            <span className="text-[10.5px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
               Lokasi
             </span>
           </button>

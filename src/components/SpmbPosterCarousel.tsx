@@ -182,35 +182,35 @@ export const SpmbPosterCarousel: React.FC<SpmbPosterCarouselProps> = ({
   return (
     <section
       id="spmb-landscape-showcase"
-      className="relative w-full bg-[#F8FAFC] py-12 sm:py-16 border-y border-slate-200/80 overflow-hidden"
+      className="relative w-full bg-[#F8FAFC] py-7 sm:py-16 border-y border-slate-200/80 overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8">
         {/* Clean Editorial Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-8">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#006699] tracking-wide">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[10.5px] sm:text-xs font-semibold text-[#006699] tracking-wide">
               <span>Publikasi Resmi SPMB</span>
               <span aria-hidden="true" className="text-slate-300">·</span>
               <span className="text-slate-500">Tahun Ajaran 2026/2027</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0B253A] tracking-tight mt-1.5 [text-wrap:balance]">
+            <h2 className="text-lg sm:text-3xl font-extrabold text-[#0B253A] tracking-tight mt-1 sm:mt-1.5 [text-wrap:balance] leading-tight">
               Poster Informasi Pendaftaran &amp; Program
             </h2>
           </div>
 
           {/* Crisp Navigation Controls */}
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            <div className="flex items-center gap-1 p-1 bg-white border border-slate-200 rounded-xl">
+          <div className="flex items-center gap-1.5 sm:gap-2 self-start sm:self-auto">
+            <div className="flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-white border border-slate-200 rounded-lg sm:rounded-xl">
               {Array.from({ length: totalPages }).map((_, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setCurrentPage(idx)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                  className={`px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-md sm:rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                     currentPage === idx
                       ? 'bg-[#006699] text-white'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -225,17 +225,17 @@ export const SpmbPosterCarousel: React.FC<SpmbPosterCarouselProps> = ({
               type="button"
               onClick={handlePrev}
               aria-label="Poster Sebelumnya"
-              className="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:border-[#006699] text-slate-700 hover:text-[#006699] flex items-center justify-center transition-colors cursor-pointer shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white border border-slate-200 hover:border-[#006699] text-slate-700 hover:text-[#006699] flex items-center justify-center transition-colors cursor-pointer shrink-0"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button
               type="button"
               onClick={handleNext}
               aria-label="Poster Selanjutnya"
-              className="w-10 h-10 rounded-xl bg-white border border-slate-200 hover:border-[#006699] text-slate-700 hover:text-[#006699] flex items-center justify-center transition-colors cursor-pointer shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white border border-slate-200 hover:border-[#006699] text-slate-700 hover:text-[#006699] flex items-center justify-center transition-colors cursor-pointer shrink-0"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -249,7 +249,7 @@ export const SpmbPosterCarousel: React.FC<SpmbPosterCarouselProps> = ({
             {isMobile ? (
               POSTER_META.map((item) => (
                 <div key={item.id} className="w-full flex-shrink-0 px-0.5">
-                  <div className="max-w-[520px] mx-auto">{renderPosterById(item.id)}</div>
+                  <div className="max-w-[390px] sm:max-w-[520px] mx-auto">{renderPosterById(item.id)}</div>
                 </div>
               ))
             ) : (
@@ -332,7 +332,7 @@ const PosterSpmbUtama: React.FC<PosterCommonProps> = ({
   onZoom,
 }) => {
   return (
-    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[650px] sm:min-h-[700px] text-slate-900 select-none">
+    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[495px] sm:min-h-[700px] text-slate-900 select-none">
       {/* Zoom Trigger */}
       {onZoom && (
         <button
@@ -340,9 +340,9 @@ const PosterSpmbUtama: React.FC<PosterCommonProps> = ({
           onClick={onZoom}
           title="Perbesar Poster"
           aria-label="Perbesar Poster SPMB Utama"
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-lg bg-white/90 hover:bg-[#006699] text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
+          className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/90 hover:bg-[#006699] text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       )}
 
@@ -397,32 +397,32 @@ const PosterSpmbUtama: React.FC<PosterCommonProps> = ({
       </div>
 
       {/* HERO SCULPTED TILTED DISPLAY HEADLINE */}
-      <div className="relative z-10 px-5 pt-4 pb-3 text-center">
+      <div className="relative z-10 px-3.5 sm:px-5 pt-2.5 sm:pt-4 pb-2 sm:pb-3 text-center">
         <div className="-rotate-2 inline-flex flex-col items-center">
           <span
-            className="text-lg sm:text-xl font-black tracking-wide text-[#006699] uppercase leading-none"
+            className="text-sm sm:text-xl font-black tracking-wide text-[#006699] uppercase leading-none"
             style={stickerTextStyle(5)}
           >
             TELAH DIBUKA
           </span>
           <h3
-            className="text-[3.75rem] sm:text-[4.5rem] font-black tracking-tight text-[#006699] leading-[0.95] mt-0.5"
+            className="text-[2.75rem] sm:text-[4.5rem] font-black tracking-tight text-[#006699] leading-[0.95] mt-0.5"
             style={stickerTextStyle(11)}
           >
             SPMB
           </h3>
-          <p className="mt-2 text-sm sm:text-base font-black text-[#0B3B5B] tracking-tight leading-tight uppercase">
+          <p className="mt-1 sm:mt-2 text-xs sm:text-base font-black text-[#0B3B5B] tracking-tight leading-tight uppercase">
             {schoolShortName}
           </p>
-          <p className="text-xl sm:text-2xl font-black text-[#006699] leading-tight tabular-nums">
+          <p className="text-base sm:text-2xl font-black text-[#006699] leading-tight tabular-nums">
             2026/2027
           </p>
         </div>
       </div>
 
       {/* MAIN BORDERED CARD: JALUR PENDAFTARAN (Matches Reference 1 Center Frame) */}
-      <div className="relative z-10 px-5 mt-3">
-        <div className="relative bg-white border-2 border-[#006699] rounded-2xl pt-5 pb-4 px-4 shadow-xs">
+      <div className="relative z-10 px-3.5 sm:px-5 mt-2 sm:mt-3">
+        <div className="relative bg-white border-2 border-[#006699] rounded-xl sm:rounded-2xl pt-4 sm:pt-5 pb-3 sm:pb-4 px-3 sm:px-4 shadow-xs">
           {/* Floating Top Center Tab */}
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#006699] text-white px-4 py-1 rounded-full text-[11px] font-black tracking-wider uppercase whitespace-nowrap shadow-xs">
             JALUR PENDAFTARAN
@@ -588,16 +588,16 @@ const PosterFreeTrial: React.FC<PosterCommonProps> = ({
   onZoom,
 }) => {
   return (
-    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[650px] sm:min-h-[700px] text-slate-900 select-none">
+    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[495px] sm:min-h-[700px] text-slate-900 select-none">
       {onZoom && (
         <button
           type="button"
           onClick={onZoom}
           title="Perbesar Poster"
           aria-label="Perbesar Poster Free Trial Class"
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-lg bg-white/90 hover:bg-[#006699] text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
+          className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/90 hover:bg-[#006699] text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       )}
 
@@ -657,42 +657,42 @@ const PosterFreeTrial: React.FC<PosterCommonProps> = ({
         </div>
 
         {/* Crisp Studio Portrait of Smiling TK Islam Students */}
-        <div className="relative z-10 w-full max-w-[300px] sm:max-w-[325px] h-[205px] sm:h-[225px] overflow-hidden flex items-start justify-center">
+        <div className="relative z-10 w-full max-w-[235px] sm:max-w-[325px] h-[155px] sm:h-[225px] overflow-hidden flex items-start justify-center">
           <img
             src={spmbStudentsCutout}
             alt="Santri Ceria TK Islam Lukman Hakim Purwokerto"
             referrerPolicy="no-referrer"
             className="w-full h-full object-contain object-top"
           />
-          <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-12 sm:h-14 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
         </div>
 
         {/* Sculpted Overlapping Title Block (Matches Reference 2) */}
-        <div className="relative z-20 -mt-14 text-center flex flex-col items-center">
+        <div className="relative z-20 -mt-10 sm:-mt-14 text-center flex flex-col items-center">
           <div className="-rotate-2 flex flex-col items-center">
             <span
-              className="text-lg sm:text-xl font-black text-[#006699] tracking-wide uppercase leading-none"
+              className="text-sm sm:text-xl font-black text-[#006699] tracking-wide uppercase leading-none"
               style={stickerTextStyle(5)}
             >
               DIBUKA
             </span>
             <h3
-              className="text-[3.5rem] sm:text-[4.25rem] font-black text-[#006699] tracking-tight leading-[0.92]"
+              className="text-[2.6rem] sm:text-[4.25rem] font-black text-[#006699] tracking-tight leading-[0.92]"
               style={stickerTextStyle(10)}
             >
               SPMB
             </h3>
             <p
-              className="text-xs sm:text-sm font-extrabold text-[#0B3B5B] mt-1 leading-tight"
+              className="text-[11px] sm:text-sm font-extrabold text-[#0B3B5B] mt-0.5 sm:mt-1 leading-tight"
               style={stickerTextStyle(4)}
             >
               Sistem Penerimaan Murid Baru
             </p>
-            <p className="text-[11px] sm:text-xs font-black text-[#006699] tracking-tight uppercase mt-0.5">
+            <p className="text-[10px] sm:text-xs font-black text-[#006699] tracking-tight uppercase mt-0.5">
               {schoolShortName}
             </p>
           </div>
-          <div className="-rotate-1 mt-1.5 bg-[#0B3B5B] text-white text-[10px] font-extrabold tracking-wider px-4 py-1 rounded-full shadow-xs uppercase tabular-nums">
+          <div className="-rotate-1 mt-1 sm:mt-1.5 bg-[#0B3B5B] text-white text-[9px] sm:text-[10px] font-extrabold tracking-wider px-3 sm:px-4 py-0.5 sm:py-1 rounded-full shadow-xs uppercase tabular-nums">
             TAHUN AJARAN 2026–2027
           </div>
         </div>
@@ -839,42 +839,42 @@ const PosterSentraTilawati: React.FC<PosterSentraProps> = ({
   onZoom,
 }) => {
   return (
-    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[650px] sm:min-h-[700px] text-slate-900 select-none">
+    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[495px] sm:min-h-[700px] text-slate-900 select-none">
       {onZoom && (
         <button
           type="button"
           onClick={onZoom}
           title="Perbesar Poster"
           aria-label="Perbesar Poster 7 Sentra dan Tilawati"
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-lg bg-white/90 hover:bg-emerald-700 text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
+          className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/90 hover:bg-emerald-700 text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       )}
 
       {/* TOP BAR */}
-      <div className="relative z-10 px-5 pt-4 pb-2 flex items-center justify-between gap-2 border-b border-slate-100">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className="relative z-10 px-3.5 sm:px-5 pt-3 sm:pt-4 pb-2 flex items-center justify-between gap-2 border-b border-slate-100">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
           <img
             src="/logo.png"
             alt="Logo Resmi TK Islam Lukman Hakim Purwokerto"
             referrerPolicy="no-referrer"
-            className="w-10 h-10 object-contain shrink-0"
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0"
           />
           <div className="leading-tight min-w-0">
-            <p className="text-[11px] font-black text-emerald-900 truncate">KURIKULUM UNGGULAN</p>
-            <p className="text-[9.5px] font-bold text-emerald-700 truncate">{schoolShortName}</p>
+            <p className="text-[10px] sm:text-[11px] font-black text-emerald-900 truncate">KURIKULUM UNGGULAN</p>
+            <p className="text-[9px] sm:text-[9.5px] font-bold text-emerald-700 truncate">{schoolShortName}</p>
           </div>
         </div>
-        <span className="text-[9.5px] font-extrabold text-emerald-800 pr-6 sm:pr-0 shrink-0">
+        <span className="text-[9px] sm:text-[9.5px] font-extrabold text-emerald-800 pr-7 sm:pr-0 shrink-0">
           #CintaQuranSejakDini
         </span>
       </div>
 
       {/* DUAL PHOTO COLLAGE + SCULPTED TITLE */}
-      <div className="relative px-5 pt-4">
-        <div className="grid grid-cols-12 gap-2.5">
-          <div className="col-span-7 h-44 sm:h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
+      <div className="relative px-3.5 sm:px-5 pt-3 sm:pt-4">
+        <div className="grid grid-cols-12 gap-2 sm:gap-2.5">
+          <div className="col-span-7 h-32 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
             <img
               src={spmbSentraClassroom}
               alt="Pembelajaran Sentra Balok Montessori TK Islam Lukman Hakim"
@@ -882,7 +882,7 @@ const PosterSentraTilawati: React.FC<PosterSentraProps> = ({
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="col-span-5 h-44 sm:h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
+          <div className="col-span-5 h-32 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
             <img
               src="/assets/gallery/foto6-sholat-berjamaah.jpg"
               alt="Pembiasaan Sholat Berjamaah dan Tilawati PAUD"
@@ -893,22 +893,22 @@ const PosterSentraTilawati: React.FC<PosterSentraProps> = ({
         </div>
 
         {/* Sculpted Overlapping Title */}
-        <div className="relative z-20 -mt-9 text-center flex flex-col items-center">
+        <div className="relative z-20 -mt-7 sm:-mt-9 text-center flex flex-col items-center">
           <div className="-rotate-2 flex flex-col items-center">
             <span
-              className="text-sm sm:text-base font-black text-emerald-700 uppercase tracking-wide leading-none"
+              className="text-xs sm:text-base font-black text-emerald-700 uppercase tracking-wide leading-none"
               style={stickerTextStyle(5)}
             >
               KARAKTER QUR’ANI
             </span>
             <h3
-              className="text-[2.4rem] sm:text-[2.85rem] font-black text-emerald-700 tracking-tight leading-none mt-0.5"
+              className="text-[1.85rem] sm:text-[2.85rem] font-black text-emerald-700 tracking-tight leading-none mt-0.5"
               style={stickerTextStyle(9)}
             >
               7 SENTRA BER-AC
             </h3>
           </div>
-          <div className="mt-2 bg-emerald-800 text-white text-[10px] font-extrabold tracking-wider px-4 py-1 rounded-full uppercase">
+          <div className="mt-1.5 sm:mt-2 bg-emerald-800 text-white text-[9px] sm:text-[10px] font-extrabold tracking-wider px-3 sm:px-4 py-0.5 sm:py-1 rounded-full uppercase">
             METODE TILAWATI PAUD &amp; KURIKULUM MERDEKA
           </div>
         </div>
@@ -1013,68 +1013,68 @@ const PosterDaycareBatita: React.FC<PosterCommonProps> = ({
   onZoom,
 }) => {
   return (
-    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[650px] sm:min-h-[700px] text-slate-900 select-none">
+    <article className="group relative bg-white rounded-2xl border border-slate-200/90 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col justify-between min-h-[495px] sm:min-h-[700px] text-slate-900 select-none">
       {onZoom && (
         <button
           type="button"
           onClick={onZoom}
           title="Perbesar Poster"
           aria-label="Perbesar Poster Daycare dan KB Batita"
-          className="absolute top-3 right-3 z-30 w-8 h-8 rounded-lg bg-white/90 hover:bg-amber-600 text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
+          className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/90 hover:bg-amber-600 text-slate-600 hover:text-white border border-slate-200 flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-all cursor-pointer shadow-xs"
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       )}
 
       {/* TOP BAR */}
-      <div className="relative z-10 px-5 pt-4 pb-2 flex items-center justify-between gap-2 border-b border-slate-100">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className="relative z-10 px-3.5 sm:px-5 pt-3 sm:pt-4 pb-2 flex items-center justify-between gap-2 border-b border-slate-100">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
           <img
             src="/logo.png"
             alt="Logo Resmi TK Islam Lukman Hakim Purwokerto"
             referrerPolicy="no-referrer"
-            className="w-10 h-10 object-contain shrink-0"
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0"
           />
           <div className="leading-tight min-w-0">
-            <p className="text-[11px] font-black text-[#0B3B5B] truncate">
+            <p className="text-[10px] sm:text-[11px] font-black text-[#0B3B5B] truncate">
               LAYANAN PENGASUHAN &amp; KB
             </p>
-            <p className="text-[9.5px] font-bold text-amber-700 truncate">{schoolShortName}</p>
+            <p className="text-[9px] sm:text-[9.5px] font-bold text-amber-700 truncate">{schoolShortName}</p>
           </div>
         </div>
-        <span className="text-[9.5px] font-extrabold text-amber-700 pr-6 sm:pr-0 shrink-0">
+        <span className="text-[9px] sm:text-[9.5px] font-extrabold text-amber-700 pr-7 sm:pr-0 shrink-0">
           #AmanNyamanHigienis
         </span>
       </div>
 
       {/* HERO PHOTO + SCULPTED TITLE */}
-      <div className="relative px-5 pt-4">
-        <div className="h-44 sm:h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-xs relative">
+      <div className="relative px-3.5 sm:px-5 pt-3 sm:pt-4">
+        <div className="h-32 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 shadow-xs relative">
           <img
             src="/assets/gallery/foto4-snack-area-bermain.jpg"
             alt="Area Makan Bergizi dan Bermain Daycare TK Islam Lukman Hakim"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-14 sm:h-16 bg-gradient-to-t from-white/90 to-transparent" />
         </div>
 
-        <div className="relative z-20 -mt-9 text-center flex flex-col items-center">
+        <div className="relative z-20 -mt-7 sm:-mt-9 text-center flex flex-col items-center">
           <div className="-rotate-2 flex flex-col items-center">
             <span
-              className="text-sm sm:text-base font-black text-[#0B3B5B] uppercase tracking-wide leading-none"
+              className="text-xs sm:text-base font-black text-[#0B3B5B] uppercase tracking-wide leading-none"
               style={stickerTextStyle(5)}
             >
               PENGASUHAN RAMAH ANAK
             </span>
             <h3
-              className="text-[2.35rem] sm:text-[2.8rem] font-black text-amber-600 tracking-tight leading-none mt-0.5"
+              className="text-[1.85rem] sm:text-[2.8rem] font-black text-amber-600 tracking-tight leading-none mt-0.5"
               style={stickerTextStyle(9)}
             >
               DAYCARE &amp; KB
             </h3>
           </div>
-          <div className="mt-2 bg-[#0B3B5B] text-amber-300 text-[10px] font-extrabold tracking-wider px-4 py-1 rounded-full uppercase">
+          <div className="mt-1.5 sm:mt-2 bg-[#0B3B5B] text-amber-300 text-[9px] sm:text-[10px] font-extrabold tracking-wider px-3 sm:px-4 py-0.5 sm:py-1 rounded-full uppercase">
             BATITA CERIA · USIA 1,5 – 6 TAHUN
           </div>
         </div>

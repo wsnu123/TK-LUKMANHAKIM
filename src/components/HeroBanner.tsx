@@ -62,7 +62,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
   return (
     <div
-      className="relative w-full h-[80svh] min-h-[540px] max-h-[680px] md:h-screen md:min-h-[680px] md:max-h-none overflow-hidden bg-slate-950 select-none flex items-end"
+      className="relative w-full h-[58svh] min-h-[370px] max-h-[450px] md:h-screen md:min-h-[680px] md:max-h-none overflow-hidden bg-slate-950 select-none flex items-end"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={handleTouchStart}
@@ -91,55 +91,55 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       </div>
 
       {/* Measured Contrast Scrim for Crisp Daylight & Mobile Readability */}
-      <div className="absolute inset-x-0 bottom-0 h-3/4 sm:h-3/5 bg-gradient-to-t from-[#071926]/96 via-[#071926]/65 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-x-0 bottom-0 h-4/5 sm:h-3/5 bg-gradient-to-t from-[#071926]/96 via-[#071926]/65 to-transparent pointer-events-none z-10" />
       <div className="absolute inset-0 bg-black/15 pointer-events-none z-10" />
 
       {/* Main Text & Action Zone */}
-      <div className="relative z-20 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-14 sm:pb-20 lg:pb-24 w-full">
+      <div className="relative z-20 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-11 sm:pb-20 lg:pb-24 w-full">
         <div
           key={safeIndex}
-          className="max-w-3xl text-left space-y-2.5 sm:space-y-3 transition-opacity duration-500 ease-out"
+          className="max-w-3xl text-left space-y-1.5 sm:space-y-3 transition-opacity duration-500 ease-out"
         >
           {/* Quiet Kicker */}
-          <p className="text-[11px] sm:text-sm font-extrabold tracking-widest text-amber-300 uppercase">
+          <p className="text-[10px] sm:text-sm font-extrabold tracking-widest text-amber-300 uppercase">
             {slide.welcome}
           </p>
 
           {/* Main Display Title */}
-          <h1 className="text-[1.85rem] sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase leading-[1.12] drop-shadow-md [text-wrap:balance]">
+          <h1 className="text-[1.4rem] sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase leading-[1.12] drop-shadow-md [text-wrap:balance]">
             {slide.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-xl lg:text-2xl font-extrabold text-sky-200 sm:text-white tracking-wide uppercase drop-shadow-sm">
+          <p className="text-xs sm:text-xl lg:text-2xl font-extrabold text-sky-200 sm:text-white tracking-wide uppercase drop-shadow-sm">
             {slide.subtitle}
           </p>
 
           {/* Concise Description */}
-          <p className="text-xs sm:text-sm lg:text-base text-white/90 max-w-2xl leading-relaxed line-clamp-3 sm:line-clamp-none">
+          <p className="text-[11px] sm:text-sm lg:text-base text-white/90 max-w-2xl leading-relaxed line-clamp-2 sm:line-clamp-none">
             {slide.description}
           </p>
 
-          {/* Mobile-Friendly Thumb-Zone Actions -> Desktop Single Primary CTA */}
-          <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+          {/* Mobile-Friendly Compact Single-Row Actions -> Desktop Single Primary CTA */}
+          <div className="pt-2 sm:pt-3 flex flex-row items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onOpenPpdb}
-              className="min-h-[46px] inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 rounded-xl sm:rounded-full bg-amber-400 hover:bg-amber-300 sm:bg-[#0084d6] sm:hover:bg-[#0070b8] text-[#0B253A] sm:text-white font-black sm:font-bold text-xs sm:text-sm shadow-xl transition-transform active:scale-95 cursor-pointer"
+              className="flex-1 sm:flex-initial min-h-[40px] sm:min-h-[46px] inline-flex items-center justify-center gap-1.5 sm:gap-2.5 px-3.5 sm:px-7 py-2 sm:py-3 rounded-xl sm:rounded-full bg-amber-400 hover:bg-amber-300 sm:bg-[#0084d6] sm:hover:bg-[#0070b8] text-[#0B253A] sm:text-white font-black sm:font-bold text-[11.5px] sm:text-sm shadow-xl transition-transform active:scale-95 cursor-pointer whitespace-nowrap"
             >
               <span>{slide.primaryButton || 'Daftar SPMB Online'}</span>
               <Play className="hidden sm:inline w-3.5 h-3.5 fill-white text-white translate-x-0.5" />
-              <ArrowRight className="sm:hidden w-4 h-4" />
+              <ArrowRight className="sm:hidden w-3.5 h-3.5 shrink-0" />
             </button>
 
             {onNavigate && (
               <button
                 type="button"
                 onClick={() => onNavigate('schools')}
-                className="sm:hidden min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-bold text-xs cursor-pointer"
+                className="sm:hidden min-h-[40px] inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-bold text-[11.5px] cursor-pointer whitespace-nowrap"
               >
-                <BookOpen className="w-4 h-4 text-sky-200" />
-                <span>Lihat Jenjang &amp; 7 Sentra</span>
+                <BookOpen className="w-3.5 h-3.5 text-sky-200 shrink-0" />
+                <span>4 Jenjang</span>
               </button>
             )}
           </div>

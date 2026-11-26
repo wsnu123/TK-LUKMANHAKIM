@@ -70,7 +70,7 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
       {/* BAGIAN ATAS: DEDIKASI & PENGALAMAN (SESUAI BAGIAN ATAS IMAGE KANAN)  */}
       {/* ==================================================================== */}
       {showDedication && (
-        <div className="relative pt-14 sm:pt-20 pb-20 sm:pb-28 bg-white overflow-hidden">
+        <div className="relative pt-8 sm:pt-20 pb-10 sm:pb-28 bg-white overflow-hidden">
           {/* Top Sky & Clouds Decorative Border */}
           <div className="absolute top-0 inset-x-0 h-14 pointer-events-none overflow-hidden">
             <svg
@@ -140,11 +140,11 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
             </svg>
           </div>
 
-          <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10 pt-4 sm:pt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-14 items-center">
               {/* Left 6 Cols: Circular Happy Children Joining Hands Illustration */}
               <div className="lg:col-span-6 flex items-center justify-center">
-                <div className="relative w-full max-w-[340px] sm:max-w-[400px] aspect-square flex items-center justify-center">
+                <div className="relative w-full max-w-[205px] sm:max-w-[400px] aspect-square flex items-center justify-center">
                   {/* Soft ambient circle glow */}
                   <div className="absolute inset-6 rounded-full bg-sky-50 border-2 border-dashed border-sky-200/80" />
 
@@ -245,68 +245,68 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
               </div>
 
               {/* Right 6 Cols: Editorial Dedication Story, 4 Stats & CTA Button */}
-              <div className="lg:col-span-6 space-y-5">
-                <div className="space-y-2">
-                  <span className="text-xs sm:text-sm font-bold text-[#0084d6] tracking-wide block">
+              <div className="lg:col-span-6 space-y-3 sm:space-y-5">
+                <div className="space-y-1 sm:space-y-2">
+                  <span className="text-[11px] sm:text-sm font-bold text-[#0084d6] tracking-wide block">
                     Belajar, Bermain, dan Bereksplorasi
                   </span>
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0F2937] leading-tight tracking-tight">
-                    Dedikasi & Pengalaman {schoolIdentity.nama}
+                  <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-[#0F2937] leading-tight tracking-tight">
+                    Dedikasi &amp; Pengalaman {schoolIdentity.nama}
                   </h2>
                 </div>
 
-                <blockquote className="text-xs sm:text-sm italic text-[#006699] bg-sky-50/80 border-l-4 border-[#006699] px-4 py-2.5 rounded-r-xl">
+                <blockquote className="text-[11.5px] sm:text-sm italic text-[#006699] bg-sky-50/80 border-l-4 border-[#006699] px-3 sm:px-4 py-2 sm:py-2.5 rounded-r-xl">
                   &ldquo;Tanpa Olah Pikir (Tafakur), Mustahil Ada Kreativitas. Tafakur Adalah Pelajaran Penting dalam Al-Qur&apos;an.&rdquo;
                 </blockquote>
 
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-[11.5px] sm:text-sm text-slate-600 leading-relaxed">
                   Selama lebih dari 25 tahun pengabdian di Purwokerto, {schoolIdentity.nama} menjadi rumah kedua yang hangat bagi ananda untuk berbagi, belajar, dan tumbuh berakhlak mulia melalui Kurikulum Merdeka PAUD, Tahfidz Tilawati, serta 5 Pilar Karakter.
                 </p>
 
                 {/* 4 Consistent Stat Counters */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-3 text-center">
-                    <span className="block text-xl sm:text-2xl font-extrabold text-[#006699] tabular-nums">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-1">
+                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-2.5 sm:p-3 text-center">
+                    <span className="block text-lg sm:text-2xl font-extrabold text-[#006699] tabular-nums">
                       <CountUpNumber end={25} suffix="+" duration={1600} />
                     </span>
-                    <span className="text-[11px] font-bold text-[#0F2937] block mt-0.5">
+                    <span className="text-[10.5px] sm:text-[11px] font-bold text-[#0F2937] block mt-0.5">
                       Tahun Dedikasi
                     </span>
                   </div>
 
-                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-3 text-center">
-                    <span className="block text-xl sm:text-2xl font-extrabold text-[#006699] tabular-nums">
+                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-2.5 sm:p-3 text-center">
+                    <span className="block text-lg sm:text-2xl font-extrabold text-[#006699] tabular-nums">
                       <CountUpNumber end={48} suffix="+" duration={1800} />
                     </span>
-                    <span className="text-[11px] font-bold text-[#0F2937] block mt-0.5">
-                      Pendidik & Staf
+                    <span className="text-[10.5px] sm:text-[11px] font-bold text-[#0F2937] block mt-0.5">
+                      Pendidik &amp; Staf
                     </span>
                   </div>
 
-                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-3 text-center">
-                    <span className="block text-xl sm:text-2xl font-extrabold text-[#006699] tabular-nums">
+                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-2.5 sm:p-3 text-center">
+                    <span className="block text-lg sm:text-2xl font-extrabold text-[#006699] tabular-nums">
                       <CountUpNumber end={3200} suffix="+" duration={2000} />
                     </span>
-                    <span className="text-[11px] font-bold text-[#0F2937] block mt-0.5">
+                    <span className="text-[10.5px] sm:text-[11px] font-bold text-[#0F2937] block mt-0.5">
                       Alumni Santri
                     </span>
                   </div>
 
-                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-3 text-center">
-                    <span className="block text-xl sm:text-2xl font-extrabold text-emerald-600">
+                  <div className="bg-[#F4F9FD] border border-sky-100 rounded-xl p-2.5 sm:p-3 text-center">
+                    <span className="block text-lg sm:text-2xl font-extrabold text-emerald-600">
                       Grade A
                     </span>
-                    <span className="text-[11px] font-bold text-[#0F2937] block mt-0.5">
+                    <span className="text-[10.5px] sm:text-[11px] font-bold text-[#0F2937] block mt-0.5">
                       NPSN {schoolIdentity.npsn}
                     </span>
                   </div>
                 </div>
 
                 {onNavigate && (
-                  <div className="pt-2">
+                  <div className="pt-1 sm:pt-2">
                     <button
                       onClick={() => onNavigate('about')}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#006699] hover:bg-[#0F2937] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#006699] hover:bg-[#0F2937] text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer"
                     >
                       <span>Selengkapnya</span>
                       <ArrowUpRight className="w-4 h-4" />
@@ -340,7 +340,7 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
           </div>
 
           {/* Main Ocean Blue Section Body */}
-          <div className="bg-gradient-to-b from-[#005585] via-[#004c78] to-[#0F2937] pt-6 pb-24 sm:pb-28 relative overflow-hidden">
+          <div className="bg-gradient-to-b from-[#005585] via-[#004c78] to-[#0F2937] pt-3 sm:pt-6 pb-12 sm:pb-28 relative overflow-hidden">
             {/* Decorative Rainbow Arch on Top-Left (in Consistent Teal/Sky/Gold Palette) */}
             <div className="hidden sm:block absolute left-6 lg:left-16 top-2 w-48 h-32 pointer-events-none opacity-85">
               <svg viewBox="0 0 220 130" fill="none" className="w-full h-full">
@@ -365,31 +365,31 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
               </svg>
             </div>
 
-            {/* Decorative Twinkling Stars (Matching Reference Image) */}
+            {/* Decorative Twinkling Stars */}
             <svg
               viewBox="0 0 24 24"
-              className="w-6 h-6 text-amber-300 absolute left-[18%] top-8 pointer-events-none opacity-90"
+              className="hidden sm:block w-6 h-6 text-amber-300 absolute left-[18%] top-8 pointer-events-none opacity-90"
               fill="currentColor"
             >
               <polygon points="12,2 15,9 22,9.5 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.5 9,9" />
             </svg>
             <svg
               viewBox="0 0 24 24"
-              className="w-7 h-7 text-amber-300 absolute right-[12%] top-6 pointer-events-none opacity-90"
+              className="hidden sm:block w-7 h-7 text-amber-300 absolute right-[12%] top-6 pointer-events-none opacity-90"
               fill="currentColor"
             >
               <polygon points="12,2 15,9 22,9.5 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.5 9,9" />
             </svg>
             <svg
               viewBox="0 0 24 24"
-              className="w-5 h-5 text-sky-300 absolute right-[18%] top-28 pointer-events-none opacity-80"
+              className="hidden sm:block w-5 h-5 text-sky-300 absolute right-[18%] top-28 pointer-events-none opacity-80"
               fill="currentColor"
             >
               <polygon points="12,2 15,9 22,9.5 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.5 9,9" />
             </svg>
             <svg
               viewBox="0 0 24 24"
-              className="w-6 h-6 text-amber-300 absolute left-[65%] bottom-8 pointer-events-none opacity-85"
+              className="hidden sm:block w-6 h-6 text-amber-300 absolute left-[65%] bottom-8 pointer-events-none opacity-85"
               fill="currentColor"
             >
               <polygon points="12,2 15,9 22,9.5 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.5 9,9" />
@@ -397,28 +397,28 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
 
             <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10">
               {/* Centered Section Header */}
-              <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
-                <span className="text-xs sm:text-sm font-bold text-sky-300 tracking-wide block">
+              <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-14">
+                <span className="text-[11px] sm:text-sm font-bold text-sky-300 tracking-wide block">
                   Direktori Informasi Sekolah
                 </span>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mt-1">
+                <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mt-0.5 sm:mt-1">
                   Jelajahi {schoolIdentity.nama}
                 </h2>
-                <p className="text-xs sm:text-sm text-sky-100/90 mt-2.5 leading-relaxed">
+                <p className="text-[11.5px] sm:text-sm text-sky-100/90 mt-1.5 sm:mt-2.5 leading-relaxed">
                   Informasi lengkap seputar sejarah sekolah, jenjang pendidikan, sarana bermain ramah anak, dan pendaftaran santri baru.
                 </p>
               </div>
 
-              {/* 4 Cards with Top Photo + Overlapping Dark Navy Card Box + Bottom Pill Button */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+              {/* 4 Cards: Horizontal snap carousel on mobile, 4-col grid on desktop */}
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-6 -mx-4 px-4 no-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-8 lg:gap-6 sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible">
                 {exploreCards.map((card) => (
                   <div
                     key={card.id}
                     onClick={() => onNavigate && onNavigate(card.id)}
-                    className="group flex flex-col cursor-pointer"
+                    className="w-[235px] shrink-0 snap-start sm:w-auto group flex flex-col cursor-pointer"
                   >
                     {/* Top Photo Frame */}
-                    <div className="relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden shadow-lg bg-slate-800 border-2 border-white/15">
+                    <div className="relative h-32 sm:h-52 w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-lg bg-slate-800 border-2 border-white/15">
                       <img
                         src={card.image}
                         alt={card.title}
@@ -427,33 +427,33 @@ export const ExperienceStats: React.FC<ExperienceStatsProps> = ({
                       />
                     </div>
 
-                    {/* Overlapping Dark Navy Box (Matches Reference Image Cards) */}
-                    <div className="relative z-10 -mt-10 mx-2.5 bg-[#0F2937] group-hover:bg-[#133243] border border-sky-400/20 rounded-2xl pt-5 pb-9 px-5 shadow-2xl flex-1 flex flex-col justify-between transition-colors">
+                    {/* Overlapping Dark Navy Box */}
+                    <div className="relative z-10 -mt-7 sm:-mt-10 mx-2 sm:mx-2.5 bg-[#0F2937] group-hover:bg-[#133243] border border-sky-400/20 rounded-xl sm:rounded-2xl pt-3.5 sm:pt-5 pb-7 sm:pb-9 px-3.5 sm:px-5 shadow-xl sm:shadow-2xl flex-1 flex flex-col justify-between transition-colors">
                       <div>
-                        <h3 className="text-base sm:text-lg font-extrabold text-white group-hover:text-sky-300 transition">
+                        <h3 className="text-sm sm:text-lg font-extrabold text-white group-hover:text-sky-300 transition">
                           {card.title}
                         </h3>
 
                         {/* Clock & Calendar Metadata Row */}
-                        <div className="flex items-center flex-wrap gap-3 mt-2 text-[11px] font-semibold text-sky-200/90">
+                        <div className="flex items-center flex-wrap gap-2 sm:gap-3 mt-1.5 sm:mt-2 text-[10px] sm:text-[11px] font-semibold text-sky-200/90">
                           <span className="inline-flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                            <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
                             {card.timeMeta}
                           </span>
                           <span className="inline-flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                            <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-sky-400 shrink-0" />
                             {card.dayMeta}
                           </span>
                         </div>
 
-                        <p className="text-xs text-slate-300 mt-3 leading-relaxed">
+                        <p className="text-[11px] sm:text-xs text-slate-300 mt-2 sm:mt-3 leading-snug sm:leading-relaxed line-clamp-3 sm:line-clamp-none">
                           {card.desc}
                         </p>
                       </div>
 
                       {/* Bottom Overlapping Pill CTA Button */}
-                      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-                        <span className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#0084d6] group-hover:bg-[#38bdf8] text-white group-hover:text-[#0F2937] text-xs font-extrabold shadow-lg transition whitespace-nowrap">
+                      <div className="absolute -bottom-3.5 sm:-bottom-4 left-1/2 -translate-x-1/2">
+                        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-[#0084d6] group-hover:bg-[#38bdf8] text-white group-hover:text-[#0F2937] text-[11px] sm:text-xs font-extrabold shadow-lg transition whitespace-nowrap">
                           {card.btnLabel}
                         </span>
                       </div>
