@@ -10,7 +10,6 @@ import { TanyaAdminWA } from '../components/TanyaAdminWA';
 import { Testimonials } from '../components/Testimonials';
 import { SpmbPosterCarousel } from '../components/SpmbPosterCarousel';
 import { SchoolActivityGallery } from '../components/SchoolActivityGallery';
-import { PrincipalProfileSection } from '../components/PrincipalProfileSection';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
 import {
@@ -25,7 +24,7 @@ import {
 interface HomePageProps {
   onOpenPpdb: () => void;
   onOpenChatbot?: () => void;
-  onNavigate: (page: PageTab) => void;
+  onNavigate: (page: PageTab, section?: string) => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -96,11 +95,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           <button
             type="button"
-            onClick={() => {
-              document
-                .getElementById('profil-kepala-sekolah')
-                ?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => onNavigate('about', 'profil-kepala-sekolah')}
             className="bg-white border border-sky-100 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer min-h-[78px]"
           >
             <span className="w-9 h-9 rounded-xl bg-amber-400 text-[#0B253A] flex items-center justify-center">
@@ -158,9 +153,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* 3. Official School Identity Banner */}
       {appearanceConfig.showIdentityCard && <IdentityCardSection />}
-
-      {/* 3.5 Profil & Sambutan Kepala Sekolah */}
-      <PrincipalProfileSection onOpenPpdb={onOpenPpdb} compact />
 
       {/* 4. Trust & Conversion Section */}
       {appearanceConfig.showTrustConversion && (
