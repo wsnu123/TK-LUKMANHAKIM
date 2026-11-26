@@ -1,15 +1,14 @@
 import React from 'react';
-import {
-  CheckCircle2,
+import { 
+  Sparkles, 
+  ShieldCheck, 
+  Award, 
+  CheckCircle2, 
   PhoneCall,
-  ArrowRight,
-  ArrowUpRight,
+  ArrowRight
 } from 'lucide-react';
+
 import { useApp } from '../context/AppContext';
-import montessoriPhoto from '../assets/images/editorial_sentra_montessori_1795672459355.jpg';
-import tahfidzPhoto from '../assets/images/editorial_tahfidz_garden_1795672461872.jpg';
-import artPhoto from '../assets/images/editorial_art_exploration_1795672463487.jpg';
-import heroGoldenCampus from '../assets/images/hero_campus_golden_1795672459358.jpg';
 
 interface TrustPillarsConversionProps {
   onOpenPpdb: () => void;
@@ -20,7 +19,6 @@ export const TrustPillarsConversion: React.FC<TrustPillarsConversionProps> = ({
   onOpenPpdb,
 }) => {
   const { schoolIdentity } = useApp();
-
   const handleOpenWaBooking = () => {
     const targetWa = (schoolIdentity.whatsapp || '6287713551412').replace(/[^0-9]/g, '');
     const cleanWa = targetWa.startsWith('0') ? '62' + targetWa.slice(1) : targetWa;
@@ -30,153 +28,120 @@ export const TrustPillarsConversion: React.FC<TrustPillarsConversionProps> = ({
     window.open(`https://wa.me/${cleanWa}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
-  const editorialPillars = [
-    {
-      num: '01',
-      tag: 'Disiplin Positif · Kelas Ber-AC',
-      title: 'Sentra Montessori & Lingkungan Ramah Anak',
-      desc: 'Menerapkan pendekatan Disiplin Positif tanpa bentakan, rasio guru-murid ideal, dan 7 ruang sentra ber-AC yang aman serta hangat bagai rumah kedua.',
-      proof: 'Standar Sekolah Ramah Anak',
-      image: montessoriPhoto,
-      alt: 'Ruang Kelas Sentra Montessori TK Lukman Hakim Purwokerto',
-      spanClass: 'md:col-span-2 lg:col-span-5',
-    },
-    {
-      num: '02',
-      tag: 'Tahfidz Tilawati · Adab Qur’ani',
-      title: 'Tahfidz Cilik Juz 30 & Pembiasaan Ibadah',
-      desc: 'Hafalan surat pendek, doa harian, dan adab sopan santun Islami dibimbing dengan metode Tilawati PAUD yang ceria tanpa tekanan.',
-      proof: 'Target Hafalan Gembira Tanpa Tekanan',
-      image: tahfidzPhoto,
-      alt: 'Pendopo Tahfidz dan Tilawati Anak TK Lukman Hakim Purwokerto',
-      spanClass: 'md:col-span-1 lg:col-span-4',
-    },
-    {
-      num: '03',
-      tag: 'Seni, Alam & Portal Wali',
-      title: 'Eksplorasi Kreativitas, Gizi Sehat & E-Raport',
-      desc: 'Eksplorasi seni lukis, kebun alam, makan sehat bergizi tanpa MSG, serta pantauan tumbuh kembang transparan langsung dari ponsel Ayah & Bunda.',
-      proof: 'Laporan Tumbuh Kembang Real-Time',
-      image: artPhoto,
-      alt: 'Studio Seni dan Eksplorasi Alam Anak Usia Dini',
-      spanClass: 'md:col-span-1 lg:col-span-3',
-    },
-  ];
-
   return (
-    <section className="py-10 sm:py-20 lg:py-24 bg-[#FAFBFD] relative overflow-hidden">
+    <section className="py-8 sm:py-20 bg-white border-b border-slate-100 relative overflow-hidden">
       <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-        {/* Editorial Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-7 sm:mb-14">
-          <div className="max-w-2xl space-y-2 sm:space-y-3">
-            <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
-              Keunggulan Utama <span className="text-slate-300 mx-1">·</span> Keluarga Muslim Purwokerto
-            </p>
-            <h2 className="font-display text-2xl sm:text-4xl lg:text-[42px] font-extrabold text-[#092338] tracking-tight leading-[1.1] [text-wrap:balance]">
-              Pendidikan Ramah Anak, Berakhlak &amp; Terpercaya
-            </h2>
-          </div>
+        
+        {/* Clean Editorial Header */}
+        <div className="text-center max-w-3xl mx-auto mb-5 sm:mb-14 space-y-1.5 sm:space-y-3">
+          <span className="text-[10.5px] sm:text-xs font-bold uppercase tracking-widest text-[#0077b6] block">
+            Pilihan Utama Keluarga Muslim Purwokerto
+          </span>
 
-          <p className="text-slate-600 text-xs sm:text-sm lg:text-[15px] max-w-md leading-relaxed">
-            Setiap sudut ruang dirancang untuk menumbuhkan rasa ingin tahu, kemandirian, dan kecintaan pada Al-Qur&apos;an sejak masa emas ananda.
+          <h2 className="text-xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            Pendidikan Ramah Anak, Berakhlak &amp; Terpercaya
+          </h2>
+
+          <p className="text-slate-600 text-[11.5px] sm:text-sm max-w-xl mx-auto leading-relaxed">
+            Menghadirkan lingkungan tumbuh kembang yang aman, bahagia, dan penuh kehangatan layaknya rumah kedua bagi ananda tercinta.
           </p>
         </div>
 
-        {/* Asymmetric Editorial Photo Bento Grid (Compact Horizontal Snap-Scroll on Mobile, 12-Col Bento on Desktop) */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-3 -mx-4 px-4 no-scrollbar md:grid md:grid-cols-2 lg:grid-cols-12 md:gap-6 md:mx-0 md:px-0 md:pb-0 md:overflow-visible mb-8 sm:mb-16">
-          {editorialPillars.map((item) => (
-            <article
-              key={item.num}
-              className={`w-[270px] shrink-0 snap-start md:w-auto ${item.spanClass} group bg-white rounded-2xl sm:rounded-[26px] border border-slate-200/80 overflow-hidden shadow-[0_10px_30px_-18px_rgba(9,35,56,0.12)] hover:shadow-[0_24px_48px_-20px_rgba(9,35,56,0.18)] hover:border-sky-200 transition-all duration-300 flex flex-col`}
-            >
-              {/* Crisp 4:3 Editorial Photograph */}
-              <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                <img
-                  src={item.image}
-                  alt={item.alt}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#092338]/55 via-transparent to-transparent" />
-                <span className="absolute top-3 left-3 sm:top-4 sm:left-4 font-display text-xs sm:text-sm font-extrabold text-white bg-[#092338]/75 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/15 tabular-nums">
-                  {item.num}
-                </span>
+        {/* 3 Core Conversion Highlights Cards (Swipeable horizontal strip on mobile, 3-col grid on md+) */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 -mx-4 px-4 no-scrollbar md:grid md:grid-cols-3 md:gap-8 md:mx-0 md:px-0 md:pb-0 md:overflow-visible mb-6 sm:mb-14">
+          {/* Card 1 */}
+          <div className="w-[255px] shrink-0 snap-start md:w-auto bg-slate-50/80 rounded-2xl p-4 sm:p-7 border border-slate-200/80 hover:border-sky-200 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-sky-100 text-[#0077b6] flex items-center justify-center">
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-
-              {/* Editorial Card Body */}
-              <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between gap-4">
-                <div className="space-y-1.5 sm:space-y-2.5">
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#006699]">
-                    {item.tag}
-                  </p>
-                  <h3 className="font-display text-base sm:text-xl font-extrabold text-[#092338] leading-snug tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="text-[11.5px] sm:text-sm text-slate-600 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center gap-2 text-[11px] sm:text-xs font-bold text-[#092338]">
-                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
-                  <span>{item.proof}</span>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Architectural Conversion Banner: Trial Class & School Tour Gratis */}
-        <div className="relative rounded-2xl sm:rounded-[32px] bg-[#092338] text-white overflow-hidden shadow-[0_24px_60px_-24px_rgba(9,35,56,0.45)] border border-white/10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-            {/* Left Content */}
-            <div className="lg:col-span-7 p-5 sm:p-10 lg:p-12 flex flex-col justify-center space-y-3 sm:space-y-5 relative z-10 editorial-hairline-grid">
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-amber-300">
-                Program Trial Class &amp; School Tour Gratis
-              </p>
-
-              <h3 className="font-display text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-[1.12] [text-wrap:balance]">
-                Ajak Ananda Merasakan Langsung Belajar dengan Senang
+              <h3 className="text-sm sm:text-lg font-bold text-slate-900 leading-snug">
+                Aman, Nyaman &amp; Bebas Bentakan
               </h3>
-
-              <p className="text-xs sm:text-sm lg:text-[15px] text-sky-100/85 max-w-xl leading-relaxed">
-                Ayah dan Bunda dipersilakan berkunjung langsung melihat ruang sentra ber-AC, playground kayu alami, dan berkonsultasi hangat bersama Kepala Sekolah.
+              <p className="text-[11.5px] sm:text-sm text-slate-600 leading-relaxed">
+                Menerapkan pendekatan <strong>Disiplin Positif</strong> tanpa kekerasan atau bentakan. Didukung pantauan keamanan, rasio guru-murid ideal, dan ruang kelas ber-AC.
               </p>
-
-              <div className="pt-1 sm:pt-2 flex flex-row flex-wrap items-center gap-2.5 sm:gap-3.5">
-                <button
-                  type="button"
-                  onClick={onOpenPpdb}
-                  className="flex-1 sm:flex-initial min-h-[44px] inline-flex items-center justify-center gap-2 px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-amber-400 hover:bg-amber-300 text-[#092338] font-extrabold text-xs sm:text-sm shadow-lg transition-all cursor-pointer whitespace-nowrap"
-                >
-                  <span>Daftar SPMB</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleOpenWaBooking}
-                  className="flex-1 sm:flex-initial min-h-[44px] inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm border border-emerald-400/30 transition-all cursor-pointer whitespace-nowrap"
-                >
-                  <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span>Jadwalkan Tour</span>
-                  <ArrowUpRight className="hidden sm:inline w-3.5 h-3.5" />
-                </button>
-              </div>
             </div>
+            <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-[#0077b6]">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
+              <span>Standar Sekolah Ramah Anak</span>
+            </div>
+          </div>
 
-            {/* Right Sunlit Campus Photo Bleed */}
-            <div className="hidden lg:block lg:col-span-5 relative min-h-[320px]">
-              <img
-                src={heroGoldenCampus}
-                alt={`Suasana Kampus ${schoolIdentity.nama}`}
-                referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#092338] via-[#092338]/30 to-transparent" />
+          {/* Card 2 */}
+          <div className="w-[255px] shrink-0 snap-start md:w-auto bg-slate-50/80 rounded-2xl p-4 sm:p-7 border border-slate-200/80 hover:border-emerald-200 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <Award className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <h3 className="text-sm sm:text-lg font-bold text-slate-900 leading-snug">
+                Tahfidz Cilik &amp; Cambridge Fun
+              </h3>
+              <p className="text-[11.5px] sm:text-sm text-slate-600 leading-relaxed">
+                Perpaduan harmonis antara hafalan surat pendek Juz 30, doa harian, adab sopan santun Islami, serta pengenalan bahasa Inggris interaktif yang gembira.
+              </p>
+            </div>
+            <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-emerald-700">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
+              <span>Target Hafalan Tanpa Tekanan</span>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="w-[255px] shrink-0 snap-start md:w-auto bg-slate-50/80 rounded-2xl p-4 sm:p-7 border border-slate-200/80 hover:border-amber-200 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <h3 className="text-sm sm:text-lg font-bold text-slate-900 leading-snug">
+                Gizi Sehat &amp; Portal Digital Wali
+              </h3>
+              <p className="text-[11.5px] sm:text-sm text-slate-600 leading-relaxed">
+                Program makan sehat bergizi bersama tanpa pengawet/MSG. Pantau E-Raport dan tagihan SPP langsung dari HP Ayah/Bunda secara transparan.
+              </p>
+            </div>
+            <div className="mt-3 sm:mt-5 pt-2.5 sm:pt-3 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-amber-700">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
+              <span>Laporan Perkembangan Real-Time</span>
             </div>
           </div>
         </div>
+
+        {/* Action Callout: Kunjungan Sekolah / Trial Class Gratis */}
+        <div className="bg-gradient-to-r from-[#0e3b48] via-[#145585] to-[#0077b6] rounded-2xl sm:rounded-3xl p-4 sm:p-10 text-white shadow-lg relative overflow-hidden">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
+            <div className="lg:col-span-8 space-y-1.5 sm:space-y-2.5">
+              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-300 block">
+                Program Trial Class &amp; School Tour Gratis
+              </span>
+              <h3 className="text-base sm:text-3xl font-black text-white tracking-tight leading-snug">
+                Ajak Ananda Merasakan Langsung Belajar dengan Senang!
+              </h3>
+              <p className="text-[11.5px] sm:text-sm text-sky-100 max-w-2xl leading-relaxed">
+                Ayah dan Bunda dipersilakan datang langsung melihat ruang kelas ber-AC, playground alami, dan berkonsultasi santai bersama Kepala Sekolah.
+              </p>
+            </div>
+
+            <div className="lg:col-span-4 grid grid-cols-2 lg:flex lg:flex-col gap-2 sm:gap-3">
+              <button
+                onClick={handleOpenWaBooking}
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 sm:py-3 px-3 sm:px-5 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer text-[11px] sm:text-sm whitespace-nowrap"
+              >
+                <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span>Jadwal Tour</span>
+              </button>
+
+              <button
+                onClick={onOpenPpdb}
+                className="w-full bg-white hover:bg-sky-50 text-[#145585] font-bold py-2.5 sm:py-3 px-3 sm:px-5 rounded-xl shadow-md transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer text-[11px] sm:text-sm whitespace-nowrap"
+              >
+                <span>Daftar SPMB</span>
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );
