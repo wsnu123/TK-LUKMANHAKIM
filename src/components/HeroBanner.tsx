@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  ChevronLeft,
+  ChevronRight,
   Play,
-  Sparkles
+  ArrowRight,
+  BookOpen,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -17,22 +18,15 @@ interface HeroBannerProps {
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   onOpenPpdb,
+  onNavigate,
 }) => {
-  // Mengambil data banner slide dari Global Context
   const { heroSlides } = useApp();
-  
-  // State untuk melacak indeks slide aktif saat ini
   const [currentSlide, setCurrentSlide] = useState(0);
-  
-  // State untuk mendeteksi apakah kursor mouse sedang berada di atas banner
   const [isHovered, setIsHovered] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
-  // Mencegah error 'out of bounds' jika jumlah slide berubah dinamis
   const safeIndex = currentSlide >= heroSlides.length ? 0 : currentSlide;
 
-  // [LOGIKA TEKNIS 1]: Auto-Slide Otomatis setiap 6.5 detik
-  // Jika mouse hover aktif (isHovered = true), interval dihentikan sementara
-  // agar wali murid dapat membaca informasi slide dengan tenang tanpa terpotong.
   useEffect(() => {
     if (isHovered || heroSlides.length <= 1) return;
     const interval = setInterval(() => {
@@ -41,28 +35,40 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     return () => clearInterval(interval);
   }, [isHovered, heroSlides.length]);
 
-  // Fungsi navigasi manual: Slide Sebelumnya
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
   };
 
-  // Fungsi navigasi manual: Slide Berikutnya
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev >= heroSlides.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) nextSlide();
+      else prevSlide();
+    }
+    touchStartX.current = null;
   };
 
   if (!heroSlides || heroSlides.length === 0) return null;
   const slide = heroSlides[safeIndex] || heroSlides[0];
 
   return (
-    <div 
-      className="relative w-full h-screen min-h-screen overflow-hidden bg-slate-950 select-none flex items-end"
+    <div
+      className="relative w-full h-[80svh] min-h-[540px] max-h-[680px] md:h-screen md:min-h-[680px] md:max-h-none overflow-hidden bg-slate-950 select-none flex items-end"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      {/* [LOGIKA TEKNIS 2]: Stacked Cross-Fade Background
-          Semua gambar dirender bertumpuk (stacked) dengan transisi CSS 'opacity'.
-          Teknik ini mencegah layout-shifting, flicker, atau jeda putih saat gambar berganti. */}
+      {/* Stacked Cross-Fade Background */}
       <div className="absolute inset-0 w-full h-full">
         {heroSlides.map((s, idx) => {
           const isActive = idx === safeIndex;
@@ -84,83 +90,90 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         })}
       </div>
 
-      {/* Natural Dark Gradient for Perfect Text Contrast */}
-      <div className="absolute inset-x-0 bottom-0 h-3/5 sm:h-1/2 bg-gradient-to-t from-black/95 via-black/60 to-transparent pointer-events-none z-10" />
-      <div className="absolute inset-0 bg-black/20 pointer-events-none z-10" />
+      {/* Measured Contrast Scrim for Crisp Daylight & Mobile Readability */}
+      <div className="absolute inset-x-0 bottom-0 h-3/4 sm:h-3/5 bg-gradient-to-t from-[#071926]/96 via-[#071926]/65 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-black/15 pointer-events-none z-10" />
 
-      {/* Main Text & Content: Stable Typography with Smooth CSS Fade per Slide */}
-      <div className="relative z-20 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-16 sm:pb-20 lg:pb-24 w-full">
-        <div 
-          key={safeIndex} 
-          className="max-w-3xl text-left space-y-2 sm:space-y-3 transition-opacity duration-500 ease-out"
+      {/* Main Text & Action Zone */}
+      <div className="relative z-20 max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-14 sm:pb-20 lg:pb-24 w-full">
+        <div
+          key={safeIndex}
+          className="max-w-3xl text-left space-y-2.5 sm:space-y-3 transition-opacity duration-500 ease-out"
         >
-          {/* Badge: Welcome Tag */}
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-amber-300 text-xs sm:text-sm font-black tracking-wider uppercase shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span>{slide.welcome}</span>
-            </span>
-          </div>
+          {/* Quiet Kicker */}
+          <p className="text-[11px] sm:text-sm font-extrabold tracking-widest text-amber-300 uppercase">
+            {slide.welcome}
+          </p>
 
-          {/* Main Title: Crisp, bold, solid without layout shifting or jitter */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase leading-tight drop-shadow-lg">
+          {/* Main Display Title */}
+          <h1 className="text-[1.85rem] sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase leading-[1.12] drop-shadow-md [text-wrap:balance]">
             {slide.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm sm:text-xl lg:text-2xl font-black text-amber-300 sm:text-white tracking-wide uppercase drop-shadow-md">
+          <p className="text-sm sm:text-xl lg:text-2xl font-extrabold text-sky-200 sm:text-white tracking-wide uppercase drop-shadow-sm">
             {slide.subtitle}
           </p>
 
-          {/* Description Paragraph */}
-          <p className="text-xs sm:text-sm lg:text-base text-white/95 max-w-2xl leading-relaxed drop-shadow">
+          {/* Concise Description */}
+          <p className="text-xs sm:text-sm lg:text-base text-white/90 max-w-2xl leading-relaxed line-clamp-3 sm:line-clamp-none">
             {slide.description}
           </p>
 
-          {/* Action Button: Lets Join Us */}
-          <div className="pt-2 sm:pt-3">
+          {/* Mobile-Friendly Thumb-Zone Actions -> Desktop Single Primary CTA */}
+          <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
             <button
               type="button"
               onClick={onOpenPpdb}
-              className="relative group overflow-hidden inline-flex items-center gap-2.5 px-6 sm:px-7 py-3 rounded-full bg-[#0084d6] hover:bg-[#0070b8] text-white font-bold text-xs sm:text-sm shadow-xl hover:shadow-cyan-500/30 transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="min-h-[46px] inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3 rounded-xl sm:rounded-full bg-amber-400 hover:bg-amber-300 sm:bg-[#0084d6] sm:hover:bg-[#0070b8] text-[#0B253A] sm:text-white font-black sm:font-bold text-xs sm:text-sm shadow-xl transition-transform active:scale-95 cursor-pointer"
             >
-              <span className="relative z-10">{slide.primaryButton || 'Daftar SPMB Online'}</span>
-              <Play className="w-3.5 h-3.5 fill-white text-white translate-x-0.5 relative z-10" />
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+              <span>{slide.primaryButton || 'Daftar SPMB Online'}</span>
+              <Play className="hidden sm:inline w-3.5 h-3.5 fill-white text-white translate-x-0.5" />
+              <ArrowRight className="sm:hidden w-4 h-4" />
             </button>
+
+            {onNavigate && (
+              <button
+                type="button"
+                onClick={() => onNavigate('schools')}
+                className="sm:hidden min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-bold text-xs cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4 text-sky-200" />
+                <span>Lihat Jenjang &amp; 7 Sentra</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Left Slider Arrow */}
+      {/* Desktop Left/Right Arrows (Hidden on Mobile where Touch Swipe is Native) */}
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-20 sm:h-24 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-xs transition rounded-r-lg cursor-pointer"
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-30 w-12 h-24 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white items-center justify-center backdrop-blur-xs transition rounded-r-lg cursor-pointer"
         aria-label="Slide sebelumnya"
       >
-        <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+        <ChevronLeft className="w-8 h-8" />
       </button>
 
-      {/* Right Slider Arrow */}
       <button
         type="button"
         onClick={nextSlide}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-10 sm:w-12 h-20 sm:h-24 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-xs transition rounded-l-lg cursor-pointer"
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-24 bg-black/30 hover:bg-black/60 text-white/90 hover:text-white items-center justify-center backdrop-blur-xs transition rounded-l-lg cursor-pointer"
         aria-label="Slide selanjutnya"
       >
-        <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+        <ChevronRight className="w-8 h-8" />
       </button>
 
       {/* Bottom Slider Dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-xs border border-white/10">
+      <div className="absolute bottom-4 sm:bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/45 px-3 py-1.5 rounded-full backdrop-blur-xs border border-white/10">
         {heroSlides.map((_, i) => (
           <button
             key={i}
             type="button"
             onClick={() => setCurrentSlide(i)}
             className={`h-2 rounded-full transition-all cursor-pointer ${
-              safeIndex === i ? 'w-6 bg-white shadow-xs' : 'w-2 bg-white/40 hover:bg-white/80'
+              safeIndex === i ? 'w-6 bg-amber-400 sm:bg-white shadow-xs' : 'w-2 bg-white/45 hover:bg-white/80'
             }`}
             aria-label={`Slide ${i + 1}`}
           />

@@ -18,6 +18,7 @@ import { ChatbotModal } from './components/ChatbotModal';
 import { QrCodeModal } from './components/QrCodeModal';
 import { ScrollProgressBar } from './components/effects/ScrollProgressBar';
 import { ClickEffect } from './components/effects/ClickEffect';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { PageTab } from './types';
 
 // ============================================================================
@@ -153,7 +154,11 @@ function MainApp() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F9F8F6] text-slate-800 flex flex-col font-sans antialiased selection:bg-[#006699] selection:text-white">
+    <div
+      className={`relative min-h-screen bg-[#F9F8F6] text-slate-800 flex flex-col font-sans antialiased selection:bg-[#006699] selection:text-white ${
+        currentPage !== 'admin' ? 'pb-16 lg:pb-0' : ''
+      }`}
+    >
       {/* Interactive Click Ripple & Sparkle Effects */}
       <ClickEffect />
 
@@ -252,6 +257,15 @@ function MainApp() {
           onOpenAdmin={() => handleNavigate('admin')}
           onOpenQr={() => setIsQrModalOpen(true)}
           onNavigate={handleNavigate}
+        />
+      )}
+
+      {/* Dedicated Mobile App Bottom Navigation Bar (Hidden on Desktop & Admin Panel) */}
+      {currentPage !== 'admin' && (
+        <MobileBottomNav
+          currentPage={currentPage}
+          onNavigate={handleNavigate}
+          onOpenPpdb={handleOpenProtectedPpdb}
         />
       )}
 

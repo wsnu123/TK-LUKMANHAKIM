@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { PageTab } from '../types';
+import { PrincipalProfileSection } from '../components/PrincipalProfileSection';
+import defaultPrincipalPortrait from '../assets/images/principal_portrait_tk_1795669689936.jpg';
 
 interface AboutPageProps {
   activeSection?: string;
@@ -313,35 +315,45 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       </section>
 
       {/* ==================================================================== */}
+      {/* 3.5 PROFIL & SAMBUTAN KEPALA SEKOLAH                                 */}
+      {/* ==================================================================== */}
+      <PrincipalProfileSection onOpenPpdb={onOpenPpdb} />
+
+      {/* ==================================================================== */}
       {/* 4. "MEET OUR TEAM": CIRCULAR PORTRAITS GRID (FROM REFERENCE)        */}
       {/* ==================================================================== */}
-      <section id="our-team" className="py-14 sm:py-24 bg-[#F9F8F6]">
+      <section id="our-team" className="py-12 sm:py-24 bg-[#F9F8F6]">
         <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           {/* Header Tag & Title */}
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-10 sm:mb-16">
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699] block mb-2">
               MEET OUR TEAM
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F2937] tracking-tight">
-              Our Team
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0F2937] tracking-tight">
+              Dewan Pendidik &amp; Ustadzah
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
               Didampingi oleh dewan pendidik dan ustadzah berdedikasi yang membimbing ananda dengan ketulusan hati, kesabaran, dan profesionalisme.
             </p>
           </div>
 
-          {/* Circular Avatar Grid (Matching Bottom of Reference Image) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
-            {displayedTeachers.map((teacher) => (
+          {/* Circular Avatar Grid: Clean 2-col on Mobile, 4-col on Desktop */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {displayedTeachers.map((teacher) => {
+              const isPrincipalLegacy =
+                (teacher.id === 't-1' || teacher.role.toLowerCase().includes('kepala')) &&
+                (!teacher.photo || teacher.photo.includes('images.unsplash.com'));
+              const photoSrc = isPrincipalLegacy ? defaultPrincipalPortrait : teacher.photo;
+              return (
               <div
                 key={teacher.id}
-                className="flex flex-col items-center text-center group"
+                className="flex flex-col items-center text-center group bg-white sm:bg-transparent p-4 sm:p-0 rounded-2xl border border-slate-100 sm:border-0 shadow-2xs sm:shadow-none"
               >
                 {/* Circular Portrait with Ring Accent */}
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 mb-4">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 mb-3.5 sm:mb-4">
                   <div className="w-full h-full rounded-full overflow-hidden shadow-md ring-4 ring-sky-100 border-2 border-white group-hover:ring-[#006699]/40 transition duration-300 bg-slate-200">
                     <img
-                      src={teacher.photo}
+                      src={photoSrc}
                       alt={teacher.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500"
@@ -379,7 +391,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                   <span>Sapa via WhatsApp</span>
                 </button>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Toggle Button for More Teachers if Available */}

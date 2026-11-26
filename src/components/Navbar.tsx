@@ -249,11 +249,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Mobile Menu Hamburger */}
+          {/* Mobile Quick SPMB + Menu Toggle */}
           <div className="lg:hidden flex items-center gap-2 ml-auto">
             <button
+              type="button"
+              onClick={onOpenPpdb}
+              className="px-3 py-2 min-h-[38px] rounded-xl bg-[#006699] hover:bg-[#0B3B5B] text-white text-[11px] font-extrabold tracking-tight whitespace-nowrap cursor-pointer shadow-xs"
+            >
+              SPMB
+            </button>
+            <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-md text-slate-800 hover:bg-slate-100 transition cursor-pointer"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-800 hover:bg-slate-100 transition cursor-pointer"
               aria-label="Menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

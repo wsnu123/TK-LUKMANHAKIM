@@ -175,11 +175,11 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
     SCHOOL_PROGRAMS.find((u) => u.id === selectedId) || SCHOOL_PROGRAMS[2];
 
   return (
-    <div className="pt-16 sm:pt-20 bg-white min-h-screen overflow-hidden">
+    <div className="bg-white min-h-screen overflow-hidden">
       {/* ==================================================================== */}
-      {/* 1. HERO BANNER (KIDDYLAND REFERENCE LAYOUT IN CONSISTENT WEB COLORS) */}
+      {/* 1. HERO BANNER (CLEAN RESPONSIVE LAYOUT IN CONSISTENT WEB COLORS)    */}
       {/* ==================================================================== */}
-      <section className="relative bg-gradient-to-br from-[#005585] via-[#004670] to-[#0F2937] text-white pt-10 sm:pt-14 pb-24 sm:pb-28 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#005585] via-[#004670] to-[#0F2937] text-white pt-10 sm:pt-14 pb-20 sm:pb-28 overflow-hidden">
         <svg
           viewBox="0 0 24 24"
           className="w-5 h-5 text-amber-300/80 absolute left-[10%] top-12 pointer-events-none"
@@ -261,15 +261,15 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
             </div>
 
             {/* Right 5 Cols: Official TK Lukman Hakim Logo Badge with Satellites */}
-            <div className="lg:col-span-5 flex items-center justify-center relative">
-              <div className="relative flex items-center justify-center">
-                <LukmanHakimLogo variant="badge" size={320} className="sm:scale-110" />
+            <div className="lg:col-span-5 flex items-center justify-center relative pt-2 lg:pt-0">
+              <div className="relative flex items-center justify-center scale-90 sm:scale-100">
+                <LukmanHakimLogo variant="badge" size={240} className="sm:scale-110" />
 
-                <div className="absolute -left-3 top-1/4 w-12 h-12 rounded-2xl bg-[#fbbf24] text-[#0F2937] flex items-center justify-center shadow-xl transform -rotate-12 z-20">
-                  <GraduationCap className="w-6 h-6" />
+                <div className="absolute -left-2 top-1/4 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#fbbf24] text-[#0F2937] flex items-center justify-center shadow-xl transform -rotate-12 z-20">
+                  <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
 
-                <div className="absolute -right-2 bottom-1/4 px-3.5 py-1.5 rounded-full bg-[#006699] text-white font-extrabold text-[11px] shadow-xl z-20 border border-white/40">
+                <div className="absolute -right-1 bottom-1/4 px-3 py-1.5 rounded-full bg-[#006699] text-white font-extrabold text-[10.5px] sm:text-[11px] shadow-xl z-20 border border-white/40 whitespace-nowrap">
                   4 Jenjang Utama
                 </div>
               </div>
@@ -304,9 +304,9 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
               </div>
             </div>
 
-            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-5">
-              <div className="text-left sm:text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-[#0084d6] block">
+            <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5">
+              <div className="bg-[#F8FBFE] sm:bg-transparent border border-sky-100 sm:border-0 rounded-2xl p-3.5 sm:p-0 text-left sm:text-center">
+                <span className="text-lg sm:text-2xl font-extrabold text-[#0084d6] block tabular-nums">
                   1.5 – 3 Thn
                 </span>
                 <span className="text-xs font-bold text-[#0F2937] block mt-1">
@@ -315,8 +315,8 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                 <span className="text-[11px] text-slate-500">Rasio 1 : 3</span>
               </div>
 
-              <div className="text-left sm:text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-[#006699] block">
+              <div className="bg-[#F8FBFE] sm:bg-transparent border border-sky-100 sm:border-0 rounded-2xl p-3.5 sm:p-0 text-left sm:text-center">
+                <span className="text-lg sm:text-2xl font-extrabold text-[#006699] block tabular-nums">
                   3 – 4 Thn
                 </span>
                 <span className="text-xs font-bold text-[#0F2937] block mt-1">
@@ -325,8 +325,8 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                 <span className="text-[11px] text-slate-500">Rasio 1 : 6</span>
               </div>
 
-              <div className="text-left sm:text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-teal-600 block">
+              <div className="bg-[#F8FBFE] sm:bg-transparent border border-sky-100 sm:border-0 rounded-2xl p-3.5 sm:p-0 text-left sm:text-center">
+                <span className="text-lg sm:text-2xl font-extrabold text-teal-600 block tabular-nums">
                   4 – 5 Thn
                 </span>
                 <span className="text-xs font-bold text-[#0F2937] block mt-1">
@@ -335,8 +335,8 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                 <span className="text-[11px] text-slate-500">Rasio 1 : 10</span>
               </div>
 
-              <div className="text-left sm:text-center">
-                <span className="text-xl sm:text-2xl font-extrabold text-emerald-600 block">
+              <div className="bg-[#F8FBFE] sm:bg-transparent border border-sky-100 sm:border-0 rounded-2xl p-3.5 sm:p-0 text-left sm:text-center">
+                <span className="text-lg sm:text-2xl font-extrabold text-emerald-600 block tabular-nums">
                   5 – 6 Thn
                 </span>
                 <span className="text-xs font-bold text-[#0F2937] block mt-1">
@@ -366,31 +366,43 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              {/* Mobile: Smooth Horizontal Swipe App Strip -> Desktop: Clean 2x3 Grid */}
+              <div className="flex overflow-x-auto gap-2.5 pb-2 -mx-4 px-4 snap-x no-scrollbar lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-2 lg:gap-3.5 lg:overflow-visible">
                 {SCHOOL_PROGRAMS.map((prog) => {
                   const Icon = prog.icon;
                   const isSelected = currentUnit.id === prog.id;
                   return (
                     <button
                       key={prog.id}
+                      type="button"
                       onClick={() => setSelectedId(prog.id)}
-                      className={`p-3 rounded-2xl border text-left transition flex items-center gap-3 cursor-pointer ${
+                      className={`shrink-0 snap-start min-h-[54px] px-3.5 py-2.5 lg:p-3 rounded-2xl border text-left transition flex items-center gap-2.5 lg:gap-3 cursor-pointer ${
                         isSelected
-                          ? 'bg-[#F4F9FD] border-[#0084d6] shadow-xs'
-                          : 'bg-white border-slate-100 hover:border-slate-200'
+                          ? 'bg-[#006699] lg:bg-[#F4F9FD] border-[#006699] lg:border-[#0084d6] text-white lg:text-[#0F2937] shadow-sm'
+                          : 'bg-white border-slate-200 lg:border-slate-100 hover:border-slate-300 text-[#0F2937]'
                       }`}
                     >
                       <div
-                        className={`w-10 h-10 rounded-full ${prog.badgeBg} text-white flex items-center justify-center shrink-0 shadow-xs`}
+                        className={`w-9 h-9 lg:w-10 lg:h-10 rounded-full ${
+                          isSelected ? 'bg-white/20 lg:bg-[#006699]' : prog.badgeBg
+                        } text-white flex items-center justify-center shrink-0 shadow-xs`}
                       >
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-4 h-4 lg:w-5 lg:h-5" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-xs sm:text-sm font-extrabold text-[#0F2937] truncate">
+                        <h3
+                          className={`text-xs sm:text-sm font-extrabold whitespace-nowrap lg:truncate ${
+                            isSelected ? 'text-white lg:text-[#0F2937]' : 'text-[#0F2937]'
+                          }`}
+                        >
                           {prog.name}
                         </h3>
-                        <p className="text-[11px] text-slate-500 truncate">
-                          ({prog.ageRange})
+                        <p
+                          className={`text-[10.5px] whitespace-nowrap lg:truncate ${
+                            isSelected ? 'text-sky-100 lg:text-slate-500' : 'text-slate-500'
+                          }`}
+                        >
+                          {prog.ageRange}
                         </p>
                       </div>
                     </button>
@@ -398,8 +410,9 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                 })}
               </div>
 
-              <div>
+              <div className="hidden lg:block">
                 <button
+                  type="button"
                   onClick={onOpenPpdb}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F2937] hover:bg-[#006699] text-white text-xs font-extrabold shadow-md transition cursor-pointer"
                 >
@@ -458,12 +471,20 @@ export const SchoolsPage: React.FC<SchoolsPageProps> = ({
                   </div>
                   <div className="bg-white rounded-2xl p-3 border border-sky-100 text-xs">
                     <span className="font-extrabold text-[#006699] block">
-                      Target Tahfidz & Ibadah:
+                      Target Tahfidz &amp; Ibadah:
                     </span>
                     <span className="text-slate-600 text-[11px] leading-snug block mt-0.5">
                       {currentUnit.tahfidzTarget}
                     </span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={onOpenPpdb}
+                    className="lg:hidden w-full min-h-[46px] inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#006699] hover:bg-[#0B3B5B] text-white text-xs font-extrabold shadow-sm transition cursor-pointer"
+                  >
+                    <span>Daftar Jenjang {currentUnit.name}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
