@@ -1,301 +1,147 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Play, Volume2, Settings, Maximize, X } from 'lucide-react';
+import {
+  Play,
+  X,
+  Sparkles,
+  Users,
+  Building2,
+  BookOpenCheck,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { getCacheBustedUrl } from '../utils/cacheBuster';
 import { LukmanHakimLogo } from './LukmanHakimLogo';
-
-const CribMobileIcon = () => (
-  <svg viewBox="0 0 48 48" className="w-9 h-9 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M24 6v5" />
-    <path d="M13 11h22" strokeWidth="2.2" />
-    <path d="M16 11v8" />
-    <path d="M24 11v12" />
-    <path d="M32 11v8" />
-    <path d="M14 22c0-2 2-3.5 4-2 1.5-1.5 4 0 4 2 0 2.5-4 4.5-4 4.5s-4-2-4-4.5z" fill="#fbbf24" />
-    <circle cx="24" cy="27" r="3.5" fill="#38bdf8" />
-    <path d="M30 20a4 4 0 1 0 4.8 4.8 3.2 3.2 0 0 1-4.8-4.8z" fill="#60a5fa" />
-  </svg>
-);
-
-const TeacherEducatorIcon = () => (
-  <svg viewBox="0 0 48 48" className="w-9 h-9 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 16c0-4 3-6.5 7-6.5s7 2.5 7 6.5" fill="#2dd4bf" />
-    <path d="M15 16h18" strokeWidth="2" />
-    <path d="M18 16v5a6 6 0 0 0 12 0v-5" fill="#fde68a" />
-    <rect x="19" y="18" width="4.2" height="3.2" rx="1" fill="#ffffff" />
-    <rect x="24.8" y="18" width="4.2" height="3.2" rx="1" fill="#ffffff" />
-    <path d="M23.2 19.5h1.6" />
-    <path d="M15 35c0-5.5 3.8-7.5 9-7.5s9 2 9 7.5" fill="#38bdf8" />
-    <path d="M21 27.5l3 4.5 3-4.5" fill="#fef08a" />
-  </svg>
-);
-
-const FacilitiesIcon = () => (
-  <svg viewBox="0 0 48 48" className="w-9 h-9 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="10" y="10" width="28" height="20" rx="2" fill="#fbbf24" />
-    <rect x="13" y="13" width="22" height="14" fill="#38bdf8" />
-    <rect x="15" y="18" width="4" height="9" fill="#60a5fa" />
-    <rect x="21" y="15" width="4" height="12" fill="#93c5fd" />
-    <rect x="27" y="20" width="5" height="7" fill="#fde047" />
-    <path d="M24 30v5" />
-    <rect x="21" y="35" width="6" height="3" rx="0.8" fill="#cbd5e1" />
-  </svg>
-);
-
-const CurriculumIcon = () => (
-  <svg viewBox="0 0 48 48" className="w-9 h-9 sm:w-16 sm:h-16" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="12" y="9" width="18" height="26" rx="1.5" fill="#ffffff" />
-    <rect x="20" y="13" width="16" height="24" rx="1.5" fill="#f8fafc" />
-    <rect x="15" y="12" width="12" height="5" fill="#fef08a" />
-    <rect x="15" y="20" width="5" height="5" fill="#38bdf8" />
-    <path d="M22 21h6" />
-    <path d="M22 24h6" />
-    <path d="M15 28h12" />
-    <path d="M15 31h9" />
-    <rect x="28" y="17" width="5" height="4" fill="#f43f5e" />
-    <rect x="28" y="24" width="5" height="4" fill="#60a5fa" />
-  </svg>
-);
-
-const BaseIllustration = ({ num }: { num: number }) => {
-  switch (num) {
-    case 8:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f4a261] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <path d="M17 8h6v9h9v6h-9v9h-6v-9H8v-6h9V8z" fill="#16a34a" />
-          </svg>
-          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            8
-          </span>
-        </div>
-      );
-    case 7:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f28482] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <path
-              d="M20 8c-7 0-12 5-12 11.5 0 6.2 5 11.5 11 11.5 2 0 3.2-1 3.2-2.4 0-.7-.3-1.3-.7-1.8-.4-.5-.6-1-.6-1.6 0-1.3 1-2.2 2.4-2.2h2.7c4 0 7-3 7-7.2C33 11.3 27.2 8 20 8z"
-              fill="#ffffff"
-            />
-            <circle cx="14" cy="16" r="1.8" fill="#ef4444" />
-            <circle cx="18" cy="13" r="1.8" fill="#f59e0b" />
-            <circle cx="23" cy="14" r="1.8" fill="#10b981" />
-            <circle cx="14" cy="21" r="1.8" fill="#8b5cf6" />
-            <path d="M23 27l6-12" stroke="#334155" strokeWidth="2.2" strokeLinecap="round" />
-          </svg>
-          <span className="absolute bottom-0 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            7
-          </span>
-        </div>
-      );
-    case 6:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#e56b92] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <path d="M12 25l8-8 5 5-8 8-5-5z" fill="#fbcfe8" />
-            <path d="M20 15l6 6-4 4-6-6 4-4z" fill="#fde2e4" />
-            <circle cx="24" cy="14" r="2.5" fill="#ffffff" />
-          </svg>
-          <span className="absolute top-0 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            6
-          </span>
-        </div>
-      );
-    case 5:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#4cc9bd] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <circle cx="20" cy="22" r="7" fill="#fbbf24" />
-            <circle cx="20" cy="14" r="4" fill="#fde68a" />
-            <path d="M14 10l3 3M26 10l-3 3" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          <span className="absolute top-0 right-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            5
-          </span>
-        </div>
-      );
-    case 4:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#f4c04e] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <polygon points="20,8 23,15 30,16 25,21 26,28 20,24.5 14,28 15,21 10,16 17,15" fill="#ffffff" />
-          </svg>
-          <span className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            4
-          </span>
-        </div>
-      );
-    case 3:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#4ea8de] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <path d="M20 28s-8-4.8-8-10.5A4.5 4.5 0 0 1 20 14a4.5 4.5 0 0 1 8 3.5C28 23.2 20 28 20 28z" fill="#ffffff" />
-          </svg>
-          <span className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            3
-          </span>
-        </div>
-      );
-    case 2:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#6ab04c] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <path d="M13 11h14v6a7 7 0 0 1-14 0v-6z" fill="#fbbf24" />
-            <rect x="18" y="23" width="4" height="5" fill="#ffffff" />
-            <rect x="14" y="28" width="12" height="3" rx="1" fill="#ffffff" />
-          </svg>
-          <span className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            2
-          </span>
-        </div>
-      );
-    default:
-      return (
-        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-[#7cb518] flex items-center justify-center shadow-sm sm:shadow-md shrink-0">
-          <svg viewBox="0 0 40 40" className="w-7 h-7 sm:w-11 sm:h-11">
-            <circle cx="20" cy="15" r="5.5" fill="#fef08a" />
-            <path d="M12 29c0-4.5 3.5-7 8-7s8 2.5 8 7" fill="#ffffff" />
-          </svg>
-          <span className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#ef4444] text-white text-[10px] sm:text-xs font-bold flex items-center justify-center shadow-sm">
-            1
-          </span>
-        </div>
-      );
-  }
-};
+import heroGoldenCampus from '../assets/images/hero_campus_golden_1795672459358.jpg';
 
 export const PhilosophyCards: React.FC = () => {
   const { schoolIdentity, philosophyCards, pillarsData } = useApp();
   const [showFullIntro, setShowFullIntro] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [videoImgFallback, setVideoImgFallback] = useState(false);
 
-  const cardIcons = [
-    <CribMobileIcon />,
-    <TeacherEducatorIcon />,
-    <FacilitiesIcon />,
-    <CurriculumIcon />,
-  ];
+  const cardIcons = [Sparkles, Users, Building2, BookOpenCheck];
 
-  // Ordered 8 down to 1 to match the reference layout
   const eightBasesOrdered = [
     {
-      num: 8,
-      title: 'Disiplin Positif',
-      desc: 'Ditanamkan dari kebiasaan sehari-hari di sekolah',
-    },
-    {
-      num: 7,
-      title: 'Praktek OASE',
-      desc: 'Agama, seni dan olahraga sebagai praktek',
-    },
-    {
-      num: 6,
-      title: 'Toleransi',
-      desc: 'Penghargaan dan toleransi pada perbedaan',
-    },
-    {
-      num: 5,
-      title: 'Proses',
-      desc: 'Pembelajaran adalah proses yg terbuka dan partisiparis',
-    },
-    {
-      num: 4,
-      title: 'Lugas',
-      desc: 'Orientasi pada kelugasan berfikir dan bertindak',
-    },
-    {
-      num: 3,
-      title: 'Living Values',
-      desc: 'Pendidikan berbasis living values',
-    },
-    {
-      num: 2,
-      title: 'Prestasi',
-      desc: 'Penghargaan pada setiap usaha dan capaian anak',
-    },
-    {
-      num: 1,
+      num: '01',
       title: 'Anak = Unik',
-      desc: 'Setiap individu adalah unik, sehingga ia mempunyai cara dan kemampuan masing-masing untuk berkembang menjadi dirinya sendiri',
+      desc: 'Setiap individu adalah unik, sehingga ia mempunyai cara dan kemampuan masing-masing untuk berkembang menjadi dirinya sendiri.',
+    },
+    {
+      num: '02',
+      title: 'Prestasi',
+      desc: 'Penghargaan tulus pada setiap usaha, keberanian mencoba, dan capaian perkembangan setiap anak.',
+    },
+    {
+      num: '03',
+      title: 'Living Values',
+      desc: 'Pendidikan berbasis nilai kehidupan nyata: iman, kasih sayang, syukur, dan kedamaian hati.',
+    },
+    {
+      num: '04',
+      title: 'Lugas',
+      desc: 'Orientasi pada kelugasan berpikir, keberanian berekspresi santun, dan kemandirian bertindak.',
+    },
+    {
+      num: '05',
+      title: 'Proses',
+      desc: 'Pembelajaran adalah proses eksplorasi yang terbuka, partisipatif, dan menggembirakan.',
+    },
+    {
+      num: '06',
+      title: 'Toleransi',
+      desc: 'Penghargaan dan toleransi pada perbedaan, saling menolong, serta empati sosial sejak dini.',
+    },
+    {
+      num: '07',
+      title: 'Praktek OASE',
+      desc: 'Olah Agama, Seni, dan Olahraga dipraktikkan langsung secara nyata dan ceria setiap hari.',
+    },
+    {
+      num: '08',
+      title: 'Disiplin Positif',
+      desc: 'Ditanamkan melalui pembiasaan dan keteladanan hangat sehari-hari di sekolah tanpa paksaan.',
     },
   ];
 
   return (
-    <section id="philosophy" className="relative w-full bg-white pt-8 sm:pt-24 overflow-hidden">
+    <section id="philosophy" className="relative w-full bg-white pt-10 sm:pt-24 overflow-hidden">
       {/* ==================================================================== */}
-      {/* BAGIAN 1: "APAKAH KALIAN TAU ..." & VIDEO GRAND CENTERED (SESUAI BMD) */}
+      {/* BAGIAN 1: EDITORIAL INTRO & CINEMATIC VIDEO PREVIEW                  */}
       {/* ==================================================================== */}
-      <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-6 sm:pb-16">
-        {/* Grand Centered Heading & Intro */}
-        <div className="text-center max-w-4xl mx-auto mb-5 sm:mb-14 space-y-2.5 sm:space-y-4">
-          <h2 className="text-xl sm:text-4xl lg:text-5xl font-black text-[#2c3e50] tracking-tight leading-tight">
-            Apakah kalian Tau {schoolIdentity.nama} ?
-          </h2>
-          <div className="w-16 sm:w-28 h-1 bg-[#0d6efd] mx-auto rounded-full" />
-          <p className="text-xs sm:text-base lg:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto font-normal">
-            {schoolIdentity.nama} adalah sekolah Islam Terpadu, Bilingual, dan ramah anak di Purwokerto. Kurikulum di{' '}
-            {schoolIdentity.nama} terdiri dari Cambridge (Science, Math, English), Kurikulum Nasional Merdeka PAUD, Islamic Montessori, dan Tahfidz Tilawati yang dikembangkan oleh tim dan pendidik di {schoolIdentity.nama}. Mendidik generasi berakhlak mulia untuk kebahagiaan Dunia Akhirat
-            {showFullIntro
-              ? ' melalui pembiasaan ibadah harian, eksplorasi alam terbuka, serta pendampingan penuh kasih sayang sesuai fitrah tumbuh kembang setiap ananda.'
-              : '...'}
-          </p>
-          <div>
-            <button
-              type="button"
-              onClick={() => setShowFullIntro(!showFullIntro)}
-              className="px-4 py-2 sm:px-6 sm:py-2.5 bg-[#007bb6] hover:bg-[#006699] text-white text-[11.5px] sm:text-sm font-bold rounded-lg shadow-sm transition transform hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              {showFullIntro ? 'Tampilkan Ringkas' : 'Load More'}
-            </button>
-          </div>
-        </div>
+      <div className="w-full max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pb-10 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+          {/* Left Editorial Prose */}
+          <div className="lg:col-span-6 space-y-3 sm:space-y-5 text-left">
+            <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
+              Filosofi Pendidikan <span className="text-slate-300 mx-1">·</span> Kurikulum Terpadu
+            </p>
 
-        {/* Compact Centered Video Preview (Ukuran kecil, proporsional dan rapi) */}
-        <div className="max-w-md sm:max-w-lg mx-auto">
-          <div
-            onClick={() => setIsPlayingVideo(true)}
-            className="relative aspect-16/9 rounded-xl sm:rounded-2xl overflow-hidden border border-sky-400/70 shadow-lg group cursor-pointer bg-sky-950 transition-all hover:shadow-xl hover:border-sky-400"
-          >
-            <img
-              src="/assets/gallery/foto1-menara-teratai.jpg"
-              alt={schoolIdentity.nama}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            
-            {/* Bright Sky Overlay & Tagline Graphic */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-sky-950/60 via-sky-900/20 to-transparent flex items-center justify-between p-4 sm:p-5">
-              {/* Consistent Official School Emblem Badge */}
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/95 backdrop-blur-sm rounded-full p-1 shadow-md flex items-center justify-center shrink-0">
-                <LukmanHakimLogo variant="emblem" size={44} className="border-0 shadow-none" />
+            <h2 className="font-display text-2xl sm:text-4xl lg:text-[42px] font-extrabold text-[#092338] tracking-tight leading-[1.1] [text-wrap:balance]">
+              Mengenal Lebih Dekat {schoolIdentity.nama}
+            </h2>
+
+            <p className="text-xs sm:text-base text-slate-600 leading-relaxed">
+              {schoolIdentity.nama} adalah sekolah Islam Terpadu, Bilingual, dan ramah anak di Purwokerto. Kurikulum kami memadukan Cambridge (Science, Math, English), Kurikulum Nasional Merdeka PAUD, Islamic Montessori, dan Tahfidz Tilawati untuk mendidik generasi berakhlak mulia bagi kebahagiaan dunia dan akhirat
+              {showFullIntro
+                ? ' melalui pembiasaan ibadah harian, eksplorasi alam terbuka, serta pendampingan penuh kasih sayang sesuai fitrah tumbuh kembang setiap ananda.'
+                : '.'}
+            </p>
+
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowFullIntro(!showFullIntro)}
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-[#006699] hover:text-[#092338] transition cursor-pointer"
+              >
+                <span>{showFullIntro ? 'Tampilkan Ringkas' : 'Baca Selengkapnya'}</span>
+                {showFullIntro ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Right Framed Video Story Card */}
+          <div className="lg:col-span-6">
+            <div
+              onClick={() => setIsPlayingVideo(true)}
+              className="relative aspect-[16/10] sm:aspect-video rounded-2xl sm:rounded-[28px] overflow-hidden border border-slate-200/80 shadow-[0_22px_50px_-20px_rgba(9,35,56,0.28)] group cursor-pointer bg-[#092338]"
+            >
+              <img
+                src={videoImgFallback ? heroGoldenCampus : '/assets/gallery/foto1-menara-teratai.jpg'}
+                onError={() => setVideoImgFallback(true)}
+                alt={schoolIdentity.nama}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061826]/85 via-[#061826]/25 to-transparent" />
+
+              {/* Top Left Emblem */}
+              <div className="absolute top-3.5 left-3.5 sm:top-5 sm:left-5 flex items-center gap-2.5 bg-white/95 backdrop-blur-md rounded-full pl-1.5 pr-3.5 py-1 shadow-md">
+                <LukmanHakimLogo variant="emblem" size={28} className="w-7 h-7 border-0 shadow-none" />
+                <span className="text-[10px] sm:text-xs font-extrabold text-[#092338] tracking-tight">
+                  Profil Kampus · 03:34
+                </span>
               </div>
 
-              {/* Stylized Quote */}
-              <div className="text-right max-w-[200px] sm:max-w-xs select-none">
-                <div className="font-extrabold text-xs sm:text-sm leading-snug tracking-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] uppercase">
-                  “BERSEKOLAH DENGAN SENANG, DAN SENANG DI SEKOLAH”
+              {/* Center Play Button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-400 group-hover:bg-amber-300 text-[#092338] flex items-center justify-center shadow-[0_12px_30px_rgba(245,158,11,0.5)] group-hover:scale-110 transition-transform duration-300">
+                  <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-[#092338] ml-0.5" />
                 </div>
               </div>
-            </div>
 
-            {/* Center Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#00a8ff] hover:bg-[#0097e6] text-white flex items-center justify-center shadow-[0_0_20px_rgba(0,168,255,0.7)] group-hover:scale-110 transition duration-300">
-                <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-white ml-0.5" />
+              {/* Bottom Quote Overlay */}
+              <div className="absolute bottom-3.5 left-4 right-4 sm:bottom-5 sm:left-6 sm:right-6 flex items-end justify-between gap-3">
+                <p className="font-serif italic text-xs sm:text-base text-white/95 leading-snug max-w-md">
+                  &ldquo;Bersekolah dengan senang, dan senang di sekolah.&rdquo;
+                </p>
               </div>
-            </div>
-
-            {/* Bottom Compact Video Control Bar */}
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent px-3 py-2 flex items-center gap-2.5 text-white text-[11px] sm:text-xs">
-              <Play className="w-3.5 h-3.5 fill-white shrink-0 cursor-pointer" />
-              <div className="flex-1 h-1.5 bg-white/30 rounded-full relative flex items-center">
-                <div className="w-3.5 h-3.5 rounded-full bg-white shadow-sm" />
-              </div>
-              <span className="font-mono text-[10px] sm:text-xs opacity-90">-03:34</span>
-              <Volume2 className="w-3.5 h-3.5 opacity-90 cursor-pointer" />
-              <div className="w-10 h-1 bg-white/40 rounded-full hidden sm:block" />
-              <Settings className="w-3.5 h-3.5 opacity-90 cursor-pointer" />
-              <Maximize className="w-3.5 h-3.5 opacity-90 cursor-pointer" />
             </div>
           </div>
         </div>
@@ -305,26 +151,33 @@ export const PhilosophyCards: React.FC = () => {
       {isPlayingVideo && (
         <div
           onClick={() => setIsPlayingVideo(false)}
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#061826]/85 backdrop-blur-sm flex items-center justify-center p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200"
+            className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200"
           >
-            <div className="bg-[#0F2937] text-white px-5 py-3.5 flex items-center justify-between">
-              <h4 className="font-bold text-sm">Profil Singkat {schoolIdentity.nama}</h4>
-              <button onClick={() => setIsPlayingVideo(false)} className="text-slate-300 hover:text-white cursor-pointer">
-                <X className="w-5 h-5" />
+            <div className="bg-[#092338] text-white px-5 py-4 flex items-center justify-between">
+              <h4 className="font-display font-bold text-sm sm:text-base">
+                Profil Singkat {schoolIdentity.nama}
+              </h4>
+              <button
+                type="button"
+                onClick={() => setIsPlayingVideo(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer"
+                aria-label="Tutup"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="p-6 space-y-4 text-center">
+            <div className="p-5 sm:p-7 space-y-4 text-center">
               <img
-                src="/assets/gallery/foto1-menara-teratai.jpg"
+                src={videoImgFallback ? heroGoldenCampus : '/assets/gallery/foto1-menara-teratai.jpg'}
                 alt={schoolIdentity.nama}
-                className="w-full h-64 object-cover rounded-xl"
+                className="w-full h-56 sm:h-72 object-cover rounded-2xl"
               />
-              <h5 className="font-extrabold text-lg text-slate-900">
-                “Bersekolah dengan Senang, dan Senang di Sekolah”
+              <h5 className="font-serif italic font-bold text-lg sm:text-xl text-[#092338]">
+                &ldquo;Bersekolah dengan Senang, dan Senang di Sekolah&rdquo;
               </h5>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Selamat datang di kampus {schoolIdentity.nama} ({schoolIdentity.alamat}, {schoolIdentity.kecamatan}, {schoolIdentity.kabupaten}). Kami menghadirkan pendidikan ramah anak yang memadukan 5 Pilar Karakter dan 8 Basis Pembelajaran.
@@ -335,91 +188,120 @@ export const PhilosophyCards: React.FC = () => {
       )}
 
       {/* ==================================================================== */}
-      {/* BAGIAN 2: 4 KARTU BIRU MEGAH + 5 PILAR + 8 BASIS (SESUAI BMD SCREENSHOT) */}
+      {/* BAGIAN 2: LUMINOUS SKY-MIST ARCHITECTURAL STAGE                      */}
+      {/* 4 KEUNGGULAN + 5 PILAR + 8 BASIS PEMBELAJARAN                        */}
       {/* ==================================================================== */}
-      <div className="relative pt-6 sm:pt-24">
-        {/* Rounded-Top Soft Teal Background Plane starting halfway behind the 4 blue cards */}
-        <div
-          className="absolute inset-x-0 top-[110px] sm:top-[260px] bottom-0 bg-[#86b7c6] rounded-t-[28px] sm:rounded-t-[64px] pointer-events-none"
-          style={{
-            background: 'linear-gradient(180deg, #82b4c3 0%, #9dc7d4 55%, #b3d6e0 100%)',
-          }}
-        />
-
-        <div className="w-full max-w-[1760px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 relative z-10 pb-12 sm:pb-32">
-          {/* Decorative Blue Circle Ring on Left (Matches BMD Screenshot) */}
-          <div className="hidden lg:block absolute -left-6 top-[130px] w-48 h-48 rounded-full border-[6px] border-[#3b82f6]/70 pointer-events-none z-0" />
-          <div className="hidden lg:block absolute left-14 top-[320px] w-12 h-12 rounded-full border-[5px] border-[#93c5fd]/80 pointer-events-none z-0" />
-
-          {/* 4 GRAND BLUE CARDS: Compact swipe carousel on mobile, 4-col grid on desktop */}
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pt-9 pb-2 -mx-4 px-4 no-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 xl:gap-8 sm:mx-0 sm:px-0 sm:pt-0 sm:pb-0 sm:overflow-visible items-stretch relative z-10">
-            {philosophyCards.map((card, idx) => (
-              <div
-                key={card.id || idx}
-                className={`w-[235px] shrink-0 snap-start sm:w-auto relative bg-gradient-to-b from-[#0084d6] via-[#006fb8] to-[#005a9c] rounded-2xl sm:rounded-[32px] pt-11 sm:pt-28 pb-5 sm:pb-14 px-4 sm:px-8 xl:px-9 text-center shadow-[0_12px_28px_rgba(0,102,153,0.25)] sm:shadow-[0_20px_45px_rgba(0,102,153,0.30)] flex flex-col items-center justify-start mt-0 sm:mt-12 lg:mt-0 transition-transform duration-300 hover:-translate-y-2 ${
-                  idx === 1 ? 'lg:-mt-3 lg:pb-16' : ''
-                }`}
-              >
-                {/* Pastel Pink Icon Circle Overlapping Top (Compact w-16 on mobile, grand w-32 on desktop) */}
-                <div className="absolute -top-8 sm:-top-16 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-32 sm:h-32 rounded-full bg-[#fae5e8] border-[3px] sm:border-4 border-white flex items-center justify-center shadow-md sm:shadow-lg">
-                  {cardIcons[idx % cardIcons.length]}
-                </div>
-
-                {/* Pure White Bold Title */}
-                <h3 className="text-sm sm:text-2xl xl:text-[25px] font-black text-white leading-tight mb-1.5 sm:mb-4 text-center tracking-tight drop-shadow-xs">
-                  {card.title}
-                </h3>
-
-                {/* Pure White Crisp Readable Body Text */}
-                <p className="text-[11.5px] sm:text-[15px] xl:text-base text-white/95 leading-snug sm:leading-relaxed font-normal text-center">
-                  {card.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* ==================================================================== */}
-          {/* 5 PILAR SECTION (INSIDE TEAL CONTAINER) */}
-          {/* ==================================================================== */}
-          <div className="mt-10 sm:mt-32">
-            <div className="text-center mb-5 sm:mb-16">
-              <h2 className="text-xl sm:text-4xl lg:text-5xl font-black text-[#105187] tracking-tight inline-flex items-center justify-center flex-wrap gap-1.5 sm:gap-3">
-                <span>5 Pilar</span>
-                <span className="bg-white text-[#105187] px-2.5 py-0.5 sm:px-5 sm:py-1.5 rounded-lg sm:rounded-none text-sm sm:text-4xl lg:text-5xl font-black uppercase tracking-wider shadow-sm">
-                  {schoolIdentity.nama}
-                </span>
+      <div className="relative bg-[#F2F7FB] rounded-t-[28px] sm:rounded-t-[56px] border-t border-sky-100/90 py-10 sm:py-24">
+        <div className="w-full max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 space-y-12 sm:space-y-24">
+          {/* 4 KEUNGGULAN CARDS: Crisp Porcelain & Deep Ocean Architecture */}
+          <div>
+            <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-12 space-y-1.5 sm:space-y-2.5">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
+                Mengapa Orang Tua Memilih Kami
+              </p>
+              <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#092338] tracking-tight">
+                4 Keunggulan Inti {schoolIdentity.nama}
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-x-16 xl:gap-x-24 md:gap-y-14 max-w-6xl xl:max-w-7xl mx-auto">
-              {pillarsData.map((pillar, idx) => (
-                <div
-                  key={pillar.id || idx}
-                  className="flex items-center sm:items-start gap-3 sm:gap-6 bg-white/60 sm:bg-transparent p-3 sm:p-0 rounded-2xl sm:rounded-none"
-                >
-                  {/* Circular Photo with Green/Blue Ring & Centered Overlay Label */}
-                  <div className="relative w-14 h-14 sm:w-26 sm:h-26 rounded-full p-[2.5px] sm:p-[3.5px] bg-gradient-to-tr from-[#2ecc71] via-[#00a8ff] to-[#38bdf8] shadow-md sm:shadow-lg shrink-0">
-                    <div className="relative w-full h-full rounded-full overflow-hidden">
-                      <img
-                        src={getCacheBustedUrl(pillar.image)}
-                        alt={pillar.title}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/25 flex items-center justify-center p-1 text-center">
-                        <span className="text-[7.5px] sm:text-[10px] font-black text-white uppercase tracking-wider drop-shadow leading-tight">
-                          {pillar.badgeText}
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 -mx-4 px-4 no-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 xl:gap-6 sm:mx-0 sm:px-0 sm:pb-0 sm:overflow-visible">
+              {philosophyCards.map((card, idx) => {
+                const Icon = cardIcons[idx % cardIcons.length];
+                const isFeatured = idx === 1;
+                return (
+                  <div
+                    key={card.id || idx}
+                    className={`w-[240px] shrink-0 snap-start sm:w-auto rounded-2xl sm:rounded-[26px] p-5 sm:p-7 flex flex-col justify-between transition-all duration-300 school-card-hover ${
+                      isFeatured
+                        ? 'bg-[#092338] text-white border border-white/10 shadow-[0_20px_44px_-18px_rgba(9,35,56,0.35)]'
+                        : 'bg-white text-[#092338] border border-slate-200/85 shadow-[0_10px_28px_-18px_rgba(9,35,56,0.1)]'
+                    }`}
+                  >
+                    <div className="space-y-3 sm:space-y-5">
+                      <div className="flex items-center justify-between">
+                        <div
+                          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center ${
+                            isFeatured
+                              ? 'bg-amber-400/15 text-amber-300 border border-amber-300/25'
+                              : 'bg-[#F2F7FB] text-[#006699] border border-sky-100'
+                          }`}
+                        >
+                          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </div>
+                        <span
+                          className={`font-display text-xs sm:text-sm font-extrabold tabular-nums ${
+                            isFeatured ? 'text-amber-300/80' : 'text-slate-300'
+                          }`}
+                        >
+                          0{idx + 1}
                         </span>
+                      </div>
+
+                      <div>
+                        <h3
+                          className={`font-display text-base sm:text-xl font-extrabold leading-snug tracking-tight ${
+                            isFeatured ? 'text-white' : 'text-[#092338]'
+                          }`}
+                        >
+                          {card.title}
+                        </h3>
+                        <p
+                          className={`text-[11.5px] sm:text-sm leading-relaxed mt-2 ${
+                            isFeatured ? 'text-sky-100/85' : 'text-slate-600'
+                          }`}
+                        >
+                          {card.desc}
+                        </p>
                       </div>
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          </div>
 
-                  {/* Title & Description */}
-                  <div className="flex-1 sm:pt-1 min-w-0">
-                    <h3 className="text-xs sm:text-xl font-black text-[#1e293b] uppercase tracking-wide leading-tight">
+          {/* 5 PILAR PENDIDIKAN: Clean Magazine Photo Cards */}
+          <div className="bg-white rounded-2xl sm:rounded-[36px] border border-slate-200/80 p-5 sm:p-10 lg:p-14 shadow-[0_14px_40px_-24px_rgba(9,35,56,0.1)]">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-6 mb-6 sm:mb-12">
+              <div className="space-y-1.5 sm:space-y-2">
+                <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
+                  Fondasi Karakter Islami
+                </p>
+                <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#092338] tracking-tight">
+                  5 Pilar {schoolIdentity.nama}
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md">
+                Lima nilai utama yang dihidupkan dalam setiap interaksi belajar, bermain, dan beribadah di sekolah.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-5">
+              {pillarsData.map((pillar, idx) => (
+                <div
+                  key={pillar.id || idx}
+                  className="group flex flex-row md:flex-col items-center md:items-stretch gap-3.5 md:gap-4 p-3 md:p-0 rounded-2xl md:rounded-none bg-[#FAFBFD] md:bg-transparent border border-slate-100 md:border-0"
+                >
+                  <div className="relative w-20 h-20 md:w-full md:aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 shrink-0">
+                    <img
+                      src={getCacheBustedUrl(pillar.image)}
+                      alt={pillar.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="hidden md:inline-flex absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-[#092338]/80 backdrop-blur-xs text-amber-300 font-display text-[11px] font-bold tabular-nums">
+                      0{idx + 1}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#006699] block">
+                      {pillar.badgeText}
+                    </span>
+                    <h3 className="font-display text-sm sm:text-base font-extrabold text-[#092338] leading-snug mt-0.5">
                       {pillar.title}
                     </h3>
-                    <p className="text-[11.5px] sm:text-base text-[#334155] leading-snug sm:leading-relaxed mt-1 sm:mt-1.5 font-normal">
+                    <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed mt-1">
                       {pillar.desc}
                     </p>
                   </div>
@@ -428,31 +310,34 @@ export const PhilosophyCards: React.FC = () => {
             </div>
           </div>
 
-          {/* ==================================================================== */}
-          {/* 8 BASIS PEMBELAJARAN SECTION (2-col compact grid on mobile, 2-col editorial on desktop) */}
-          {/* ==================================================================== */}
-          <div className="mt-10 sm:mt-32">
-            <div className="text-center mb-5 sm:mb-16">
-              <h2 className="text-xl sm:text-4xl lg:text-5xl font-black text-[#105187] tracking-tight inline-flex items-center justify-center flex-wrap gap-1.5 sm:gap-3">
-                <span>8 Basis Pembelajaran</span>
-                <span className="bg-white text-[#105187] px-2.5 py-0.5 sm:px-5 sm:py-1.5 rounded-lg sm:rounded-none text-sm sm:text-4xl lg:text-5xl font-black uppercase tracking-wider shadow-sm">
-                  {schoolIdentity.nama}
-                </span>
+          {/* 8 BASIS PEMBELAJARAN: Ultra-Clean Architectural Grid */}
+          <div>
+            <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-12 space-y-1.5 sm:space-y-2.5">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
+                Metodologi Ramah Fitrah
+              </p>
+              <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#092338] tracking-tight">
+                8 Basis Pembelajaran
               </h2>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-2.5 sm:gap-x-16 xl:gap-x-24 sm:gap-y-12 max-w-6xl xl:max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5">
               {eightBasesOrdered.map((base) => (
                 <div
                   key={base.num}
-                  className="flex flex-col md:flex-row items-center text-center md:text-left gap-2 sm:gap-6 bg-white/65 md:bg-transparent p-3 md:p-0 rounded-2xl md:rounded-none"
+                  className="bg-white rounded-2xl p-3.5 sm:p-6 border border-slate-200/80 hover:border-[#006699]/40 hover:shadow-md transition-all flex flex-col justify-between"
                 >
-                  <BaseIllustration num={base.num} />
-                  <div className="flex-1">
-                    <h3 className="text-xs sm:text-xl font-extrabold md:font-bold text-[#1e293b] leading-tight">
+                  <div>
+                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                      <span className="font-display text-xs sm:text-sm font-extrabold text-[#006699] bg-sky-50 border border-sky-100 px-2.5 py-0.5 rounded-lg tabular-nums">
+                        {base.num}
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    </div>
+                    <h3 className="font-display text-xs sm:text-lg font-extrabold text-[#092338] leading-snug">
                       {base.title}
                     </h3>
-                    <p className="text-[10.5px] sm:text-base text-[#334155] leading-snug sm:leading-relaxed mt-1 font-normal">
+                    <p className="text-[10.5px] sm:text-xs text-slate-600 leading-relaxed mt-1 sm:mt-2">
                       {base.desc}
                     </p>
                   </div>

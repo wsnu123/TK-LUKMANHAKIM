@@ -4,10 +4,46 @@
   html {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     scroll-behavior: smooth;
+    background-color: #FAFBFD;
+  }
+
+  .font-display {
+    font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "ss01" on, "cv01" on;
   }
 
   .font-serif {
     font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Editorial Motion Keyframes (Compositor-Only transform & opacity) */
+@keyframes kenBurnsSlow {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.07) translate3d(-0.8%, -0.6%, 0);
+  }
+}
+
+@keyframes heroProgressFill {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fadeUpEditorial {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -16,13 +52,13 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-8px) rotate(1.5deg);
+    transform: translateY(-6px) rotate(1deg);
   }
 }
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 102, 153, 0.35);
+    box-shadow: 0 0 0 0 rgba(0, 102, 153, 0.28);
   }
   50% {
     box-shadow: 0 0 0 10px rgba(0, 102, 153, 0);
@@ -36,28 +72,6 @@
   100% {
     transform: translateX(100%);
   }
-}
-
-.animate-float-slow {
-  animation: floatSlow 5s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 2.4s infinite;
-}
-
-.school-card-hover {
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
-}
-
-.school-card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(15, 41, 55, 0.14);
-}
-
-.school-grid-pattern {
-  background-image: radial-gradient(rgba(0, 102, 153, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
 @keyframes letterPopIn {
@@ -107,6 +121,27 @@
   }
 }
 
+.animate-ken-burns {
+  animation: kenBurnsSlow 8.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-hero-progress {
+  transform-origin: left center;
+  animation: heroProgressFill 6.5s linear forwards;
+}
+
+.animate-fade-up {
+  animation: fadeUpEditorial 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-float-slow {
+  animation: floatSlow 5.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.6s infinite;
+}
+
 .animate-click-ripple {
   border-style: solid;
   animation: clickRippleEffect 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -116,15 +151,37 @@
   animation: clickParticleEffect 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* Tactile Click Physics for All Buttons & Interactive Elements */
-button:not(:disabled):active, 
+/* Subtle Editorial Surface & Elevation System */
+.school-card-hover {
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
+}
+
+.school-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -18px rgba(9, 35, 56, 0.14);
+}
+
+.school-grid-pattern {
+  background-image: radial-gradient(rgba(0, 102, 153, 0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.editorial-hairline-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Tactile Click Physics */
+button:not(:disabled):active,
 a.btn-click:active,
 .clickable-card:active {
-  transform: scale(0.96) !important;
+  transform: scale(0.97) !important;
   transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
-/* Mobile-First Utilities: Safe Area Inset & Hidden Scrollbar for Horizontal Swipe Strips */
+/* Mobile-First Utilities */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -138,3 +195,15 @@ a.btn-click:active,
   display: none;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-ken-burns,
+  .animate-hero-progress,
+  .animate-fade-up,
+  .animate-float-slow,
+  .animate-pulse-glow {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}

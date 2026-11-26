@@ -45,7 +45,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     },
     {
       id: 'schools',
-      label: 'Sekolah',
+      label: 'Jenjang',
       icon: BookOpen,
       isActive: currentPage === 'schools',
       onClick: () => onNavigate('schools'),
@@ -62,7 +62,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav
       aria-label="Navigasi Cepat Mobile"
-      className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-6px_24px_rgba(11,59,91,0.08)] pb-safe"
+      className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/92 backdrop-blur-xl border-t border-slate-200/80 shadow-[0_-8px_28px_rgba(9,35,56,0.08)] pb-safe"
     >
       <div className="grid grid-cols-5 items-center h-16 px-1.5 max-w-lg mx-auto">
         {navItems.map((item) => {
@@ -75,10 +75,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 onClick={item.onClick}
                 className="flex flex-col items-center justify-center -mt-5 cursor-pointer group"
               >
-                <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#006699] to-[#0B3B5B] text-white shadow-lg shadow-[#006699]/30 flex items-center justify-center ring-4 ring-white group-active:scale-95 transition-transform">
-                  <Icon className="w-5 h-5 text-amber-300" />
+                <span className="w-12 h-12 rounded-2xl bg-[#092338] text-amber-300 shadow-[0_10px_22px_-6px_rgba(9,35,56,0.5)] flex items-center justify-center ring-4 ring-white group-active:scale-95 transition-transform">
+                  <Icon className="w-5 h-5" />
                 </span>
-                <span className="text-[10px] font-extrabold text-[#006699] mt-1 leading-none whitespace-nowrap">
+                <span className="text-[10px] font-extrabold text-[#092338] mt-1 leading-none whitespace-nowrap">
                   {item.label}
                 </span>
               </button>
@@ -91,13 +91,13 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               type="button"
               onClick={item.onClick}
               className={`relative min-h-[44px] flex flex-col items-center justify-center gap-1 rounded-xl transition-colors cursor-pointer ${
-                item.isActive ? 'text-[#006699]' : 'text-slate-500 hover:text-slate-800'
+                item.isActive ? 'text-[#006699]' : 'text-slate-500 hover:text-[#092338]'
               }`}
             >
               {item.isActive && (
                 <span
                   aria-hidden="true"
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-7 h-0.5 rounded-full bg-[#006699]"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2.5px] rounded-full bg-[#006699]"
                 />
               )}
               <Icon className={`w-5 h-5 ${item.isActive ? 'stroke-[2.4]' : 'stroke-[1.9]'}`} />

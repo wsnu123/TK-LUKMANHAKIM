@@ -13,7 +13,6 @@ import { SchoolActivityGallery } from '../components/SchoolActivityGallery';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
 import {
-  Sparkles,
   ArrowRight,
   GraduationCap,
   BookOpen,
@@ -51,8 +50,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <div className="space-y-0">
-      {/* 1. Panoramic Hero */}
+    <div className="space-y-0 bg-[#FAFBFD]">
+      {/* 1. Editorial Cinema Hero */}
       {appearanceConfig.showHeroBanner && (
         <HeroBanner
           onOpenPpdb={onOpenPpdb}
@@ -61,21 +60,21 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       )}
 
-      {/* 1.5 Mobile-Only App Quick Access Grid (Bespoke Smartphone Experience) */}
+      {/* 1.5 Mobile-Only App Quick Access Strip */}
       <section
         aria-label="Pintasan Cepat Mobile"
-        className="lg:hidden bg-[#F9F8F6] px-3 pt-3 pb-2.5"
+        className="lg:hidden bg-[#FAFBFD] px-3.5 pt-3.5 pb-3 border-b border-slate-200/60"
       >
         <div className="grid grid-cols-4 gap-2">
           <button
             type="button"
             onClick={onOpenPpdb}
-            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
+            className="bg-white border border-slate-200/80 rounded-2xl py-2.5 px-1.5 flex flex-col items-center justify-center gap-1.5 shadow-[0_6px_16px_-8px_rgba(9,35,56,0.12)] active:scale-95 transition cursor-pointer min-h-[68px]"
           >
-            <span className="w-8 h-8 rounded-lg bg-[#006699] text-white flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-amber-300" />
+            <span className="w-8 h-8 rounded-xl bg-[#092338] text-amber-300 flex items-center justify-center">
+              <GraduationCap className="w-4 h-4" />
             </span>
-            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#092338] leading-tight text-center">
               SPMB
             </span>
           </button>
@@ -83,12 +82,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('schools')}
-            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
+            className="bg-white border border-slate-200/80 rounded-2xl py-2.5 px-1.5 flex flex-col items-center justify-center gap-1.5 shadow-[0_6px_16px_-8px_rgba(9,35,56,0.12)] active:scale-95 transition cursor-pointer min-h-[68px]"
           >
-            <span className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+            <span className="w-8 h-8 rounded-xl bg-[#006699] text-white flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
             </span>
-            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#092338] leading-tight text-center">
               Jenjang
             </span>
           </button>
@@ -96,12 +95,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('about', 'profil-kepala-sekolah')}
-            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
+            className="bg-white border border-slate-200/80 rounded-2xl py-2.5 px-1.5 flex flex-col items-center justify-center gap-1.5 shadow-[0_6px_16px_-8px_rgba(9,35,56,0.12)] active:scale-95 transition cursor-pointer min-h-[68px]"
           >
-            <span className="w-8 h-8 rounded-lg bg-amber-400 text-[#0B253A] flex items-center justify-center">
+            <span className="w-8 h-8 rounded-xl bg-amber-400 text-[#092338] flex items-center justify-center">
               <UserCheck className="w-4 h-4" />
             </span>
-            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#092338] leading-tight text-center">
               Kepsek
             </span>
           </button>
@@ -109,28 +108,28 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => onNavigate('contact')}
-            className="bg-white border border-sky-100 rounded-xl p-2 flex flex-col items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer min-h-[64px]"
+            className="bg-white border border-slate-200/80 rounded-2xl py-2.5 px-1.5 flex flex-col items-center justify-center gap-1.5 shadow-[0_6px_16px_-8px_rgba(9,35,56,0.12)] active:scale-95 transition cursor-pointer min-h-[68px]"
           >
-            <span className="w-8 h-8 rounded-lg bg-[#0B3B5B] text-white flex items-center justify-center">
-              <MapPin className="w-4 h-4 text-sky-300" />
+            <span className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+              <MapPin className="w-4 h-4" />
             </span>
-            <span className="text-[10px] font-extrabold text-[#0B3B5B] leading-tight text-center">
+            <span className="text-[10px] font-extrabold text-[#092338] leading-tight text-center">
               Lokasi
             </span>
           </button>
         </div>
       </section>
 
-      {/* Optional Announcement Ribbon (Hanya muncul bila diaktifkan secara khusus oleh Admin) */}
+      {/* Optional Announcement Ribbon */}
       {announcement?.enabled && announcement.text && (
         <div
-          className="w-full py-3 px-4 text-white text-xs sm:text-sm font-bold shadow-xs"
+          className="w-full py-2.5 px-4 text-white text-xs sm:text-sm font-bold"
           style={{ backgroundColor: announcement.bgColor || '#006699' }}
         >
           <div className="max-w-[1560px] mx-auto flex flex-wrap items-center justify-center gap-2.5 text-center">
             {announcement.badge && (
-              <span className="px-2.5 py-0.5 rounded-full bg-white/20 text-amber-200 text-[10px] font-extrabold uppercase tracking-wider">
-                {announcement.badge}
+              <span className="text-amber-300 text-[10px] font-extrabold uppercase tracking-[0.16em]">
+                {announcement.badge} ·
               </span>
             )}
             <span>{announcement.text}</span>
@@ -138,7 +137,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <button
                 type="button"
                 onClick={handleAnnouncementClick}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-[#0F2937] hover:bg-amber-300 text-[11px] font-extrabold transition cursor-pointer"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-[#092338] hover:bg-amber-300 text-[11px] font-extrabold transition cursor-pointer"
               >
                 <span>{announcement.linkText}</span>
                 <ArrowRight className="w-3 h-3" />
@@ -148,64 +147,57 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       )}
 
-      {/* 2. 3 Balok Keunggulan */}
+      {/* 2. Architectural Trust Metric Strip */}
       {appearanceConfig.showBalokStrip && <HeroBalokStrip />}
 
-      {/* 3. Official School Identity Banner */}
+      {/* 3. Official Institutional Dossier */}
       {appearanceConfig.showIdentityCard && <IdentityCardSection />}
 
-      {/* 4. Trust & Conversion Section */}
+      {/* 4. Editorial Photography Bento Showcase & School Tour Invitation */}
       {appearanceConfig.showTrustConversion && (
         <TrustPillarsConversion onOpenPpdb={onOpenPpdb} />
       )}
 
-      {/* 5. Poster Showcase SPMB & Keunggulan */}
+      {/* 5. Official SPMB Poster Showcase */}
       {(appearanceConfig.showPosterCarousel ?? true) && (
         <SpmbPosterCarousel onOpenPpdb={onOpenPpdb} onNavigate={onNavigate} />
       )}
 
-      {/* 6. 4 Kartu Keunggulan + 5 Pilar + 8 Basis Pembelajaran */}
+      {/* 6. Philosophy, 4 Keunggulan, 5 Pilar & 8 Basis */}
       {appearanceConfig.showPhilosophySection && <PhilosophyCards />}
 
-      {/* 7. Pendidikan Karakter & 8 Basis Pembelajaran Wheel */}
+      {/* 7. Interactive 8-Basis Character Wheel */}
       {appearanceConfig.showCharacterWheel && <CharacterAndEightBasesSection />}
 
-      {/* 8. Program & Fitur Unggulan Tambahan (Dikelola Penuh dari Panel Admin -> Pusat Buat Fitur) */}
+      {/* 8. Optional Custom Features (Managed via Admin Panel) */}
       {activeCustomFeatures.length > 0 && (
-        <section className="py-14 sm:py-20 bg-[#F9F8F6] border-y border-slate-200/70">
+        <section className="py-12 sm:py-20 bg-[#FAFBFD] border-y border-slate-200/70">
           <div className="max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="text-center max-w-3xl mx-auto mb-10">
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-sky-100 text-[#006699] text-xs font-extrabold uppercase tracking-wider mb-3">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Program &amp; Layanan Unggulan</span>
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F2937] tracking-tight">
+            <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-2">
+              <p className="text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#006699]">
+                Program &amp; Layanan Unggulan
+              </p>
+              <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-[#092338] tracking-tight">
                 Inovasi Layanan {schoolIdentity.nama}
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {activeCustomFeatures.map((feat) => (
                 <div
                   key={feat.id}
-                  className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition flex flex-col justify-between"
+                  className="bg-white rounded-2xl border border-slate-200/85 p-6 shadow-xs hover:shadow-md transition flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#006699] bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
-                        {feat.category}
-                      </span>
-                      {feat.badge && (
-                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-                          {feat.badge}
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-lg font-extrabold text-[#0F2937] leading-snug">
+                    <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#006699] mb-2">
+                      {feat.category}
+                      {feat.badge ? ` · ${feat.badge}` : ''}
+                    </p>
+                    <h3 className="font-display text-lg font-extrabold text-[#092338] leading-snug">
                       {feat.title}
                     </h3>
                     {feat.targetAudience && (
-                      <p className="text-xs font-semibold text-[#006699] mt-1">
+                      <p className="text-xs font-semibold text-slate-500 mt-1">
                         Sasaran: {feat.targetAudience}
                       </p>
                     )}
@@ -220,7 +212,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </section>
       )}
 
-      {/* 9. Dedikasi & Pengalaman + Jelajahi Sekolah */}
+      {/* 9. Heritage Collage, Stats & Jelajahi Directory */}
       {(appearanceConfig.showExperienceStats || appearanceConfig.showDirectoryHub) && (
         <ExperienceStats
           onNavigate={onNavigate}
@@ -229,15 +221,15 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
       )}
 
-      {/* 10. Galeri Keseharian Ceria (Tampil bila diaktifkan dari Panel Admin) */}
+      {/* 10. Activity Gallery (Optional Admin Toggle) */}
       {appearanceConfig.showActivityGallery && <SchoolActivityGallery />}
 
-      {/* 11. Direct WhatsApp Consultation & AI Support */}
+      {/* 11. Official WhatsApp Consultation Directory */}
       {appearanceConfig.showWaHotline && (
         <TanyaAdminWA onOpenChatbot={onOpenChatbot} />
       )}
 
-      {/* 12. Testimonials from Parents */}
+      {/* 12. Parent Voices Editorial Testimonials */}
       {appearanceConfig.showTestimonials && <Testimonials />}
     </div>
   );

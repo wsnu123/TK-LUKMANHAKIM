@@ -4,6 +4,7 @@ import {
   Menu,
   X,
   ArrowUpRight,
+  Compass,
 } from 'lucide-react';
 import { PageTab } from '../types';
 import { useApp } from '../context/AppContext';
@@ -31,14 +32,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { schoolIdentity } = useApp();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<'schools' | 'facilities' | 'portal' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'schools' | 'facilities' | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<'schools' | 'facilities' | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 24);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -49,123 +51,150 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const schoolItems = [
-    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1.5 – 3 Tahun • Pengasuhan & Stimulasi Sensorik' },
-    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 – 4 Tahun • Sosialisasi & Eksplorasi Aktif' },
-    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 – 5 Tahun • Pra-Literasi Fonik & Sains Alam' },
-    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 – 6 Tahun • Kesiapan Matang Masuk SD' },
+    { id: 'unit-daycare', label: 'Daycare & Batita Ceria', desc: 'Usia 1,5 – 3 Tahun · Pengasuhan & Sensorik' },
+    { id: 'unit-kb', label: 'Kelompok Bermain (Playgroup)', desc: 'Usia 3 – 4 Tahun · Sosialisasi & Eksplorasi' },
+    { id: 'unit-tka', label: 'Taman Kanak-Kanak A (TK A)', desc: 'Usia 4 – 5 Tahun · Pra-Literasi & Sains Alam' },
+    { id: 'unit-tkb', label: 'Taman Kanak-Kanak B (TK B)', desc: 'Usia 5 – 6 Tahun · Kesiapan Matang Masuk SD' },
   ];
 
-  const facilityItems = [
-    { id: 'fasilitas-outdoor', label: 'Playground Alam & Taman Lalu Lintas', desc: 'Jembatan motorik, zebra cross edukasi & rumput asri' },
-    { id: 'fasilitas-kebun', label: 'Kebun Hidroponik & Rumah Satwa', desc: 'Eksplorasi botanika & rumah burung merpati jinak' },
-    { id: 'fasilitas-indoor', label: '7 Ruang Kelas Sentra & Montessori AC', desc: 'Sentra Alam Cair, Balok, Olah Tubuh, Peran, Seni, Persiapan 1 & 2' },
-    { id: 'fasilitas-seni', label: 'Studio Seni Lukis & Musik Angklung', desc: 'Sentra kreativitas seni lukis, kriya & angklung bambu' },
-    { id: 'fasilitas-daycare', label: 'Ruang Sensorik & Daycare Batita', desc: 'Matras bermain lembut & ruang istirahat usia 2–4 thn' },
-    { id: 'fasilitas-ibadah', label: 'Musholla Santri & Sentra Tilawati', desc: 'Sentra praktik wudhu, sholat dhuha & mengaji' },
-  ];
-
-  const isWhiteNav = isScrolled || currentPage !== 'home';
+  const isSolidNav = isScrolled || currentPage !== 'home' || isMobileMenuOpen;
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isWhiteNav
-          ? 'bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 py-1.5 sm:py-2.5'
-          : 'bg-gradient-to-b from-white/95 via-white/85 to-transparent backdrop-blur-[2px] py-2 sm:py-3'
+        isSolidNav
+          ? 'bg-white/92 backdrop-blur-xl shadow-[0_6px_28px_-10px_rgba(9,35,56,0.12)] border-b border-slate-200/80 py-2 sm:py-2.5'
+          : 'bg-gradient-to-b from-[#061826]/75 via-[#061826]/35 to-transparent py-2.5 sm:py-4'
       }`}
     >
-
-
-      <div className="w-full max-w-[1560px] mx-auto px-3 sm:px-6 lg:px-4 xl:px-8">
+      <div className="w-full max-w-[1560px] mx-auto px-3.5 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between gap-2 sm:gap-4 xl:gap-6">
-          {/* Official Emblem & Brand (Left Zone) */}
+          {/* Left Zone: Brand Emblem & Clean Single-Line Wordmark */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2 sm:gap-2.5 xl:gap-3 cursor-pointer group select-none min-w-0 flex-1 lg:flex-initial lg:flex-shrink-0"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none min-w-0 flex-1 lg:flex-initial lg:flex-shrink-0"
           >
-            <div className="relative w-8 h-8 sm:w-10 sm:h-10 xl:w-11 xl:h-11 flex-shrink-0 flex items-center justify-center">
-              <LukmanHakimLogo variant="emblem" size={34} className="w-8 h-8 sm:w-10 sm:h-10" />
+            <div
+              className={`relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                isSolidNav
+                  ? 'bg-white ring-1 ring-slate-200/80'
+                  : 'bg-white/95 ring-2 ring-white/40 shadow-md'
+              }`}
+            >
+              <LukmanHakimLogo
+                variant="emblem"
+                size={34}
+                className="w-7 h-7 sm:w-9 sm:h-9 border-0 shadow-none"
+              />
             </div>
 
             <div className="flex flex-col min-w-0">
-              <span className="font-extrabold text-[11.5px] sm:text-sm xl:text-[16px] tracking-tight text-[#0F2937] leading-none group-hover:text-[#006699] transition truncate">
+              <span
+                className={`font-display font-bold text-[12px] sm:text-[15px] xl:text-[16.5px] tracking-tight leading-none transition-colors truncate ${
+                  isSolidNav
+                    ? 'text-[#092338] group-hover:text-[#006699]'
+                    : 'text-white drop-shadow-xs'
+                }`}
+              >
                 {schoolIdentity.nama}
               </span>
-              <span className="text-[8px] sm:text-[8.5px] xl:text-[10px] font-bold tracking-[0.08em] sm:tracking-[0.1em] text-[#006699] uppercase mt-0.5 sm:mt-1 truncate">
-                PURWOKERTO • NPSN {schoolIdentity.npsn}
+              <span
+                className={`text-[8.5px] sm:text-[10px] font-semibold tracking-[0.12em] uppercase mt-0.5 sm:mt-1 truncate transition-colors ${
+                  isSolidNav ? 'text-[#006699]' : 'text-amber-200/95'
+                }`}
+              >
+                Purwokerto Selatan
               </span>
             </div>
           </div>
 
-          {/* Desktop Navigation Links (Center Zone - Single Line) */}
-          <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-6 text-xs xl:text-[13.5px] font-semibold text-slate-800 flex-1">
-            {/* Home */}
+          {/* Center Zone: Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-8 text-[13px] xl:text-[14px] font-semibold flex-1">
             <button
+              type="button"
               onClick={() => handleNavClick('home')}
-              className={`transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+              className={`transition-colors py-1.5 relative cursor-pointer whitespace-nowrap ${
                 currentPage === 'home'
-                  ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                  : 'text-slate-700 hover:text-[#006699]'
+                  ? isSolidNav
+                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-[#006699]'
+                    : 'text-amber-300 font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-amber-300'
+                  : isSolidNav
+                    ? 'text-slate-700 hover:text-[#006699]'
+                    : 'text-white/90 hover:text-white'
               }`}
             >
-              Home
+              Beranda
             </button>
 
-            {/* About (Focused Single Institutional Profile Page - No Cluttered Dropdown) */}
             <button
+              type="button"
               onClick={() => handleNavClick('about')}
-              className={`transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+              className={`transition-colors py-1.5 relative cursor-pointer whitespace-nowrap ${
                 currentPage === 'about'
-                  ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                  : 'text-slate-700 hover:text-[#006699]'
+                  ? isSolidNav
+                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-[#006699]'
+                    : 'text-amber-300 font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-amber-300'
+                  : isSolidNav
+                    ? 'text-slate-700 hover:text-[#006699]'
+                    : 'text-white/90 hover:text-white'
               }`}
             >
-              About
+              Tentang Kami
             </button>
 
-            {/* Sekolah - Sekolah Dropdown */}
+            {/* Sekolah Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setOpenDropdown('schools')}
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <button
+                type="button"
                 onClick={() => handleNavClick('schools')}
-                className={`flex items-center gap-1 transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+                className={`flex items-center gap-1 transition-colors py-1.5 relative cursor-pointer whitespace-nowrap ${
                   currentPage === 'schools'
-                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                    : 'text-slate-700 hover:text-[#006699]'
+                    ? isSolidNav
+                      ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-[#006699]'
+                      : 'text-amber-300 font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-amber-300'
+                    : isSolidNav
+                      ? 'text-slate-700 hover:text-[#006699]'
+                      : 'text-white/90 hover:text-white'
                 }`}
               >
-                <span>Sekolah - Sekolah</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'schools' ? 'rotate-180' : ''}`} />
+                <span>Jenjang Sekolah</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    openDropdown === 'schools' ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
 
               {openDropdown === 'schools' && (
-                <div className="absolute top-full left-0 pt-2 w-80 z-50">
-                  <div className="bg-white rounded-xl shadow-[0_18px_45px_rgba(15,41,55,0.16)] border border-slate-200/90 p-2 divide-y divide-slate-100">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[340px] z-50">
+                  <div className="bg-white/98 backdrop-blur-xl rounded-2xl shadow-[0_22px_50px_-12px_rgba(9,35,56,0.2)] border border-slate-200/80 p-2.5 divide-y divide-slate-100">
                     <div className="px-3 py-2 flex items-center justify-between">
                       <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
                         4 Jenjang Pendidikan
                       </span>
-                      <span className="text-[10px] font-semibold text-[#006699]">Usia 1.5 – 6 Th</span>
+                      <span className="text-[11px] font-bold text-[#006699]">Usia 1,5 – 6 Th</span>
                     </div>
-                    <div className="py-1">
+                    <div className="py-1.5 space-y-0.5">
                       {schoolItems.map((item, idx) => (
                         <button
                           key={item.id}
+                          type="button"
                           onClick={() => handleNavClick('schools', item.id)}
-                          className={`w-full text-left px-3 py-2.5 rounded-lg transition flex items-start gap-3 group cursor-pointer ${
+                          className={`w-full text-left px-3 py-2.5 rounded-xl transition flex items-start gap-3 group cursor-pointer ${
                             currentPage === 'schools' && activeSection === item.id
-                              ? 'bg-sky-50/90 text-[#006699]'
+                              ? 'bg-sky-50 text-[#006699]'
                               : 'hover:bg-slate-50 text-slate-800'
                           }`}
                         >
-                          <span className="text-[11px] font-mono font-bold text-slate-400 group-hover:text-[#006699] mt-0.5">
+                          <span className="text-[11px] font-display font-bold text-amber-600/80 group-hover:text-[#006699] mt-0.5">
                             0{idx + 1}
                           </span>
                           <div className="flex-1 whitespace-normal">
-                            <span className="text-xs font-bold block text-slate-900 group-hover:text-[#006699]">
+                            <span className="text-xs font-bold block text-[#092338] group-hover:text-[#006699]">
                               {item.label}
                             </span>
                             <span className="text-[11px] text-slate-500 block mt-0.5 leading-snug">
@@ -180,89 +209,115 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Fasilitas & Tour Kampus */}
+            {/* Fasilitas & Tour Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setOpenDropdown('facilities')}
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <button
+                type="button"
                 onClick={() => handleNavClick('facilities')}
-                className={`flex items-center gap-1 transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+                className={`flex items-center gap-1 transition-colors py-1.5 relative cursor-pointer whitespace-nowrap ${
                   currentPage === 'facilities'
-                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                    : 'text-slate-700 hover:text-[#006699]'
+                    ? isSolidNav
+                      ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-[#006699]'
+                      : 'text-amber-300 font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-amber-300'
+                    : isSolidNav
+                      ? 'text-slate-700 hover:text-[#006699]'
+                      : 'text-white/90 hover:text-white'
                 }`}
               >
-                <span>Fasilitas & Tour</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === 'facilities' ? 'rotate-180' : ''}`} />
+                <span>Fasilitas &amp; Tour</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    openDropdown === 'facilities' ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
 
               {openDropdown === 'facilities' && (
-                <div className="absolute top-full left-0 pt-2 w-72 z-50">
-                  <div className="bg-white rounded-xl shadow-[0_18px_45px_rgba(15,41,55,0.16)] border border-slate-200/90 p-2 divide-y divide-slate-100">
-                    <div className="py-1">
-                      <button
-                        onClick={() => handleNavClick('facilities')}
-                        className="w-full text-left px-3 py-2 rounded-lg transition hover:bg-slate-50 flex items-center justify-between text-xs font-bold text-slate-800 hover:text-[#006699] cursor-pointer"
-                      >
-                        <span>Semua Fasilitas Kampus</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-                      </button>
-                      <button
-                        onClick={() => handleNavClick('facilities', 'virtual-tour')}
-                        className="w-full text-left px-3 py-2 rounded-lg transition bg-amber-50/80 hover:bg-amber-100 flex items-center justify-between text-xs font-bold text-amber-900 cursor-pointer mt-1"
-                      >
-                        <span className="flex items-center gap-1.5">
-                          <span>🧭</span>
-                          <span>Virtual Tour Interaktif 360°</span>
-                        </span>
-                        <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-800 text-[9px] font-bold">Baru</span>
-                      </button>
-                    </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-76 z-50">
+                  <div className="bg-white/98 backdrop-blur-xl rounded-2xl shadow-[0_22px_50px_-12px_rgba(9,35,56,0.2)] border border-slate-200/80 p-2 space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => handleNavClick('facilities')}
+                      className="w-full text-left px-3.5 py-2.5 rounded-xl transition hover:bg-slate-50 flex items-center justify-between text-xs font-bold text-[#092338] hover:text-[#006699] cursor-pointer"
+                    >
+                      <span>Semua Fasilitas Kampus</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleNavClick('facilities', 'virtual-tour')}
+                      className="w-full text-left px-3.5 py-2.5 rounded-xl transition bg-[#F4F8FC] hover:bg-sky-50 flex items-center justify-between text-xs font-bold text-[#092338] cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Compass className="w-4 h-4 text-[#006699]" />
+                        <span>Virtual Tour Kampus 360°</span>
+                      </span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#006699]" />
+                    </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Kontak & Lokasi */}
             <button
+              type="button"
               onClick={() => handleNavClick('contact')}
-              className={`transition py-1.5 relative cursor-pointer whitespace-nowrap ${
+              className={`transition-colors py-1.5 relative cursor-pointer whitespace-nowrap ${
                 currentPage === 'contact'
-                  ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#006699]'
-                  : 'text-slate-700 hover:text-[#006699]'
+                  ? isSolidNav
+                    ? 'text-[#006699] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-[#006699]'
+                    : 'text-amber-300 font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:rounded-full after:bg-amber-300'
+                  : isSolidNav
+                    ? 'text-slate-700 hover:text-[#006699]'
+                    : 'text-white/90 hover:text-white'
               }`}
             >
-              Kontak & Lokasi
+              Kontak &amp; Lokasi
             </button>
           </nav>
 
-          {/* Desktop Action Button (Right Zone - Clean SPMB Only, Admin Panel Hidden) */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 flex-shrink-0">
+          {/* Right Zone: Single Primary Action */}
+          <div className="hidden lg:flex items-center flex-shrink-0">
             <button
+              type="button"
               onClick={onOpenPpdb}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 xl:px-4.5 xl:py-2.5 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white text-[11.5px] xl:text-xs font-bold tracking-wide transition cursor-pointer shadow-xs whitespace-nowrap"
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs xl:text-[13px] font-bold tracking-tight transition-all cursor-pointer whitespace-nowrap ${
+                isSolidNav
+                  ? 'bg-[#092338] hover:bg-[#006699] text-white shadow-sm'
+                  : 'bg-amber-400 hover:bg-amber-300 text-[#092338] shadow-lg shadow-black/20'
+              }`}
             >
-              <span>SPMB 2026/2027</span>
+              <span>Daftar SPMB 2026/2027</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Mobile Quick SPMB + Menu Toggle */}
+          {/* Mobile Compact Header Actions */}
           <div className="lg:hidden flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={onOpenPpdb}
-              className="px-2.5 py-1.5 min-h-[34px] rounded-lg bg-[#006699] hover:bg-[#0B3B5B] text-white text-[10.5px] font-extrabold tracking-tight whitespace-nowrap cursor-pointer shadow-xs"
+              className={`px-3 py-1.5 min-h-[34px] rounded-full text-[11px] font-extrabold tracking-tight whitespace-nowrap cursor-pointer transition-colors ${
+                isSolidNav
+                  ? 'bg-[#092338] text-white'
+                  : 'bg-amber-400 text-[#092338] shadow-sm'
+              }`}
             >
               SPMB
             </button>
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-800 hover:bg-slate-100 transition cursor-pointer"
-              aria-label="Menu"
+              className={`w-9 h-9 flex items-center justify-center rounded-full transition cursor-pointer ${
+                isSolidNav
+                  ? 'text-[#092338] hover:bg-slate-100'
+                  : 'text-white bg-white/15 hover:bg-white/25 backdrop-blur-md'
+              }`}
+              aria-label="Menu Navigasi"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -272,51 +327,61 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-slate-200 shadow-2xl px-5 py-5 space-y-3 max-h-[85vh] overflow-y-auto">
+        <div className="lg:hidden bg-white/98 backdrop-blur-xl border-b border-slate-200 shadow-2xl px-5 py-4 space-y-2 max-h-[82vh] overflow-y-auto">
           <div className="flex flex-col divide-y divide-slate-100">
             <button
+              type="button"
               onClick={() => handleNavClick('home')}
               className={`text-left py-3 font-bold text-sm ${
-                currentPage === 'home' ? 'text-[#006699]' : 'text-slate-900'
+                currentPage === 'home' ? 'text-[#006699]' : 'text-[#092338]'
               }`}
             >
-              Home
+              Beranda
             </button>
 
             <button
+              type="button"
               onClick={() => handleNavClick('about')}
               className={`text-left py-3 font-bold text-sm ${
-                currentPage === 'about' ? 'text-[#006699]' : 'text-slate-900'
+                currentPage === 'about' ? 'text-[#006699]' : 'text-[#092338]'
               }`}
             >
-              About (Profil Sekolah)
+              Tentang Kami &amp; Kepala Sekolah
             </button>
 
             {/* Mobile Schools Accordion */}
             <div className="py-2">
               <div className="flex items-center justify-between">
                 <button
+                  type="button"
                   onClick={() => handleNavClick('schools')}
-                  className={`text-left py-1 font-bold text-sm ${
-                    currentPage === 'schools' ? 'text-[#006699]' : 'text-slate-900'
+                  className={`text-left py-1.5 font-bold text-sm ${
+                    currentPage === 'schools' ? 'text-[#006699]' : 'text-[#092338]'
                   }`}
                 >
-                  Sekolah - Sekolah
+                  Jenjang Sekolah
                 </button>
                 <button
+                  type="button"
                   onClick={() => setMobileExpanded(mobileExpanded === 'schools' ? null : 'schools')}
-                  className="p-1.5 text-slate-500"
+                  className="w-9 h-9 flex items-center justify-center text-slate-500"
+                  aria-label="Buka submenu jenjang"
                 >
-                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileExpanded === 'schools' ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      mobileExpanded === 'schools' ? 'rotate-180' : ''
+                    }`}
+                  />
                 </button>
               </div>
               {mobileExpanded === 'schools' && (
-                <div className="pl-3 mt-1 space-y-1 border-l-2 border-slate-200">
+                <div className="pl-3 mt-1 space-y-1 border-l border-slate-200">
                   {schoolItems.map((item) => (
                     <button
                       key={item.id}
+                      type="button"
                       onClick={() => handleNavClick('schools', item.id)}
-                      className="w-full text-left py-1.5 text-xs text-slate-600 hover:text-[#006699] font-medium block"
+                      className="w-full text-left py-2 text-xs text-slate-600 hover:text-[#006699] font-semibold block"
                     >
                       {item.label}
                     </button>
@@ -326,44 +391,48 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Mobile Facilities & Virtual Tour */}
-            <div className="py-2 border-y border-slate-100 flex flex-col gap-1">
+            <div className="py-2 flex flex-col gap-1.5">
               <button
+                type="button"
                 onClick={() => handleNavClick('facilities')}
                 className={`text-left py-1.5 font-bold text-sm ${
-                  currentPage === 'facilities' ? 'text-[#006699]' : 'text-slate-900'
+                  currentPage === 'facilities' ? 'text-[#006699]' : 'text-[#092338]'
                 }`}
               >
-                Fasilitas Penunjang Kampus
+                Fasilitas Kampus
               </button>
               <button
+                type="button"
                 onClick={() => handleNavClick('facilities', 'virtual-tour')}
-                className="text-left py-2 px-3 rounded-xl bg-amber-50 text-amber-900 font-bold text-xs flex items-center justify-between"
+                className="text-left py-2.5 px-3.5 rounded-xl bg-[#F4F8FC] text-[#092338] font-bold text-xs flex items-center justify-between border border-sky-100"
               >
                 <span className="flex items-center gap-2">
-                  <span>🧭</span>
+                  <Compass className="w-4 h-4 text-[#006699]" />
                   <span>Virtual Tour Interaktif 360°</span>
                 </span>
-                <span className="px-1.5 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[9px] font-extrabold">BARU</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#006699]" />
               </button>
             </div>
 
             <button
+              type="button"
               onClick={() => handleNavClick('contact')}
               className={`text-left py-3 font-bold text-sm ${
-                currentPage === 'contact' ? 'text-[#006699]' : 'text-slate-900'
+                currentPage === 'contact' ? 'text-[#006699]' : 'text-[#092338]'
               }`}
             >
-              Kontak & Lokasi Sekolah
+              Kontak &amp; Lokasi Sekolah
             </button>
           </div>
 
-          <div className="pt-2 flex flex-col gap-2">
+          <div className="pt-2">
             <button
+              type="button"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 onOpenPpdb();
               }}
-              className="w-full py-2.5 rounded-xl bg-[#006699] text-white font-extrabold text-xs text-center cursor-pointer shadow-xs"
+              className="w-full py-3 rounded-xl bg-[#092338] text-white font-extrabold text-xs text-center cursor-pointer shadow-sm"
             >
               Formulir SPMB Online 2026/2027
             </button>
