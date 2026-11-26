@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { Registration } from '../types';
 import {
@@ -20,6 +20,8 @@ import {
   Check,
   Sparkles,
   HeartHandshake,
+  LogOut,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface PpdbModalProps {
@@ -29,7 +31,7 @@ interface PpdbModalProps {
 }
 
 export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequestLogin }) => {
-  const { submitPublicRegistration, registrations, schoolIdentity } = useApp();
+  const { submitPublicRegistration, registrations, schoolIdentity, currentUser, signOutAccount } = useApp();
 
   const [activeTab, setActiveTab] = useState<'form' | 'status'>('form');
   const [step, setStep] = useState(1);
@@ -38,7 +40,7 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequest
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form states (Direct without Gmail requirement)
+  // Form states
   const [childName, setChildName] = useState('');
   const [nickname, setNickname] = useState('');
   const [nik, setNik] = useState('');
@@ -58,6 +60,21 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequest
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResult, setSearchResult] = useState<Registration | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Otomatis isi email wali dari akun Google yang sedang login
+  useEffect(() => {
+    if (isOpen && currentUser?.email && !email) {
+      setEmail(currentUser.email);
+    }
+  }, [isOpen, currentUser, email]);
+
+  const handleSwitchGoogleAccount = async () => {
+    await signOutAccount();
+    setEmail('');
+    if (onRequestLogin) {
+      onRequestLogin();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -212,6 +229,42 @@ export const PpdbModal: React.FC<PpdbModalProps> = ({ isOpen, onClose, onRequest
           >
             <X className="w-5 h-5" />
           </button>
+        </div>
+
+        {/* Status Akun Google Aktif (Agar wali murid selalu melihat akun Google yang terhubung & bisa ganti akun) */}
+        <div className="bg-sky-50/90 border-b border-sky-100 px-5 sm:px-6 py-2.5 flex items-center justify-between gap-3 text-xs">
+          {currentUser ? (
+            <>
+              <div className="flex items-center gap-2 min-w-0">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-slate-600 truncate">
+                  Terhubung Google:{' '}
+                  <strong className="text-slate-900">{currentUser.email || currentUser.displayName}</strong>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleSwitchGoogleAccount}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 hover:border-rose-200 font-bold text-[11px] transition cursor-pointer shrink-0"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>Ganti / Keluar</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="text-slate-600">Belum masuk akun Google.</span>
+              {onRequestLogin && (
+                <button
+                  type="button"
+                  onClick={onRequestLogin}
+                  className="px-3 py-1 rounded-lg bg-[#006699] hover:bg-[#00527a] text-white font-bold text-[11px] transition cursor-pointer shrink-0"
+                >
+                  Login Google
+                </button>
+              )}
+            </>
+          )}
         </div>
 
         {/* Tab Navigasi */}

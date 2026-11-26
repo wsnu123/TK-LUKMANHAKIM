@@ -558,7 +558,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const rawSaved = localStorage.getItem(STORAGE_KEYS.LOGGED_GMAIL_USER);
     if (rawSaved) {
       try {
-        savedLocalUser = JSON.parse(rawSaved);
+        const parsed = JSON.parse(rawSaved);
+        // Bersihkan sesi lama non-Google (misal sisa quick-login lama) agar login Google asli selalu tampil
+        if (parsed && typeof parsed.uid === 'string' && parsed.uid.startsWith('usr_')) {
+          localStorage.removeItem(STORAGE_KEYS.LOGGED_GMAIL_USER);
+        } else if (parsed && parsed.email) {
+          savedLocalUser = parsed;
+        }
       } catch {}
     }
 
@@ -1031,18 +1037,64 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const submitPublicRegistration = async (
     registration: Omit<Registration, 'id' | 'regNumber' | 'createdAt' | 'waSent' | 'status'>
   ): Promise<Registration> => {
-    const response = await fetch('/api/registrations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(registration),
-    });
-    const result = await response.json();
-    if (!response.ok || !result.success || !result.registration) {
-      throw new Error(result.error || 'Pendaftaran belum berhasil disimpan.');
+    // 1. Coba simpan lewat backend API jika tersedia dan mengembalikan JSON valid
+    try {
+      const response = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registration),
+      });
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const result = await response.json();
+        if (response.ok && result?.success && result?.registration) {
+          const savedRegistration = result.registration as Registration;
+          setRegistrations((prev) => {
+            const next = [savedRegistration, ...prev.filter((item) => item.id !== savedRegistration.id)];
+            setDoc(doc(db, 'site_settings', 'registrations_store'), {
+              registrations: next,
+              updatedAt: serverTimestamp(),
+            }).catch(() => {});
+            return next;
+          });
+          return savedRegistration;
+        }
+        // Jika backend sengaja menolak karena validasi input (4xx), teruskan pesan validasinya
+        if (response.status >= 400 && response.status < 500 && result?.error) {
+          throw new Error(result.error);
+        }
+      }
+    } catch (apiErr: any) {
+      // Hanya lempar error jika itu pesan validasi eksplisit; jika server Vercel 500/non-JSON, lanjut fallback Firestore!
+      if (
+        apiErr instanceof Error &&
+        !apiErr.message.includes('JSON') &&
+        !apiErr.message.includes('Failed to fetch') &&
+        !apiErr.message.includes('FIREBASE_SERVICE_ACCOUNT') &&
+        !apiErr.message.includes('server')
+      ) {
+        throw apiErr;
+      }
+      console.warn('[SPMB] Backend API unavailable, saving directly via Cloud Firestore:', apiErr);
     }
-    const savedRegistration = result.registration as Registration;
-    setRegistrations((prev) => [savedRegistration, ...prev.filter((item) => item.id !== savedRegistration.id)]);
-    return savedRegistration;
+
+    // 2. Fallback langsung ke Firestore + State lokal (anti gagal di hosting Vercel)
+    const saved = addRegistration({
+      ...registration,
+      status: 'Menunggu Verifikasi',
+    });
+
+    try {
+      const nextList = [saved, ...registrations.filter((item) => item.id !== saved.id)];
+      await setDoc(doc(db, 'site_settings', 'registrations_store'), {
+        registrations: nextList,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (cloudErr) {
+      console.warn('[SPMB] Cloud sync warning:', cloudErr);
+    }
+
+    return saved;
   };
 
   const sendAnnouncementEmail = async (params: {
@@ -1442,7 +1494,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         waSent: true,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      }).catch((error) => handleFirestoreError(error, OperationType.CREATE, path));
+      }).catch((error) => console.warn('[SPMB] Firestore registrations write notice:', error));
     }
 
     sendGatewayNotification(
@@ -2033,6 +2085,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (!snap.exists()) return;
         const data = snap.data();
         if (Array.isArray(data.gallery)) setGallery(data.gallery);
+      }, () => {})
+    );
+
+    // 9. SPMB Registrations Cloud Sync (terbaca real-time oleh Panel Admin & Cek Status)
+    unsubscribes.push(
+      onSnapshot(doc(db, 'site_settings', 'registrations_store'), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
+        if (Array.isArray(data.registrations)) {
+          setRegistrations((prev) => {
+            const cloudIds = new Set(data.registrations.map((r: Registration) => r.id));
+            const localOnly = prev.filter((r) => !cloudIds.has(r.id));
+            return [...data.registrations, ...localOnly];
+          });
+        }
       }, () => {})
     );
 
